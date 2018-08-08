@@ -39,6 +39,8 @@ public class Customer implements User, Serializable {
     @Transient
     private String sessionKey;
 
+
+
     public Customer() {
     }
 

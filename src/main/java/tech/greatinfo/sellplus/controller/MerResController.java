@@ -38,8 +38,8 @@ public class MerResController {
 
     // 登录
     @RequestMapping(value = "/api/mer/login",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-    public ResJson login(@RequestParam(name = "") String account,     // 商家账户
-                         @RequestParam(name = "") String password     // 密码
+    public ResJson login(@RequestParam(name = "account") String account,     // 商家账户
+                         @RequestParam(name = "password") String password     // 密码
     ){
         try {
             Merchant merchant = merchantService.findByAccountAndPassword(account, password);
