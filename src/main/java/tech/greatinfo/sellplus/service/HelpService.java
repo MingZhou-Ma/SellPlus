@@ -28,6 +28,11 @@ public class HelpService {
     }
 
     public List<Help> findAllByCustomer(Customer customer){
-        return helpRepository.findAllByCustomer(customer);
+        return helpRepository.findAllByCustomerAndActivityNotNull(customer);
     }
+
+    public List<Help> findAllByActivity(Long activityId){
+        return helpRepository.findAllByActivityId(activityId);
+    }
+
 }

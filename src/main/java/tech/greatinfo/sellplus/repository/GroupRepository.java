@@ -13,5 +13,7 @@ import tech.greatinfo.sellplus.domain.group.Group;
  */
 public interface GroupRepository extends JpaRepository<Group, Long>,
         JpaSpecificationExecutor<Group> {
-    List<Group> findAllByCustomer(Customer customer);
+    List<Group> findAllByCustomerAndActivityNotNull(Customer customer);
+
+    List<Group> findAllByActivityId(Long activityId);
 }

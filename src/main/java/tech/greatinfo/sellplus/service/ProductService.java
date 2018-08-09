@@ -3,12 +3,13 @@ package tech.greatinfo.sellplus.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.List;
 
+import tech.greatinfo.sellplus.domain.Activity;
 import tech.greatinfo.sellplus.domain.Product;
 import tech.greatinfo.sellplus.repository.ProductRepository;
 
@@ -18,6 +19,9 @@ import tech.greatinfo.sellplus.repository.ProductRepository;
  */
 @Service
 public class ProductService {
+    @Autowired
+    private ActivityService activityService;
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -53,6 +57,12 @@ public class ProductService {
     }
 
     public void deleteProduct(Long productId){
+        // TODO 这里应该改写成级联删除而不是手动维护
+        List<Activity> activities = activityService.findByProduct(productId);
+        for (Activity activity:activities){
+            activityService.deleteActivity(activity.getId());
+        }
+
         productRepository.delete(productId);
     }
 

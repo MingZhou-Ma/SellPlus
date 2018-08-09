@@ -14,4 +14,5 @@ import tech.greatinfo.sellplus.domain.group.JoinGroup;
 public interface JoinGroupRepository extends JpaRepository<JoinGroup, Long>,
         JpaSpecificationExecutor<JoinGroup> {
     JoinGroup findByCustomerAndGroup(Customer customer, Group group);
+    void deleteAllByGroup(Group group);
 }

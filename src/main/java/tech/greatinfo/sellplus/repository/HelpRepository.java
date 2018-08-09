@@ -14,5 +14,6 @@ import tech.greatinfo.sellplus.domain.help.Help;
  */
 public interface HelpRepository extends JpaRepository<Help, Long>,
         JpaSpecificationExecutor<Help> {
-    List<Help> findAllByCustomer(Customer customer);
+    List<Help> findAllByCustomerAndActivityNotNull(Customer customer);
+    List<Help> findAllByActivityId(Long activityId);
 }

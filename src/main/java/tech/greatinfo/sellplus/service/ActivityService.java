@@ -10,7 +10,13 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 import tech.greatinfo.sellplus.domain.Activity;
+import tech.greatinfo.sellplus.domain.group.Group;
+import tech.greatinfo.sellplus.domain.help.Help;
 import tech.greatinfo.sellplus.repository.ActivityRepository;
+import tech.greatinfo.sellplus.repository.GroupRepository;
+import tech.greatinfo.sellplus.repository.HelpHistoryRepository;
+import tech.greatinfo.sellplus.repository.HelpRepository;
+import tech.greatinfo.sellplus.repository.JoinGroupRepository;
 
 /**
  * Created by Ericwyn on 18-7-27.
@@ -19,6 +25,16 @@ import tech.greatinfo.sellplus.repository.ActivityRepository;
 public class ActivityService {
     @Autowired
     ActivityRepository activityRepository;
+
+    @Autowired
+    HelpRepository helpRepository;
+    @Autowired
+    HelpHistoryRepository helpHistoryRepository;
+
+    @Autowired
+    GroupRepository groupRepository;
+    @Autowired
+    JoinGroupRepository joinGroupRepository;
 
     public void save(Activity activity){
         activityRepository.save(activity);
@@ -41,6 +57,17 @@ public class ActivityService {
 //    }
 
     public void deleteActivity(Long activityId){
+        // TODO 需要改写为级联删除
+        List<Help> helps = helpRepository.findAllByActivityId(activityId);
+        for (Help help:helps){
+            helpHistoryRepository.deleteAllByHelp(help);
+        }
+        helpRepository.delete(helps);
+        List<Group> groups = groupRepository.findAllByActivityId(activityId);
+        for (Group group:groups){
+            joinGroupRepository.deleteAllByGroup(group);
+        }
+        groupRepository.delete(groups);
         activityRepository.delete(activityId);
     }
 
@@ -61,6 +88,10 @@ public class ActivityService {
             }
         }
         activityRepository.saveAndFlush(oldEntity);
+    }
+
+    public List<Activity> findByProduct(Long productId){
+        return activityRepository.getAllByProductId(productId);
     }
 
 }
