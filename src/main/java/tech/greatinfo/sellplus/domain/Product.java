@@ -23,6 +23,9 @@ public class Product {
     @PrimaryKeyJoinColumn
     private Long id;
 
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '商品题图'")
+    private String pic;
+
     @Column(columnDefinition = "VARCHAR(100) COMMENT '商品名称'")
     private String name;
 
@@ -44,6 +47,14 @@ public class Product {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 
     public String getName() {
