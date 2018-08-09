@@ -54,7 +54,7 @@ public class ProductResController {
     }
 
     // 查看商品
-    @RequestMapping(value = "/api/mer/findProduct",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/api/mer/listProduct",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public ResJson findProduct(@RequestParam(name = "token") String token,
                                @RequestParam(name = "start",defaultValue = "0") Integer start,
                                @RequestParam(name = "num",defaultValue = "10") Integer num){

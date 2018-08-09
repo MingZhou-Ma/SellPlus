@@ -6,8 +6,12 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -39,7 +43,15 @@ public class Customer implements User, Serializable {
     @Transient
     private String sessionKey;
 
+    @Column(columnDefinition = "VARCHAR(20) COMMENT '阅读时间'")
+    private String phone;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "seller_id",columnDefinition = "BIGINT COMMENT '所属销售的外键'")
+    private Seller seller;
+
+    @Column(columnDefinition = "DOUBLE COMMENT '是否是销售人员'")
+    private boolean bSell;
 
     public Customer() {
     }
@@ -66,5 +78,29 @@ public class Customer implements User, Serializable {
 
     public void setSessionKey(String sessionKey) {
         this.sessionKey = sessionKey;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Seller getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
+
+    public boolean isbSell() {
+        return bSell;
+    }
+
+    public void setbSell(boolean bSell) {
+        this.bSell = bSell;
     }
 }
