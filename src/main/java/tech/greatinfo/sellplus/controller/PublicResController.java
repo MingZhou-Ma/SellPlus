@@ -14,9 +14,9 @@ import java.util.HashMap;
 
 import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.service.ArticleService;
-import tech.greatinfo.sellplus.util.EncryptUtils;
-import tech.greatinfo.sellplus.util.ImageUtils;
-import tech.greatinfo.sellplus.util.obj.ResJson;
+import tech.greatinfo.sellplus.utils.EncryptUtils;
+import tech.greatinfo.sellplus.utils.ImageUtils;
+import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
  *
@@ -109,7 +109,7 @@ public class PublicResController {
 
     // 上传 base64 图片接口
     @RequestMapping(value = "/api/pub/uploadBase64",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-    public ResJson uploadBase64(@RequestParam("base64") String base64,
+    public ResJson uploadBase64(@RequestParam("img") String base64,
                                 @RequestParam(value = "key",required = false) String key) {
         try {
 
@@ -145,11 +145,11 @@ public class PublicResController {
 
             String[] typeTemp = base64.split(";");
             String type = typeTemp[0];
-            if (type.endsWith("jpg") || type.endsWith("JPG")) {
+            if (type.toLowerCase().endsWith("jpg")) {
                 fileMd5Name = fileMd5Name + ".jpg";
-            } else if (type.endsWith("png") || type.endsWith("PNG")) {
+            } else if (type.toLowerCase().endsWith("png")) {
                 fileMd5Name = fileMd5Name + ".png";
-            } else if (type.endsWith("gif") || type.endsWith("GIF")) {
+            } else if (type.toLowerCase().endsWith("gif")) {
                 fileMd5Name = fileMd5Name + ".gif";
             } else {
                 fileMd5Name = fileMd5Name + ".jpg";
@@ -167,7 +167,5 @@ public class PublicResController {
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
-
-    // 下载 base64 图片接口
 
 }

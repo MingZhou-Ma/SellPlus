@@ -6,13 +6,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import tech.greatinfo.sellplus.domain.Activity;
+import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.Product;
 import tech.greatinfo.sellplus.service.ActivityService;
+import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.ProductService;
-import tech.greatinfo.sellplus.util.DateUtil;
-import tech.greatinfo.sellplus.util.obj.ResJson;
+import tech.greatinfo.sellplus.utils.DateUtil;
+import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
  *
@@ -30,6 +32,9 @@ public class DefaultResController {
 
     @Autowired
     ActivityService activityService;
+
+    @Autowired
+    CustomService customService;
 
     @RequestMapping(value = "/api/default/setMerchant",method = RequestMethod.GET)
     public ResJson setDefaultSet(){
@@ -53,7 +58,6 @@ public class DefaultResController {
 
     @RequestMapping(value = "/api/default/setProduct",method = RequestMethod.GET)
     public ResJson setDefaultProduct(){
-        Merchant merchant = merchantService.findOne(1L);
         //增加商品
         Product product = new Product();
         product.setId(1L);
@@ -90,7 +94,6 @@ public class DefaultResController {
 
     @RequestMapping(value = "/api/default/setActivity",method = RequestMethod.GET)
     public ResJson setDefaultActivity(){
-        Merchant merchant = merchantService.findOne(1L);
         Product product = productService.findOne(1L);
         Activity activity = new Activity();
         activity.setEndDate(DateUtil.formatString("2018-10-10","yyyy-MM-dd"));
@@ -148,6 +151,15 @@ public class DefaultResController {
         System.out.println("新增活动 2");
 
         return ResJson.successJson("新增测试活动");
+    }
+
+    @RequestMapping(value = "/api/default/testUpdate",method = RequestMethod.GET)
+    public ResJson updateTest(){
+        Customer customer = new Customer();
+        customer.setPhone("新手机号");
+        Customer old = customService.getOne(1L);
+        customService.update(old, customer);
+        return ResJson.successJson("OK");
     }
 
 }

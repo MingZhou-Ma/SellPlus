@@ -1,4 +1,4 @@
-package tech.greatinfo.sellplus.util.obj;
+package tech.greatinfo.sellplus.utils.obj;
 
 import java.util.UUID;
 

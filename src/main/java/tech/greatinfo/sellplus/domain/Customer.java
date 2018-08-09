@@ -10,7 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -36,21 +35,21 @@ public class Customer implements User, Serializable {
 
     // 微信 openid 不会超过 50
     @JsonIgnore
-    @Column(length = 50)
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '微信 OPEN ID'")
     private String openid;
 
     @JsonIgnore
     @Transient
     private String sessionKey;
 
-    @Column(columnDefinition = "VARCHAR(20) COMMENT '阅读时间'")
+    @Column(columnDefinition = "VARCHAR(20) COMMENT '手机号码'")
     private String phone;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "seller_id",columnDefinition = "BIGINT COMMENT '所属销售的外键'")
     private Seller seller;
 
-    @Column(columnDefinition = "DOUBLE COMMENT '是否是销售人员'")
+    @Column(columnDefinition = "BIT COMMENT '是否是销售人员'",updatable = false)
     private boolean bSell;
 
     public Customer() {

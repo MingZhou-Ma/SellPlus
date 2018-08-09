@@ -18,7 +18,7 @@ import okhttp3.Response;
 import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.domain.QRcode;
 import tech.greatinfo.sellplus.repository.QRcodeRepository;
-import tech.greatinfo.sellplus.util.WebUtils;
+import tech.greatinfo.sellplus.utils.WebUtils;
 
 /**
  * Created by Ericwyn on 18-7-31.

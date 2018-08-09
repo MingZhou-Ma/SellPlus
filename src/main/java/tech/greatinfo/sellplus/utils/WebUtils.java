@@ -1,4 +1,4 @@
-package tech.greatinfo.sellplus.util;
+package tech.greatinfo.sellplus.utils;
 
 import com.alibaba.fastjson.JSONObject;
 

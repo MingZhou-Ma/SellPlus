@@ -13,8 +13,8 @@ import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.ProductService;
 import tech.greatinfo.sellplus.service.TokenService;
-import tech.greatinfo.sellplus.util.obj.AccessToken;
-import tech.greatinfo.sellplus.util.obj.ResJson;
+import tech.greatinfo.sellplus.utils.obj.AccessToken;
+import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
  *

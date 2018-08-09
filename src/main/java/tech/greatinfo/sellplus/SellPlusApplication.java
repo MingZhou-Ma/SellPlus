@@ -7,12 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.TokenService;
-import tech.greatinfo.sellplus.util.obj.AccessToken;
+import tech.greatinfo.sellplus.utils.obj.AccessToken;
 
 @SpringBootApplication
 public class SellPlusApplication {
-    @Autowired
-    private static MerchantService merchantService;
 
     public static void main(String[] args) {
         TokenService tokenService = new TokenService();

@@ -11,7 +11,7 @@ import tech.greatinfo.sellplus.domain.article.Article;
 import tech.greatinfo.sellplus.service.ArticleService;
 import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.TokenService;
-import tech.greatinfo.sellplus.util.obj.ResJson;
+import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
  * Created by Ericwyn on 18-8-9.

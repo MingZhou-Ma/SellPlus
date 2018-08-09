@@ -1,4 +1,4 @@
-package tech.greatinfo.sellplus.util;
+package tech.greatinfo.sellplus.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

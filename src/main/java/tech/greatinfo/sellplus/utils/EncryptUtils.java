@@ -1,4 +1,4 @@
-package tech.greatinfo.sellplus.util;
+package tech.greatinfo.sellplus.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;

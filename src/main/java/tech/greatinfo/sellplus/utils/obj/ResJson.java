@@ -1,4 +1,4 @@
-package tech.greatinfo.sellplus.util.obj;
+package tech.greatinfo.sellplus.utils.obj;
 
 /**
  * 普通的
@@ -36,6 +36,10 @@ public class ResJson {
 
     public static ResJson errorRequestParam(){
         return new ResJson(1200,"the request param error",null);
+    }
+
+    public static ResJson errorRequestParam(String msg){
+        return new ResJson(1200,"the request param error --> "+ msg,null);
     }
 
     // 服务器出错
