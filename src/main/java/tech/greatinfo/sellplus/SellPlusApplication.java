@@ -1,11 +1,9 @@
 package tech.greatinfo.sellplus;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import tech.greatinfo.sellplus.domain.Merchant;
-import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 
