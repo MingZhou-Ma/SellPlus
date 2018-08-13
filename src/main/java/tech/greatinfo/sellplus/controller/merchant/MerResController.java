@@ -1,4 +1,4 @@
-package tech.greatinfo.sellplus.controller;
+package tech.greatinfo.sellplus.controller.merchant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
