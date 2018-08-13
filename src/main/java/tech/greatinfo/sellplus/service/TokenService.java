@@ -67,7 +67,8 @@ public class TokenService {
     //通过 openid 获取 已有的 Token , 来刷新过期时间
     public AccessToken getTokenByCustomOpenId(String openId){
         for (String token:tokenMap.keySet()){
-            if (((Customer)tokenMap.get(token).getUser()).getOpenid().equals(openId)){
+            if (tokenMap.get(token).getUser() instanceof Customer &&
+                    ((Customer)tokenMap.get(token).getUser()).getOpenid().equals(openId)){
                 return tokenMap.get(token);
             }
         }

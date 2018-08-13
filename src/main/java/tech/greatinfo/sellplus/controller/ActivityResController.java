@@ -49,7 +49,8 @@ public class ActivityResController {
     // 增加活动
     @RequestMapping(value = "/api/mer/addActivity",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public ResJson addActivity(@RequestParam(name = "token") String token,
-                               @ModelAttribute Activity activity, HttpServletRequest request){
+                               @ModelAttribute Activity activity,
+                               HttpServletRequest request){
         try {
             if (tokenService.getUserByToken(token) != null){
                 // TODO ModelAttribute 无法解析 Boolean 有点奇怪
@@ -70,7 +71,7 @@ public class ActivityResController {
     // act_type 1 为 拼团, 0 为助力
     @RequestMapping(value = "/api/mer/listActivity",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public ResJson findActivity(@RequestParam(name = "token") String token,
-                                @RequestParam(name = "act_type") Integer type,
+                                @RequestParam(name = "act_type",defaultValue = "0") Integer type,
                                 @RequestParam(name = "start", defaultValue = "0") Integer start,
                                 @RequestParam(name = "num", defaultValue = "10") Integer num){
         try {
