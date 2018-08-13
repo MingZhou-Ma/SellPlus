@@ -10,10 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 
 import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.service.ArticleService;
+import tech.greatinfo.sellplus.utils.DateUtil;
 import tech.greatinfo.sellplus.utils.EncryptUtils;
 import tech.greatinfo.sellplus.utils.ImageUtils;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
@@ -63,7 +65,8 @@ public class PublicResController {
             **/
 
             HashMap<Object, Object> res = new HashMap<>();
-            File saveDir = new File(StaticConfig.SAVE_UPLOAD_PIC_PATH);
+            String dataFlag = DateUtil.formatDate(new Date(),"yyyy/MM/dd");
+            File saveDir = new File(StaticConfig.SAVE_UPLOAD_PIC_PATH+"/"+dataFlag);
             if (!saveDir.isDirectory()) {
                 saveDir.mkdirs();
             }
@@ -77,7 +80,9 @@ public class PublicResController {
                 //单个文件的大小不许超过5
                 return ResJson.failJson(6002,"file to big, max file size is 2MB",null);
             }
-            String fileMd5Name = EncryptUtils.getMD5("just_for_encrypt" + System.currentTimeMillis() + Math.random() * 10);
+
+            // 保存图片
+            String fileMd5Name = EncryptUtils.getMD5("just_for_encrypt" + System.currentTimeMillis() + Math.random() * 100);
             if (fileMd5Name == null) {
                 fileMd5Name = "" + System.currentTimeMillis();
             }
@@ -99,7 +104,7 @@ public class PublicResController {
             }
             inputStream.close();
             outputStream.close();
-            res.put("url", StaticConfig.SAVE_UPLOAD_PIC_PATH+"/"+fileMd5Name);
+            res.put("url", StaticConfig.SAVE_UPLOAD_PIC_PATH+"/"+dataFlag+"/"+fileMd5Name);
             return ResJson.successJson("upload pic success",res);
         }catch (Exception e){
             e.printStackTrace();
@@ -127,7 +132,8 @@ public class PublicResController {
             **/
 
             HashMap<Object, Object> res = new HashMap<>();
-            File saveDir = new File(StaticConfig.SAVE_UPLOAD_PIC_PATH);
+            String dataFlag = DateUtil.formatDate(new Date(),"yyyy/MM/dd");
+            File saveDir = new File(StaticConfig.SAVE_UPLOAD_PIC_PATH+"/"+dataFlag);
             if (!saveDir.isDirectory()) {
                 saveDir.mkdirs();
             }
@@ -157,7 +163,7 @@ public class PublicResController {
             String outPutPath = new File(saveDir, fileMd5Name).getAbsolutePath();
             // 去除 base64 头部 "data:image/png;base64," 这一段信息
             if (ImageUtils.generateImage(typeTemp[1].replaceFirst("base64,",""),outPutPath)){
-                res.put("url", StaticConfig.SAVE_UPLOAD_PIC_PATH+"/"+fileMd5Name);
+                res.put("url", StaticConfig.SAVE_UPLOAD_PIC_PATH+"/"+dataFlag+"/"+fileMd5Name);
                 return ResJson.successJson("upload pic success",res);
             }else {
                 return ResJson.failJson(7000,"base64 error",null);
