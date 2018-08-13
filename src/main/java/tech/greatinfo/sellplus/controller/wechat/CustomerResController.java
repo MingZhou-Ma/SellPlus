@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
@@ -39,12 +41,13 @@ public class CustomerResController {
     private static final String appsecret="07618c31603772e3836d003d2262c87c";
 
     @Autowired
+    ActivityService activityService;
+
+    @Autowired
     CustomService customService;
 
     @Autowired
     TokenService tokenService;
-
-
 
     // 阅读一篇文章
 
@@ -129,5 +132,8 @@ public class CustomerResController {
     // 绑定上级 Seller
 
 
+    // 获取列表
+
+    // 获取
 
 }

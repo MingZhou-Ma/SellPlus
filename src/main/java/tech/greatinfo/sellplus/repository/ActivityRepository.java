@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 
 import tech.greatinfo.sellplus.domain.Activity;
+import tech.greatinfo.sellplus.domain.Merchant;
 
 
 /**

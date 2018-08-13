@@ -3,6 +3,7 @@ package tech.greatinfo.sellplus;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
@@ -12,6 +13,18 @@ public class SellPlusApplication {
 
     public static void main(String[] args) {
         TokenService tokenService = new TokenService();
+        //测试用户
+        AccessToken token = new AccessToken();
+        Customer customer = new Customer();
+        customer.setId(1L);
+        customer.setOpenid("openidTest");
+        customer.setSessionKey("sessionKeyTest");
+        token.setUser(customer);
+        token.setUuid("testtoken");
+        tokenService.saveToken(token);
+
+
+        // 测试商户
         AccessToken token2 = new AccessToken();
         Merchant merchant = new Merchant();
         merchant.setId(1L);

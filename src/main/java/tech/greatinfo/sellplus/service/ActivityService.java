@@ -10,6 +10,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 import tech.greatinfo.sellplus.domain.Activity;
+import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.group.Group;
 import tech.greatinfo.sellplus.domain.help.Help;
 import tech.greatinfo.sellplus.repository.ActivityRepository;
@@ -51,10 +52,6 @@ public class ActivityService {
     public Page<Activity> getAllHelpAct(int start, int num){
         return activityRepository.getAllByIsGroupFalse(new PageRequest(start,num));
     }
-
-//    public Page<Activity> findAllByMerchant(Merchant merchant, int start, int num){
-//        return activityRepository.findAllByMerchant(merchant, new PageRequest(start, num));
-//    }
 
     public void deleteActivity(Long activityId){
         // TODO 需要改写为级联删除

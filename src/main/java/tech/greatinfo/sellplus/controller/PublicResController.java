@@ -10,11 +10,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.service.ArticleService;
+import tech.greatinfo.sellplus.service.CompanyService;
 import tech.greatinfo.sellplus.utils.DateUtil;
 import tech.greatinfo.sellplus.utils.EncryptUtils;
 import tech.greatinfo.sellplus.utils.ImageUtils;
@@ -32,12 +35,43 @@ public class PublicResController {
     @Autowired
     ArticleService articleService;
 
+    @Autowired
+    CompanyService companyService;
+
     // 营销文章获取接口
     @RequestMapping(value = "/api/pub/listArticle", method = RequestMethod.POST)
     public ResJson listArticle(@RequestParam(value = "start",defaultValue = "0") Integer start,
                                @RequestParam(value = "num", defaultValue = "10") Integer num){
         try {
             return ResJson.successJson("list Article success", articleService.findByPage(start, num));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/api/pub/getMainInfo",method = RequestMethod.GET)
+    public ResJson setMainInfo(){
+
+        try {
+            HashMap<String, Object> resMap = new HashMap<>();
+            List<String> bannerList = new ArrayList<>();
+            String vTemp;
+            for (int i=1;i<=3;i++){
+                if ((vTemp = companyService.findByKey("banner"+i).getV())!=null && !vTemp.equals("null")){
+                    bannerList.add(companyService.findByKey("banner"+i).getV());
+                }
+            }
+            resMap.put("banners",bannerList);
+
+            List<String> notifyList = new ArrayList<>();
+            for (int i=1;i<=3;i++){
+                if ((vTemp = companyService.findByKey("notify"+i).getV())!=null && !vTemp.equals("null")){
+                    notifyList.add(companyService.findByKey("notify"+i).getV());
+                }
+            }
+            resMap.put("notifys",notifyList);
+            return ResJson.successJson("get company info success",resMap);
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -144,7 +178,7 @@ public class PublicResController {
                 //单个文件的大小不许超过5
                 return ResJson.failJson(6002,"file to big, max file size is 2MB",null);
             }
-            String fileMd5Name = EncryptUtils.getMD5("just_for_encrypt" + System.currentTimeMillis() + Math.random() * 10);
+            String fileMd5Name = EncryptUtils.getMD5("just_for_encrypt" + System.currentTimeMillis() + Math.random() * 100);
             if (fileMd5Name == null) {
                 fileMd5Name = "" + System.currentTimeMillis();
             }

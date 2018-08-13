@@ -164,7 +164,7 @@ public class HelpResController {
             Long state ;
             try {
                 token = jsonObject.getString("token");
-                state = jsonObject.getLong("state");
+                state = jsonObject.getLong("status");
                 if (token == null || state == null){
                     return ResJson.errorRequestParam();
                 }
