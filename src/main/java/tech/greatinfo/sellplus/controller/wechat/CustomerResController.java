@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -89,6 +90,7 @@ public class CustomerResController {
                         customer = new Customer();
                         customer.setOpenid(obj.getString("openid"));
                         customer.setSessionKey(obj.getString("session_key"));
+                        customer.setUid(UUID.randomUUID().toString().replaceAll("-",""));
                         customService.save(customer);
                     }
                     token = new AccessToken();
@@ -128,9 +130,15 @@ public class CustomerResController {
     // 获取用户的信息
 
     // 绑定成为 Seller
+//    public ResJson beSeller(){
+//
+//    }
+
 
     // 绑定上级 Seller
-
+//    public ResJson bindSeller(){
+//
+//    }
 
     // 获取列表
 
