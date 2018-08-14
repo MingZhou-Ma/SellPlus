@@ -10,7 +10,7 @@
  */
 package tech.greatinfo.sellplus.config.swagger;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -36,11 +36,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 */
 @Configuration
 @EnableSwagger2
+@ConditionalOnProperty(name = "enabled", havingValue = "true",prefix="swagger",matchIfMissing=false) //if swagger.enabled - true 开启
 public class SwaggerConfig {
-	
-	
-	@Value(value = "${swagger.enabled}")
-    Boolean swaggerEnabled;
 	
 	/**
 	 * @Description: 摘要信息
