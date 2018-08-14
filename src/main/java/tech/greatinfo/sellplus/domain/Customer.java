@@ -42,7 +42,7 @@ public class Customer implements User, Serializable {
     @Transient
     private String sessionKey;
 
-    @Column(columnDefinition = "VARCHAR(32) COMMENT '用户识别码'")
+    @Column
     private String uid;
 
     @Column(columnDefinition = "VARCHAR(20) COMMENT '手机号码'")
@@ -52,7 +52,7 @@ public class Customer implements User, Serializable {
     @JoinColumn(name = "seller_id",columnDefinition = "BIGINT COMMENT '所属销售的外键'")
     private Seller seller;
 
-    @Column(columnDefinition = "BIT COMMENT '是否是销售人员'",updatable = false)
+    @Column(columnDefinition = "BIT COMMENT '是否是销售人员'")
     private boolean bSell;
 
     public Customer() {

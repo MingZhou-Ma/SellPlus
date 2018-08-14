@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 import tech.greatinfo.sellplus.domain.Activity;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
@@ -160,6 +162,17 @@ public class DefaultResController {
         Customer old = customService.getOne(1L);
         customService.update(old, customer);
         return ResJson.successJson("OK");
+    }
+
+    @RequestMapping(value = "/api/defalut/setUUID")
+    public ResJson test222(){
+        Customer one = customService.getOne(1L);
+        Customer two = customService.getOne(2L);
+        one.setUid(UUID.randomUUID().toString().replaceAll("-",""));
+        two.setUid(UUID.randomUUID().toString().replaceAll("-",""));
+        customService.save(one);
+        customService.save(two);
+        return null;
     }
 
 }

@@ -18,6 +18,7 @@ public class SellPlusApplication {
         Customer customer = new Customer();
         customer.setId(1L);
         customer.setOpenid("openidTest");
+        customer.setUid("3f1217d51a264f5eb34b527c6fdc78e4");
         customer.setSessionKey("sessionKeyTest");
         token.setUser(customer);
         token.setUuid("testtoken");
