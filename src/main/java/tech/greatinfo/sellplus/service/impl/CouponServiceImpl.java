@@ -12,9 +12,15 @@ package tech.greatinfo.sellplus.service.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import tech.greatinfo.sellplus.common.exception.SystemException;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.repository.CouponRepository;
 import tech.greatinfo.sellplus.service.CouponService;
@@ -33,6 +39,8 @@ import tech.greatinfo.sellplus.service.CouponService;
 @Service
 public class CouponServiceImpl implements CouponService{
 	
+	private static final Logger logger = LoggerFactory.getLogger(CouponServiceImpl.class);
+	
 	@Autowired
 	CouponRepository couponRepository;
 	
@@ -49,6 +57,56 @@ public class CouponServiceImpl implements CouponService{
 	@Override
 	public Coupon findById(String id) {
 		return couponRepository.findOne(id);
+	}
+
+
+	@Override
+	public Coupon getCoupon(String id) {
+		return null;
+	}
+
+	@Override
+	public void insertCoupon(Coupon coupon) {
+		try {
+			Assert.notNull(coupon,"coupon不允许为空!");
+			couponRepository.save(coupon);
+		} catch (Exception e) {
+			logger.error("插入优惠券异常:{}", e);
+			throw new SystemException(e);
+		}
+	}
+
+	@Override
+	public void deleteCoupon(String id) {
+		try {
+			Assert.notNull(id,"id不允许为空!");
+			couponRepository.delete(id);
+		} catch (Exception e) {
+			logger.error("删除优惠券异常:{}", e);
+			throw new SystemException(e);
+		}
+	}
+
+	@Override
+	public void updateCoupon(Coupon coupon) {
+		try {
+			Assert.notNull(coupon,"coupon不允许为Null!");
+			couponRepository.saveAndFlush(coupon);
+		} catch (Exception e) {
+			logger.error("更新优惠券异常:{}", e);
+			throw new SystemException(e);
+		}
+	}
+
+	@Override
+	public Page<Coupon> findByPage(Pageable pageable) {
+		try {
+			Assert.notNull(pageable,"pageable不允许为Null!");
+			return couponRepository.findAll(pageable);
+		} catch (Exception e) {
+			logger.error("分页查询优惠券异常:{}", e);
+			throw new SystemException(e);
+		}
 	}
 
 }

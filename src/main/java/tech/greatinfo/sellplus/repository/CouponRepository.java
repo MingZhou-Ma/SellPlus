@@ -12,13 +12,18 @@ package tech.greatinfo.sellplus.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 
 /**     
 * @Package：tech.greatinfo.sellplus.repository   
 * @ClassName：CouponRepository   
-* @Description：   <p> CouponRepository </p>
+* @Description：   <p> CouponRepository 
+* 
+* PagingAndSortingRepository - 分页&排序
+* 
+* </p>
 * @Author： - Jason   
 * @CreatTime：2018年8月13日 下午6:23:35   
 * @Modify By：   
@@ -26,6 +31,6 @@ import tech.greatinfo.sellplus.domain.coupons.Coupon;
 * @Modify marker：   
 * @version    V1.0
 */
-public interface CouponRepository  extends JpaRepository<Coupon, String> , JpaSpecificationExecutor<Coupon>{
-
+public interface CouponRepository  extends JpaRepository<Coupon, String> , JpaSpecificationExecutor<Coupon>, PagingAndSortingRepository<Coupon, String>{
+	
 }

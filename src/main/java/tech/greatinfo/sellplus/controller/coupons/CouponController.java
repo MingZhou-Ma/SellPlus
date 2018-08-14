@@ -15,6 +15,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
+import tech.greatinfo.sellplus.domain.coupons.enums.CouponState;
+import tech.greatinfo.sellplus.domain.coupons.enums.CouponType;
 import tech.greatinfo.sellplus.service.CouponService;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
@@ -103,6 +109,28 @@ public class CouponController {
     public String RESTful(@PathVariable String username){
     	logger.info("api/rest:{}",username);
         return "Welcome,"+username;
+    }
+    
+    
+    @ApiOperation(value="PageHelper 分页查询")  
+    @RequestMapping(value = "/page",method = RequestMethod.GET)
+    public ResJson page(){
+    	 Sort sort = new Sort(Sort.Direction.ASC,"id");
+         Pageable pageable = new PageRequest(1,2,sort);//page  size
+         Page<Coupon> pageList = couponService.findByPage(pageable);
+         return ResJson.successJson("分页查询数据", pageList);
+    }
+    
+    @ApiOperation(value="新增优惠券")  
+    @RequestMapping(value = "/add",method = RequestMethod.GET)
+    public ResJson add(){
+    	Coupon coupon = new Coupon();
+    	coupon.setActName("wubin");
+    	coupon.setActNo("123");//活动编码
+    	coupon.setCouponState(CouponState.EXPIRE);
+    	coupon.setCouponType(CouponType.COUPON);
+    	couponService.insertCoupon(coupon);
+         return ResJson.successJson("优惠券信息", coupon);
     }
 
 
