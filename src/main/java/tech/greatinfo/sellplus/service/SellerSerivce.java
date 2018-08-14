@@ -16,6 +16,8 @@ public class SellerSerivce {
     @Autowired
     SellerRepository sellerRepository;
 
+    private Seller defaultSeller;
+
     public Seller findByAccountAndSellerKey(String account, String key){
         return sellerRepository.findByAccountAndSellerKey(account, key);
     }
@@ -24,4 +26,14 @@ public class SellerSerivce {
         return sellerRepository.save(seller);
     }
 
+    /**
+     * 返回默认的 seller ， 默认 seller 是 id 为1 的 Seller
+     * @return
+     */
+    public Seller getDefaultSeller(){
+        if (defaultSeller == null){
+            defaultSeller = sellerRepository.findOne(1L);
+        }
+        return defaultSeller;
+    }
 }

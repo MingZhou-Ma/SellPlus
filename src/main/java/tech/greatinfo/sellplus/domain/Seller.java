@@ -93,4 +93,11 @@ public class Seller {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Seller
+                && this.getAccount().equals(((Seller) obj).getAccount())
+                && this.getOpenId().equals(((Seller) obj).getOpenId());
+    }
 }

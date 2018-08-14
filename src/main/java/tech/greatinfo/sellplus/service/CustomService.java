@@ -47,4 +47,8 @@ public class CustomService {
     public Customer getOne(Long id){
         return repository.getOne(id);
     }
+
+    public Customer getByUid(String uid){
+        return repository.getByUid(uid);
+    }
 }

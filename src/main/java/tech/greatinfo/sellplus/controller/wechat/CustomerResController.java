@@ -176,8 +176,16 @@ public class CustomerResController {
      * 所有人默认的绑定都是id为 1 的默认 seller
      * 而 seller 本身，在成为 seller 的时候，绑定的 seller 就是自己了
      *
-     * 所有人的分享页面都带有自己帐号的 uuid，前端发送 token 和 uuid 来调用绑定接口
-     * 若是某个页面没有 uuid 的话，该参数需要发送为 “null”
+     * 所有人的分享页面都带有自己帐号的 uuid，前端发送 token 和 uid 来调用绑定接口
+     * 若是某个页面没有 uid 的话，该参数需要发送为 “null”
+     *
+     * 回溯寻找 Seller 的时候， 只会回溯到 uid 的用户， 如果 uid 的用户没有绑定 Seller
+     *      那么当前用户和 uid 用户都会绑定默认的 Seller
+     *
+     * 如果 uid 的用户已经绑定了非默认 Seller ， 那么当前用户就绑定同一个 Seller
+     *
+     * 如果之前已经绑定了默认 Seller，当前可以绑定新的 Seller
+     * 如果之前已经有绑定 Seller ， 那么不做处理
      *
      * @param jsonObject
      * @return
@@ -185,23 +193,32 @@ public class CustomerResController {
     public ResJson bindSeller(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
-            String selleAccount = (String) ParamUtils.getFromJson(jsonObject,"uuid", String.class);
+            String uid = (String) ParamUtils.getFromJson(jsonObject,"uid", String.class);
 
             Customer customer = new Customer();
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
-                Seller seller;
-//                if ((seller = sellerSerivce.findByAccountAndSellerKey(selleAccount, key)) != null
-//                        && seller.getOpenId() == null){
-//                    // 保存 seller 信息
-//                    seller.setOpenId(customer.getOpenid());
-//                    sellerSerivce.save(seller);
-//                    // 成为 Seller
-//                    customer.setbSell(true);
-//                    customService.save(customer);
-//                    return ResJson.successJson("set seller info success");
-//                }else {
-//                    return ResJson.failJson(-1,"seller info error",null);
-//                }
+                // 已经绑定了非默认 Seller
+                if (customer.getSeller() != null
+                        && !customer.getSeller().equals(sellerSerivce.getDefaultSeller())){
+                    return ResJson.successJson("已经绑定了非默认 Seller");
+                }else {
+                    Seller seller;
+                    Customer preCustomer;
+                    if ((preCustomer = customService.getByUid(uid)) != null){
+                        if ((seller = preCustomer.getSeller()) != null){
+                            customer.setSeller(seller);
+                            customService.save(customer);
+                        }else {
+                            preCustomer.setSeller(sellerSerivce.getDefaultSeller());
+                            customer.setSeller(sellerSerivce.getDefaultSeller());
+                            customService.save(preCustomer);
+                            customService.save(customer);
+                        }
+                    }else {
+                        customer.setSeller(sellerSerivce.getDefaultSeller());
+                        customService.save(customer);
+                    }
+                }
                 return null;
             }else {
                 return ResJson.errorAccessToken();

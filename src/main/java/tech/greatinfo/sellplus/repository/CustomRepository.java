@@ -11,4 +11,6 @@ import tech.greatinfo.sellplus.domain.Customer;
 public interface CustomRepository extends JpaRepository<Customer, Long>,
         JpaSpecificationExecutor<Customer> {
     Customer getByOpenid(String openId);
+
+    Customer getByUid(String uid);
 }
