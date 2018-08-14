@@ -24,6 +24,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- swagger - swagger.version -->
         <swagger.version>2.7.0</swagger.version>
+        <!-- commons.version  -->
+        <commons.version>3.7</commons.version>
         <java.version>1.8</java.version>
     </properties>
 
@@ -72,6 +74,18 @@
 		</dependency>
 		<!--  swagger  ending -->
 		
+		<!-- commons-lang3 -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>${commons.version}</version>
+		</dependency>
+		
+		<!--  commons-codec -->
+		<dependency>
+		    <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		</dependency>
 
         <!-- https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp -->
         <dependency>
