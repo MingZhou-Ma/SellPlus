@@ -42,6 +42,9 @@ public class Customer implements User, Serializable {
     @Transient
     private String sessionKey;
 
+    @Column(columnDefinition = "VARCHAR(32) COMMENT '用户识别码'")
+    private String uid;
+
     @Column(columnDefinition = "VARCHAR(20) COMMENT '手机号码'")
     private String phone;
 
@@ -101,5 +104,13 @@ public class Customer implements User, Serializable {
 
     public void setbSell(boolean bSell) {
         this.bSell = bSell;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

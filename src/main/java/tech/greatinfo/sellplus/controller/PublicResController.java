@@ -1,6 +1,9 @@
 package tech.greatinfo.sellplus.controller;
 
+import com.alibaba.fastjson.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,11 +19,19 @@ import java.util.HashMap;
 import java.util.List;
 
 import tech.greatinfo.sellplus.config.StaticConfig;
+import tech.greatinfo.sellplus.domain.Activity;
+import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.Product;
+import tech.greatinfo.sellplus.domain.Seller;
+import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.ArticleService;
 import tech.greatinfo.sellplus.service.CompanyService;
+import tech.greatinfo.sellplus.service.ProductService;
 import tech.greatinfo.sellplus.utils.DateUtil;
 import tech.greatinfo.sellplus.utils.EncryptUtils;
 import tech.greatinfo.sellplus.utils.ImageUtils;
+import tech.greatinfo.sellplus.utils.ParamUtils;
+import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
@@ -37,6 +48,12 @@ public class PublicResController {
 
     @Autowired
     CompanyService companyService;
+
+    @Autowired
+    ProductService productService;
+
+    @Autowired
+    ActivityService activityService;
 
     // 营销文章获取接口
     @RequestMapping(value = "/api/pub/listArticle", method = RequestMethod.POST)
@@ -72,6 +89,42 @@ public class PublicResController {
             }
             resMap.put("notifys",notifyList);
             return ResJson.successJson("get company info success",resMap);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/api/pub/productInfo", method = RequestMethod.POST)
+    public ResJson getProductInfo(@RequestBody JSONObject jsonObject){
+        try {
+            Long productId = (Long) ParamUtils.getFromJson(jsonObject,"productid", Long.class);
+            Product product;
+            if (( product = productService.findOne(productId)) != null){
+                return ResJson.successJson("get product info success", product);
+            }else {
+                return ResJson.failJson(-1,"product id error",null);
+            }
+        }catch (JsonParseException jpe){
+            return ResJson.errorRequestParam(jpe.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/api/pub/activityInfo", method = RequestMethod.POST)
+    public ResJson getActivityInfo(@RequestBody JSONObject jsonObject){
+        try {
+            Long activityId = (Long) ParamUtils.getFromJson(jsonObject,"activityid", Long.class);
+            Activity activity;
+            if (( activity = activityService.findOne(activityId)) != null){
+                return ResJson.successJson("get activity info success", activity);
+            }else {
+                return ResJson.failJson(-1,"activity id error",null);
+            }
+        }catch (JsonParseException jpe){
+            return ResJson.errorRequestParam(jpe.getMessage());
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
