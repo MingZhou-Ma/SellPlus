@@ -46,8 +46,8 @@ public class SellPlusApplicationTests {
     @Test
     public void saveCoupon2() {
     	Coupon coupon = new Coupon();
-    	coupon.setCouponState(CouponState.EXPIRE);//4
-    	coupon.setCouponType(CouponType.OLDER_DIVER);//3
+    	coupon.setCouponState(CouponState.FRESH);//4
+    	coupon.setCouponType(CouponType.OLDER_DIVER);//2
     	System.out.println("coupon SYSO:"+JSON.toJSONString(coupon));
     	logger.info("coupon:{}",JSON.toJSONString(coupon));
     	couponService.save(coupon);

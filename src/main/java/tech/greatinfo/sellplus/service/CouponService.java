@@ -12,11 +12,9 @@ package tech.greatinfo.sellplus.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
-import tech.greatinfo.sellplus.repository.CouponRepository;
 
 /**     
 * @Package：tech.greatinfo.sellplus.service   
@@ -29,29 +27,29 @@ import tech.greatinfo.sellplus.repository.CouponRepository;
 * @Modify marker：   
 * @version    V1.0
 */
-@Service
-public class CouponService {
-	
-	@Autowired
-	CouponRepository couponRepository;
+public interface CouponService {
 	
 	/**
 	 * @Description: findAll 
 	 * @return List<Coupon>
 	 * @Autor: Jason
 	 */
-	public List<Coupon> findAll(){
-		List<Coupon> coupons = couponRepository.findAll();
-		return coupons;
-    }
+	public List<Coupon> findAll();
 	
 	/**
 	 * @Description: save 
 	 * @param coupon 
 	 * @Autor: Jason
 	 */
-	public void save(Coupon coupon) {
-		couponRepository.save(coupon);
-	}
+	public void save(Coupon entity);
+	
+	/**
+	 * @Description: findById 
+	 * @param id
+	 * @return Coupon
+	 * @Autor: Jason
+	 */
+	public Coupon findById(String id);
+	
 
 }

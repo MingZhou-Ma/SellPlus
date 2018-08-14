@@ -26,6 +26,6 @@ import tech.greatinfo.sellplus.domain.coupons.Coupon;
 * @Modify marker：   
 * @version    V1.0
 */
-public interface CouponRepository  extends JpaRepository<Coupon, Long> , JpaSpecificationExecutor<Coupon>{
+public interface CouponRepository  extends JpaRepository<Coupon, String> , JpaSpecificationExecutor<Coupon>{
 
 }
