@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import tech.greatinfo.sellplus.domain.Activity;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.help.Help;
 import tech.greatinfo.sellplus.repository.HelpRepository;
@@ -35,4 +36,7 @@ public class HelpService {
         return helpRepository.findAllByActivityId(activityId);
     }
 
+    public Help findByCustomerAndActivity(Customer customer, Activity activity){
+        return helpRepository.findByCustomerAndActivity(customer, activity);
+    }
 }

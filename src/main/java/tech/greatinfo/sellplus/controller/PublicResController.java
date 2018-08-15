@@ -26,6 +26,8 @@ import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.ArticleService;
 import tech.greatinfo.sellplus.service.CompanyService;
+import tech.greatinfo.sellplus.service.CustomService;
+import tech.greatinfo.sellplus.service.HelpService;
 import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.ProductService;
 import tech.greatinfo.sellplus.utils.DateUtil;
@@ -58,6 +60,12 @@ public class PublicResController {
 
     @Autowired
     MerchantService merchantService;
+
+    @Autowired
+    HelpService helpService;
+
+    @Autowired
+    CustomService customService;
 
     // 营销文章获取接口
     @RequestMapping(value = "/api/pub/listArticle", method = RequestMethod.POST)
@@ -137,6 +145,7 @@ public class PublicResController {
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
+
 
 
     // 获取商家信息

@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import tech.greatinfo.sellplus.domain.Activity;
 import tech.greatinfo.sellplus.domain.Customer;
@@ -36,6 +37,15 @@ public class Help {
     @JoinColumn(name = "customer_id",columnDefinition = "BIGINT COMMENT '发起人外键'")
     private Customer customer;
 
+    @Transient
+    private Integer isOwner;
+
+    @Transient
+    private Integer isHelp;
+
+    @Transient
+    private Integer helpCount;
+
     public Help() {
     }
 
@@ -61,5 +71,29 @@ public class Help {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Integer getIsOwner() {
+        return isOwner;
+    }
+
+    public void setIsOwner(Integer isOwner) {
+        this.isOwner = isOwner;
+    }
+
+    public Integer getIsHelp() {
+        return isHelp;
+    }
+
+    public void setIsHelp(Integer isHelp) {
+        this.isHelp = isHelp;
+    }
+
+    public Integer getHelpCount() {
+        return helpCount;
+    }
+
+    public void setHelpCount(Integer helpCount) {
+        this.helpCount = helpCount;
     }
 }

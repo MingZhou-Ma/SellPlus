@@ -3,6 +3,10 @@ package tech.greatinfo.sellplus.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.help.Help;
 import tech.greatinfo.sellplus.domain.help.HelpHistory;
 import tech.greatinfo.sellplus.repository.HelpHistoryRepository;
 
@@ -23,5 +27,13 @@ public class HelpHistoryService {
 
     public HelpHistory findOne(Long id){
         return historyRepository.findOne(id);
+    }
+
+    public HelpHistory findByCustomerAndHelp(Customer customer, Help help){
+        return historyRepository.findByCustomerAndHelp(customer,help);
+    }
+
+    public List<HelpHistory> findAllByHelp(Help help){
+        return historyRepository.findAllByHelp(help);
     }
 }

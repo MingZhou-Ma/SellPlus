@@ -174,4 +174,8 @@ public class DefaultResController {
         return null;
     }
 
+    @RequestMapping(value = "/ping")
+    public String ping(){
+        return "pong";
+    }
 }

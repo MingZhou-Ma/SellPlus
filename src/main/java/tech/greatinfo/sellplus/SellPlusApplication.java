@@ -12,29 +12,29 @@ import tech.greatinfo.sellplus.utils.obj.AccessToken;
 public class SellPlusApplication {
 
     public static void main(String[] args) {
-        TokenService tokenService = new TokenService();
-        //测试用户
-        AccessToken token = new AccessToken();
-        Customer customer = new Customer();
-        customer.setId(1L);
-        customer.setOpenid("openidTest");
-        customer.setUid("3f1217d51a264f5eb34b527c6fdc78e4");
-        customer.setSessionKey("sessionKeyTest");
-        token.setUser(customer);
-        token.setUuid("testtoken");
-        tokenService.saveToken(token);
-
-
-        // 测试商户
-        AccessToken token2 = new AccessToken();
-        Merchant merchant = new Merchant();
-        merchant.setId(1L);
-        merchant.setAccount("rootroot");
-        merchant.setPassword("0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18");
-
-        token2.setUser(merchant);
-        token2.setUuid("mertoken");
-        tokenService.saveToken(token2);
+//        TokenService tokenService = new TokenService();
+//        //测试用户
+//        AccessToken token = new AccessToken();
+//        Customer customer = new Customer();
+//        customer.setId(1L);
+//        customer.setOpenid("openidTest");
+//        customer.setUid("3f1217d51a264f5eb34b527c6fdc78e4");
+//        customer.setSessionKey("sessionKeyTest");
+//        token.setUser(customer);
+//        token.setUuid("testtoken");
+//        tokenService.saveToken(token);
+//
+//
+//        // 测试商户
+//        AccessToken token2 = new AccessToken();
+//        Merchant merchant = new Merchant();
+//        merchant.setId(1L);
+//        merchant.setAccount("rootroot");
+//        merchant.setPassword("0242c0436daa4c241ca8a793764b7dfb50c223121bb844cf49be670a3af4dd18");
+//
+//        token2.setUser(merchant);
+//        token2.setUuid("mertoken");
+//        tokenService.saveToken(token2);
         SpringApplication.run(SellPlusApplication.class, args);
     }
 }

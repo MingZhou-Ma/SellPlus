@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,6 +22,8 @@ import tech.greatinfo.sellplus.service.HelpHistoryService;
 import tech.greatinfo.sellplus.service.HelpService;
 import tech.greatinfo.sellplus.service.JoinGroupService;
 import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.utils.ParamUtils;
+import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
@@ -86,7 +89,13 @@ public class HelpResController {
                 if (activity.getGroup()){
                     return ResJson.failJson(4003,"not help activity",null);
                 }
-                Help help = new Help();
+                Help help;
+                if ((help = helpService.findByCustomerAndActivity(customer, activity))!= null){
+                    HashMap<String,Object> map = new HashMap<>();
+                    map.put("id",help.getId());
+                    return ResJson.failJson(4006,"该用户已经发布过该活动",map);
+                }
+                help = new Help();
                 help.setActivity(activity);
                 help.setCustomer(customer);
                 helpService.save(help);
@@ -203,28 +212,28 @@ public class HelpResController {
     @RequestMapping(value = "/api/user/getHelpDetail", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson joinGroup(@RequestBody JSONObject jsonObject){
         try {
-            String token ;
-            Long helpId ;
-            try {
-                token = jsonObject.getString("token");
-                helpId = jsonObject.getLong("helpid");
-                if (token == null || helpId == null){
-                    return ResJson.errorRequestParam();
-                }
-            }catch (IllegalArgumentException ile){
-                return ResJson.errorRequestParam();
-            }
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Long helpId = (Long) ParamUtils.getFromJson(jsonObject,"helpid", Long.class);
+
             Customer customer = null;
             if ((customer = (Customer) tokenService.getUserByToken(token))!=null){
                 Help help = helpService.findOne(helpId);
                 if (help == null){
                     return ResJson.failJson(4004,"help activity does not exist",null);
                 }else {
+                    // 设置是否是发起人
+                    help.setIsOwner(help.getCustomer().getOpenid().equals(customer.getOpenid())?1:0);
+                    // 设置是否已经助力
+                    help.setIsHelp(historyService.findByCustomerAndHelp(customer,help) != null?1:0);
+                    // 设置已经助力的人数
+                    help.setHelpCount(historyService.findAllByHelp(help).size()+3);
                     return ResJson.successJson("get help activity success",help);
                 }
             }else {
                 return ResJson.errorAccessToken();
             }
+        }catch (JsonParseException jse){
+            return ResJson.errorRequestParam(jse.getMessage());
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());

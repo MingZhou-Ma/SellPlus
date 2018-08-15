@@ -96,6 +96,7 @@ public class CustomerResController {
                         customer.setSessionKey(obj.getString("session_key"));
                         customer.setUid(UUID.randomUUID().toString().replaceAll("-",""));
                         customer.setbSell(false);
+                        customer.setSeller(sellerSerivce.getDefaultSeller());
                         customService.save(customer);
                     }
                     token = new AccessToken();
