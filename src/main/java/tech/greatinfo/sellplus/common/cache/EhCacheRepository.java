@@ -10,10 +10,6 @@
  */
 package tech.greatinfo.sellplus.common.cache;
 
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
-
 /**     
 * @Package：tech.greatinfo.sellplus.common.cache   
 * @ClassName：EhCacheRepository   
@@ -25,13 +21,12 @@ import org.springframework.stereotype.Component;
 * @Modify marker：   
 * @version    V1.0
 */
-@Component
-@CacheConfig(cacheNames = "apiCallNumsCache")
+//@Component
+//@CacheConfig(cacheNames = EhcacheConstant.EHCACHE_VIEW_COUNT)
 public class EhCacheRepository {
 	
-	@Cacheable(key = "'test'+#test")
+	//@Cacheable(key = "'test'+#test")
     public void findByCode(String code) {
-        System.out.println("---> Loading country with code '" + code + "'");
     }
-
+    
 }

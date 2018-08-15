@@ -141,6 +141,19 @@ public class CouponController {
          return ResJson.successJson("优惠券信息", coupon);
     }
     
+    
+    @ApiOperation(value="更新优惠券")  
+    @RequestMapping(value = "/update/{name}/{remark}",method = RequestMethod.GET)
+    public ResJson update(@PathVariable String name,@PathVariable String remark){
+    	Coupon coupon = new Coupon();
+    	coupon.setActName(name);
+    	coupon.setRemark(remark);
+    	coupon.setCouponState(CouponState.EXPIRE);
+    	coupon.setCouponType(CouponType.COUPON);
+    	couponService.insertCoupon(coupon);
+         return ResJson.successJson("更新优惠券信息", coupon);
+    }
+    
     @ApiOperation(value="ehcache缓存")  
     @RequestMapping(value = "/ehcache",method = RequestMethod.GET)
     public RespBody ehcache(){
@@ -149,7 +162,7 @@ public class CouponController {
     	Cache viewCountCache = appEhCacheCacheManager.getCache(EhcacheConstant.EHCACHE_VIEW_COUNT);
 		AtomicInteger viewCount = viewCountCache.get("ehcache_key", AtomicInteger.class);//CAS 线程安全考虑
 		if (viewCount ==null) {
-			viewCount = new AtomicInteger(0);
+			viewCount = new AtomicInteger(0); 
 			viewCountCache.put("ehcache_key", viewCount);
 		}
 		if (viewCount.incrementAndGet()>limitCount) {

@@ -41,7 +41,7 @@ import tech.greatinfo.sellplus.domain.coupons.enums.CouponType;
 * @Author： - Jason   
 * @CreatTime：2018年8月13日 下午5:31:20   
 * @Modify By：   
-* @ModifyTime：  2018年8月13日
+* @ModifyTime：  2018年8月13日2
 * @Modify marker：   
 * @version    V1.0
 */
@@ -69,7 +69,9 @@ public class Coupon implements Serializable{
 	@Column(length = 32,columnDefinition = "VARCHAR(32) COMMENT '商家ID'")
     private String vendorId;
 	
-	
+	/**
+	 * 销售人员<br/> 默认id = 1 
+	 */
 	@GeneratedValue(generator="idGenerator")
 	@Column(length = 32,columnDefinition = "VARCHAR(32) COMMENT '销售人员'")
     private String salesmanId;
@@ -134,31 +136,31 @@ public class Coupon implements Serializable{
     /**
      * 发券时间<br/>
      */
-	@Column(columnDefinition = "TIMESTAMP COMMENT '发券时间'" )
+	//@Column(columnDefinition = "TIMESTAMP COMMENT '发券时间'",nullable = true )
     private Date sendCouponDate;
     
     /**
      * 使用券的时间<br/>
      */
-	@Column(columnDefinition = "TIMESTAMP COMMENT '使用券时间'" )
+	//@Column(columnDefinition = "TIMESTAMP COMMENT '使用券时间'" ,nullable = true)
     private Date usedCouponDate;
     
     /**
      * 作废券时间<br/>
      */
-	@Column(columnDefinition = "TIMESTAMP COMMENT '作废券时间'" )
+	//@Column(columnDefinition = "TIMESTAMP COMMENT '作废券时间'",nullable = true )
     private Date validCouponDate;
 	
 	/**
      * 优惠券生效日期<br/>
      */
-    @Column(columnDefinition = "TIMESTAMP COMMENT '生效日期'" )
+    //@Column(columnDefinition = "TIMESTAMP COMMENT '生效日期'",nullable = true )
     private Date startDate;
     
     /**
      * 优惠券结束日期<br/>
      */
-    @Column(columnDefinition = "TIMESTAMP COMMENT '结束日期'" )
+    //@Column(columnDefinition = "TIMESTAMP COMMENT '结束日期'",nullable = true )
     private Date endDate;
 
 	/**

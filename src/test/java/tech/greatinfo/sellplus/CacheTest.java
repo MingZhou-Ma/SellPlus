@@ -22,7 +22,9 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import tech.greatinfo.sellplus.common.cache.redis.impl.RedisServiceImpl;
 import tech.greatinfo.sellplus.config.ehcache.constants.EhcacheConstant;
+import tech.greatinfo.sellplus.utils.pk.PKGenerator;
 
 /**     
 * @Package：tech.greatinfo.sellplus   
@@ -45,6 +47,9 @@ public class CacheTest {
 
 	@Autowired 
 	EhCacheCacheManager appEhCacheCacheManager;
+	
+	@Autowired
+	RedisServiceImpl redisService;
 	
 	
 	/*@Test
@@ -73,6 +78,17 @@ public class CacheTest {
 		}
 		logger.info("当前{}被访问次数为{}","key",viewCount.incrementAndGet());
     }
+	
+	
+	
+	@Test
+    public void testRedis() {
+		redisService.hset("key", "test",PKGenerator.uuid32());
+		logger.info("redis 存储成功!");
+		String value = redisService.hget("key", "test");
+		logger.info("redis取出成功!value值为:",value);
+	}
+		
 			
 	
 }

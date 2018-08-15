@@ -102,7 +102,18 @@
 	         <groupId>net.sf.ehcache</groupId>
 		     <artifactId>ehcache</artifactId>
 		</dependency>   
-
+		
+		<!--  redis -->
+	   <!--  <dependency>
+	        <groupId>org.springframework.data</groupId>
+	        <artifactId>spring-data-redis</artifactId>
+	    </dependency> -->
+    	<dependency>
+	        <groupId>redis.clients</groupId>
+	        <artifactId>jedis</artifactId>
+	    </dependency>
+        
+        
         <!-- https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>

@@ -24,5 +24,21 @@ package tech.greatinfo.sellplus.domain.coupons;
 public class CashForCoupon {
 	
 	
+	//id
+	
+	//userId -- 用户自己
+	
+	//... service id
+	
+	
+	//abs id
+	 
+	
+	//
+	
+	
+	//前端展示
+	
+	
 
 }
