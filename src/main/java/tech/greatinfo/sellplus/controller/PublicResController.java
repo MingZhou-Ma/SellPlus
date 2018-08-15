@@ -26,6 +26,7 @@ import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.ArticleService;
 import tech.greatinfo.sellplus.service.CompanyService;
+import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.ProductService;
 import tech.greatinfo.sellplus.utils.DateUtil;
 import tech.greatinfo.sellplus.utils.EncryptUtils;
@@ -55,6 +56,9 @@ public class PublicResController {
     @Autowired
     ActivityService activityService;
 
+    @Autowired
+    MerchantService merchantService;
+
     // 营销文章获取接口
     @RequestMapping(value = "/api/pub/listArticle", method = RequestMethod.POST)
     public ResJson listArticle(@RequestParam(value = "start",defaultValue = "0") Integer start,
@@ -67,7 +71,7 @@ public class PublicResController {
         }
     }
 
-    // huoqu souye xinxi
+    // 获取首页公司信息
     @RequestMapping(value = "/api/pub/getMainInfo",method = RequestMethod.POST)
     public ResJson setMainInfo(){
 
@@ -96,6 +100,7 @@ public class PublicResController {
         }
     }
 
+    // 获取商品详情
     @RequestMapping(value = "/api/pub/productInfo", method = RequestMethod.POST)
     public ResJson getProductInfo(@RequestBody JSONObject jsonObject){
         try {
@@ -114,6 +119,7 @@ public class PublicResController {
         }
     }
 
+    // 获取活动详情
     @RequestMapping(value = "/api/pub/activityInfo", method = RequestMethod.POST)
     public ResJson getActivityInfo(@RequestBody JSONObject jsonObject){
         try {
@@ -126,6 +132,18 @@ public class PublicResController {
             }
         }catch (JsonParseException jpe){
             return ResJson.errorRequestParam(jpe.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+
+    // 获取商家信息
+    @RequestMapping(value = "/api/pub/getMerInfo",method = RequestMethod.POST)
+    public ResJson getMerInfo(){
+        try {
+            return ResJson.successJson("get merchant info success", merchantService.getMainMerchant());
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());

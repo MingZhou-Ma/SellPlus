@@ -27,4 +27,7 @@ public class MerchantService {
         return merchantRepository.findByAccountAndPassword(account,password);
     }
 
+    public Merchant getMainMerchant(){
+        return merchantRepository.findAll().get(0);
+    }
 }

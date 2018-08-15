@@ -2,13 +2,11 @@ package tech.greatinfo.sellplus.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  *
@@ -37,6 +35,9 @@ public class Product {
 
     @Column(columnDefinition = "DOUBLE COMMENT '商品价格'")
     private Double price;
+
+    @Transient
+    private String[] picList;
 
     public Product() {
     }
@@ -87,5 +88,13 @@ public class Product {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String[] getPicList() {
+        return pic.split(",");
+    }
+
+    public void setPicList(String[] picList) {
+        this.picList = picList;
     }
 }

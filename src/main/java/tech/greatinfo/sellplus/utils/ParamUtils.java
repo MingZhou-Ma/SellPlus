@@ -40,6 +40,27 @@ public class ParamUtils {
         }
     }
 
+    /**
+     * 从 jsonObject 解析参数
+     * 这个方法如果发现 不存在 key 的话也不会报错，但是会返回默认值
+     *
+     * @param jsonObject
+     * @param key   json 里面的 key
+     * @param de    默认的值
+     * @param type
+     * @return
+     * @throws JsonParseException
+     */
+    public static Object getFromJsonWithDefault(JSONObject jsonObject, String key, Object de, Type type) throws JsonParseException {
+        try {
+            if (jsonObject.get(key) == null){
+                return de;
+            }
+            return jsonObject.getObject(key,type);
+        }catch (Exception e){
+            throw new JsonParseException("can not parse key '"+key+"' in JSON Object --> Expection : "+e.getMessage());
+        }
+    }
 //    public static Object getFromJson(JSONObject jsonObject, String key, ParseType type) throws JsonParseException {
 //        try {
 //            if (jsonObject.get(key) == null){

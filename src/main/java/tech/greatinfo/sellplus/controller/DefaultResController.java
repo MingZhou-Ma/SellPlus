@@ -166,12 +166,11 @@ public class DefaultResController {
 
     @RequestMapping(value = "/api/defalut/setUUID")
     public ResJson test222(){
-        Customer one = customService.getOne(1L);
-        Customer two = customService.getOne(2L);
-        one.setUid(UUID.randomUUID().toString().replaceAll("-",""));
-        two.setUid(UUID.randomUUID().toString().replaceAll("-",""));
-        customService.save(one);
-        customService.save(two);
+        Merchant one = merchantService.findOne(1L);
+        one.setLocation("小姑未街道第 1 号楼 223 房");
+        one.setPhone("2220 8888");
+        one.setShopName("超级无敌大商店");
+        merchantService.save(one);
         return null;
     }
 

@@ -37,14 +37,14 @@ public class Merchant implements User {
 //    @Column(columnDefinition = "VARCHAR(100) COMMENT '商家名称'")
 //    private String name;
 //
-//    @Column(columnDefinition = "VARCHAR(100) COMMENT '店铺名称'")
-//    private String shopName;
+    @Column(columnDefinition = "VARCHAR(100) COMMENT '店铺名称'")
+    private String shopName;
 //
 //    @Column(columnDefinition = "VARCHAR(255) COMMENT '营业执照'")
 //    private String business;
 //
-//    @Column(columnDefinition = "VARCHAR(20) COMMENT '商家电话'")
-//    private String phone;
+    @Column(columnDefinition = "VARCHAR(20) COMMENT '商家电话'")
+    private String phone;
 //
 //    @Column(columnDefinition = "BIT COMMENT '商家性别,true 为男性, false 为女性'")
 //    private Boolean gender;
@@ -58,8 +58,8 @@ public class Merchant implements User {
 //    @Column(columnDefinition = "VARCHAR(50) COMMENT '商家 y 坐标'")
 //    private String yAxis;
 //
-//    @Column(columnDefinition = "TEXT COMMENT '商家具体地址'")
-//    private String location;
+    @Column(columnDefinition = "TEXT COMMENT '商家具体地址'")
+    private String location;
 
     public Merchant() {
     }
@@ -96,14 +96,14 @@ public class Merchant implements User {
 //        this.name = name;
 //    }
 //
-//    public String getShopName() {
-//        return shopName;
-//    }
-//
-//    public void setShopName(String shopName) {
-//        this.shopName = shopName;
-//    }
-//
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
 //    public String getBusiness() {
 //        return business;
 //    }
@@ -112,13 +112,13 @@ public class Merchant implements User {
 //        this.business = business;
 //    }
 //
-//    public String getPhone() {
-//        return phone;
-//    }
-//
-//    public void setPhone(String phone) {
-//        this.phone = phone;
-//    }
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 //
 //    public Boolean getGender() {
 //        return gender;
@@ -152,13 +152,13 @@ public class Merchant implements User {
 //        this.yAxis = yAxis;
 //    }
 //
-//    public String getLocation() {
-//        return location;
-//    }
-//
-//    public void setLocation(String location) {
-//        this.location = location;
-//    }
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     @Override
     public boolean equals(Object o) {
