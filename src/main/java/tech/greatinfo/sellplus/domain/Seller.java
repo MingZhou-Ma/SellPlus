@@ -1,5 +1,7 @@
 package tech.greatinfo.sellplus.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,10 +30,12 @@ public class Seller {
     private String account;
 
     // Seller 的Key
+    @JsonIgnore
     @Column
     private String sellerKey;
 
     // Seller 的 OPENID
+    @JsonIgnore
     @Column
     private String openId;
 
@@ -42,6 +46,18 @@ public class Seller {
     // Seller 的联系电话
     @Column
     private String phone;
+
+    // Seller 微信
+    @Column
+    private String wechat;
+
+    // 头像
+    @Column
+    private String pic;
+
+    // Seller 个人简介
+    @Column
+    private String intro;
 
     public Seller() {
     }
@@ -92,6 +108,30 @@ public class Seller {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 
     @Override

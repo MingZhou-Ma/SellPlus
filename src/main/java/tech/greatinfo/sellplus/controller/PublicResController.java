@@ -67,7 +67,8 @@ public class PublicResController {
         }
     }
 
-    @RequestMapping(value = "/api/pub/getMainInfo",method = RequestMethod.GET)
+    // huoqu souye xinxi
+    @RequestMapping(value = "/api/pub/getMainInfo",method = RequestMethod.POST)
     public ResJson setMainInfo(){
 
         try {

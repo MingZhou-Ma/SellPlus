@@ -18,7 +18,7 @@ import okhttp3.Response;
 import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.domain.QRcode;
 import tech.greatinfo.sellplus.repository.QRcodeRepository;
-import tech.greatinfo.sellplus.utils.WebUtils;
+import tech.greatinfo.sellplus.utils.WeChatUtils;
 
 /**
  * Created by Ericwyn on 18-7-31.
@@ -28,7 +28,7 @@ public class QRcodeService {
     @Autowired
     QRcodeRepository repository;
 
-    public static OkHttpClient client = WebUtils.client;
+    public static OkHttpClient client = WeChatUtils.client;
 
     private static final String QRcodePath = StaticConfig.SAVE_QRCODE_PATH;
 

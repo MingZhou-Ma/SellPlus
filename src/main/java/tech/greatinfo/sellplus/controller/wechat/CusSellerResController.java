@@ -14,6 +14,7 @@ import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
+import tech.greatinfo.sellplus.utils.WeChatUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
@@ -40,7 +41,13 @@ public class CusSellerResController {
             String key = (String) ParamUtils.getFromJson(jsonObject, "key", String.class);
             String name = (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
             String phone = (String) ParamUtils.getFromJson(jsonObject, "phone", String.class);
-            Customer customer ;
+            String wechat = (String) ParamUtils.getFromJson(jsonObject, "wechat", String.class);
+            String intro = (String) ParamUtils.getFromJson(jsonObject, "intro", String.class);
+            String pic = (String) ParamUtils.getFromJson(jsonObject, "avatar", String.class);
+
+            // 该帐号是公司帐号，默认销售
+            // 公司简介
+           Customer customer ;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
                 Seller seller;
                 if ((seller = sellerSerivce.findByAccountAndSellerKey(selleAccount, key)) != null
@@ -49,6 +56,9 @@ public class CusSellerResController {
                     seller.setOpenId(customer.getOpenid());
                     seller.setName(name);
                     seller.setPhone(phone);
+                    seller.setWechat(wechat);
+                    seller.setIntro(intro);
+                    seller.setPic(WeChatUtils.getBigAvatarURL(pic));
                     sellerSerivce.save(seller);
                     // 成为 Seller
                     customer.setbSell(true);

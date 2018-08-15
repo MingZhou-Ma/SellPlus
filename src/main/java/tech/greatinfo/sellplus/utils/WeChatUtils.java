@@ -11,7 +11,7 @@ import okhttp3.Response;
 /**
  * Created by Ericwyn on 18-7-31.
  */
-public class WebUtils {
+public class WeChatUtils {
     public static OkHttpClient client = new OkHttpClient();
 
     private static final String appid = "wx0ad95240d57cb5ee";
@@ -33,6 +33,22 @@ public class WebUtils {
         }else {
             return null;
         }
+    }
+
+
+
+
+    /**
+     * 将头像小图 url 转变为 大图 url
+     * 其实就是将 url 最末尾的尺寸数字变为 0
+     * @param url
+     * @return
+     */
+    public static String getBigAvatarURL(String url){
+        if (url.endsWith("/132")){
+            url = url.substring(0,url.length()-3)+"0";
+        }
+        return url;
     }
 
 }

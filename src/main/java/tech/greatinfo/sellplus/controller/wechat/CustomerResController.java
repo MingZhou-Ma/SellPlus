@@ -17,13 +17,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import tech.greatinfo.sellplus.domain.Customer;
-import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
-import tech.greatinfo.sellplus.utils.WebUtils;
+import tech.greatinfo.sellplus.utils.WeChatUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
@@ -37,7 +36,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
 @RestController
 public class CustomerResController {
 
-    public static OkHttpClient client = WebUtils.client;
+    public static OkHttpClient client = WeChatUtils.client;
 
     private static final String appid = "wx0ad95240d57cb5ee";
     private static final String appsecret="07618c31603772e3836d003d2262c87c";
