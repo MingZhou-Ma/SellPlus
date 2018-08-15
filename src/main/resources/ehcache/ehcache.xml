@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ehcache name="es">
+<!--  ehcache https://blog.csdn.net/vbirdbest/article/details/72763048 -->
+<ehcache name="sys">
 
 	<!-- 指定一个文件目录，当EhCache把数据写到硬盘上时，将把数据写到这个文件目录下  -->
-    <diskStore path="java.io.tmpdir"/>
+    <diskStore path="java.io.tmpdir/ehcache"/>
 
     <!-- 登录记录缓存 锁定10分钟  5次  -->
     <!-- name 缓存名称,cache的唯一标识(ehcache会把这个cache放到HashMap里)。 -->
@@ -15,43 +16,27 @@
     <!-- overflowToDisk 内存不足时,是否启用磁盘缓存(即内存中对象数量达到maxElementsInMemory时,Ehcache会将对象写到磁盘中)，
        	  会根据标签中path值查找对应的属性值,写入磁盘的文件会放在path文件夹下,文件的名称是cache的名称,后缀名是data。 -->
        	  
-    <!--  apiCallNumsCache api的调用次数  -->
-    <cache name="apiCallNumsCache"  	
+    <!-- 默认缓存 -->
+	<defaultCache
+	        maxEntriesLocalHeap="10000"
+	        eternal="false"
+	        timeToIdleSeconds="120"
+	        timeToLiveSeconds="120"
+	        maxEntriesLocalDisk="10000000"
+	        diskExpiryThreadIntervalSeconds="120"
+	        memoryStoreEvictionPolicy="LRU">
+	  <persistence strategy="localTempSwap"/>
+	</defaultCache>
+    
+    
+    
+    <!-- 防止恶意刷访问量   访问量统计 -->
+    <cache name="viewCount"  	
            maxEntriesLocalHeap="2000" 	
            eternal="false"				
            timeToIdleSeconds="3600"		
            timeToLiveSeconds="0"		
            overflowToDisk="false"		
-           statistics="true">
-    </cache>
-
-	<!-- api jwt -->
-    <cache name="authApiCache"
-           maxEntriesLocalHeap="2000"
-           eternal="false"
-           timeToIdleSeconds="3600"
-           timeToLiveSeconds="0"
-           overflowToDisk="false"
-           statistics="true">
-    </cache>
-
-	<!-- authenticationCache  -->
-    <cache name="authenticationCache"
-           maxEntriesLocalHeap="2000"
-           eternal="false"
-           timeToIdleSeconds="3600"
-           timeToLiveSeconds="0"
-           overflowToDisk="false"
-           statistics="true">
-    </cache>
-
-	<!--shiro-activeSessionCache   -->
-    <cache name="shiro-activeSessionCache"
-           maxEntriesLocalHeap="2000"
-           eternal="false"
-           timeToIdleSeconds="3600"
-           timeToLiveSeconds="0"
-           overflowToDisk="false"
            statistics="true">
     </cache>
 

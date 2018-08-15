@@ -10,16 +10,19 @@
  */
 package tech.greatinfo.sellplus;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
+import org.springframework.cache.Cache;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.alibaba.fastjson.JSON;
+import tech.greatinfo.sellplus.config.ehcache.constants.EhcacheConstant;
 
 /**     
 * @Package：tech.greatinfo.sellplus   
@@ -38,12 +41,38 @@ public class CacheTest {
 	
 	private static final Logger logger = LoggerFactory.getLogger(CacheTest.class);
 	
-	@Autowired
-	EhCacheManagerFactoryBean ehCacheManagerFactoryBean;
+	private static final String EHCACHE_KEY = "key";
+
+	@Autowired 
+	EhCacheCacheManager appEhCacheCacheManager;
+	
+	
+	/*@Test
+    public void testCache() {
+		Cache cache = appEhCacheCacheManager.getCache(EHCACHE_NAME);
+		cache.put(EHCACHE_KEY, 100);
+		Integer nums = cache.get(EHCACHE_KEY, Integer.class);
+		logger.info("testCache{}",nums);
+    }*/
+	
 	
 	@Test
-    public void test() {
-		logger.info("测试:EhCacheBean:{}",JSON.toJSONString(ehCacheManagerFactoryBean));
+    public void testCount() {
+		
+		Cache viewCountCache = appEhCacheCacheManager.getCache(EhcacheConstant.EHCACHE_VIEW_COUNT);
+		
+		AtomicInteger viewCount = viewCountCache.get(EHCACHE_KEY, AtomicInteger.class);//CAS 线程安全考虑
+		
+		if (viewCount ==null) {
+			viewCount = new AtomicInteger(0);
+			viewCountCache.put(EHCACHE_KEY, viewCount);
+		}
+		
+		if (viewCount.incrementAndGet()>5) {
+			logger.info("超过5次了,被限制!");
+		}
+		logger.info("当前{}被访问次数为{}","key",viewCount.incrementAndGet());
     }
-
+			
+	
 }

@@ -11,10 +11,13 @@
 package tech.greatinfo.sellplus.controller.coupons;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import tech.greatinfo.sellplus.common.vo.RespBody;
+import tech.greatinfo.sellplus.config.ehcache.constants.EhcacheConstant;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.enums.CouponState;
 import tech.greatinfo.sellplus.domain.coupons.enums.CouponType;
@@ -54,6 +59,9 @@ public class CouponController {
 	
 	@Autowired
 	CouponService couponService;
+	
+	@Autowired 
+	EhCacheCacheManager appEhCacheCacheManager;
 	
 	/**
 	 * @Description:获取优惠券列表
@@ -132,6 +140,28 @@ public class CouponController {
     	couponService.insertCoupon(coupon);
          return ResJson.successJson("优惠券信息", coupon);
     }
+    
+    @ApiOperation(value="ehcache缓存")  
+    @RequestMapping(value = "/ehcache",method = RequestMethod.GET)
+    public RespBody ehcache(){
+    	RespBody respBody = new RespBody();
+    	int limitCount = 10;
+    	Cache viewCountCache = appEhCacheCacheManager.getCache(EhcacheConstant.EHCACHE_VIEW_COUNT);
+		AtomicInteger viewCount = viewCountCache.get("ehcache_key", AtomicInteger.class);//CAS 线程安全考虑
+		if (viewCount ==null) {
+			viewCount = new AtomicInteger(0);
+			viewCountCache.put("ehcache_key", viewCount);
+		}
+		if (viewCount.incrementAndGet()>limitCount) {
+			logger.info("超过最大允许访问次数{},当前已访问次数{}",limitCount,viewCount.get());
+			respBody.addError("超过最大允许访问次数.");
+		}else {
+			logger.info("当前已访问次数{}",viewCount.get());
+			respBody.addOK(viewCount.get(),"当前访问次数.");
+		}
+        return respBody;
+    }
+    
 
 
 }
