@@ -102,7 +102,8 @@ public class CustomerResController {
                     token = new AccessToken();
                     token.setUser(customer);
                     tokenService.saveToken(token);
-                    HashMap<String, String> map = new HashMap<String, String>() ;
+//                    token = tokenService.saveToken(customer);
+                    HashMap<String, String> map = new HashMap<>() ;
                     map.put("accessToken",token.getUuid());
                     map.put("uid", customer.getUid());
                     return ResJson.successJson("login Success",map);
@@ -115,6 +116,37 @@ public class CustomerResController {
         } catch (IOException e) {
             e.printStackTrace();
             return ResJson.serverErrorJson("无法请求远程 openid");
+        }
+    }
+
+    @RequestMapping(value = "/api/cus/checkToken", method = RequestMethod.POST)
+    public ResJson checkToken(@RequestBody JSONObject jsonObject){
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            HashMap<String,Integer> map = new HashMap<>();
+            if (tokenService.getUserByToken(token) != null){
+                return ResJson.successJson("token good");
+            }else {
+                return ResJson.errorAccessToken();
+//                String openid;
+//                if ((openid = tokenService.getOpenIdFromOldToken(token)) != null){
+//                    System.out.println("oldToken"+token);
+//                    System.out.println("get new Access Token");
+//                    HashMap<String,String> resMap = new HashMap<>();
+//                    Customer customer = customService.getByOpenId(openid);
+//                    System.out.println("find old customer");
+//                    AccessToken newToken = tokenService.saveToken(customer);
+//                    resMap.put("accessToken",newToken.getUuid());
+//                    return ResJson.failJson(-1, "token new", resMap);
+//                }else {
+//                    return ResJson.errorAccessToken();
+//                }
+            }
+        }catch (JsonParseException jpe){
+            return ResJson.errorRequestParam(jpe.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
         }
     }
 

@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.intf.User;
+import tech.greatinfo.sellplus.utils.EncryptUtils;
+import tech.greatinfo.sellplus.utils.encrypt.EncryptUtil;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 
 
@@ -24,23 +26,21 @@ public class TokenService {
 
     private boolean startCleanThreadFlag = false;
 
+    private CustomService customService;
+
     public void saveToken(final AccessToken token) {
         startClearCheckCodeMap();
         tokenMap.put(token.getUuid(),token);
-        //废弃旧的 user token
+    }
 
-        //暂时不启用，如果短时间登录人数过多的话，将会导致短时间内开启多个进程，会gg的
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Set<String> keys = tokenMap.keySet();
-//                for (String key:keys){
-//                    if (tokenMap.get(key).getUser().equals(token.getUser())){
-//                        removeToken(key);
-//                    }
-//                }
-//            }
-//        });
+    public AccessToken saveToken(Customer customer) {
+        AccessToken token = new AccessToken();
+        token.setUser(customer);
+        String uuid = encryptCustomer(customer);
+        token.setUuid(uuid);
+        startClearCheckCodeMap();
+        tokenMap.put(token.getUuid(),token);
+        return token;
     }
 
     public boolean isTokenExpired(AccessToken token) {
@@ -99,6 +99,24 @@ public class TokenService {
                     TimeUnit.MINUTES);
             startCleanThreadFlag = true;
         }
+    }
+
+    private static String KEY_1 = "59e16db268f549098a6163b3ca621188";
+    private static String KEY_2 = "77a01a8f5467421cb7ac96d1023a8061";
+
+    private String encryptCustomer(Customer customer){
+        return EncryptUtils.aes128Encrypt((EncryptUtils.aes128Encrypt(customer.getOpenid(), KEY_1)+"&encrypt&"+System.currentTimeMillis()), KEY_2);
+    }
+
+    public String getOpenIdFromOldToken(String token){
+//        System.out.println("oldToken : "+token);
+        String temp = EncryptUtils.aes128Decrypt(token,KEY_2);
+        if (temp == null){
+            return null;
+        }
+        String[] spl = temp.split("&encrypt&");
+        //        String timeStemp = EncryptUtils.ase128_decrypt(spl[1]);
+        return EncryptUtils.aes128Decrypt(spl[0], KEY_1);
     }
 }
 

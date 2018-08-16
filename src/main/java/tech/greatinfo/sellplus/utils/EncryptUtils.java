@@ -21,99 +21,56 @@ import javax.crypto.spec.SecretKeySpec;
  * Created by Ericwyn on 17-11-3.
  */
 public class EncryptUtils {
-    private static String ase128Pw = "user_aes128_cncrypt_pw";
+    private static String ase128Pw = "884ed2bce301414ba7006bbeb6f512a8";
 
     public static String getAse128Pw() {
         return ase128Pw;
     }
 
     /**
-     * 获取ase 128 加密字符串
-     *
-     * @param strKey 加密密码
-     * @return  获得密文密码
-     */
-    private static SecretKey getKey(String strKey) {
-        try {
-            KeyGenerator _generator=KeyGenerator.getInstance("AES");
-            SecureRandom secureRandom=
-                    SecureRandom.getInstance("SHA1PRNG");
-            secureRandom.setSeed(strKey.getBytes());
-            _generator.init(128,secureRandom);
-            return _generator.generateKey();
-        }  catch (Exception e) {
-            throw new RuntimeException("初始化密钥出现异常");
-        }
-    }
-
-    /**
-     * AES加密字符串
+     * aes128 加密
      *
      * @param content
-     *            需要被加密的字符串
-     * @param password
-     *            加密需要的密码
-     * @return 密文
+     *            需要加密的内容
+     * @return
      */
-    private static byte[] encrypt(String content, String password) {
+    public static String aes128Encrypt(String content, String strKey) {
+
         try {
-            SecretKey key = getKey(password);
             Cipher cipher = Cipher.getInstance("AES");// 创建密码器
-            cipher.init(Cipher.ENCRYPT_MODE, key);// 初始化
             byte[] byteContent = content.getBytes("utf-8");
+            cipher.init(Cipher.ENCRYPT_MODE, genKey(strKey));// 初始化
             byte[] result = cipher.doFinal(byteContent);
-            return result;//加密
-
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
+            return parseByte2HexStr(result); // 加密
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
     /**
-     * 解密AES加密过的字符串
+     * aes128 解密
      *
      * @param content
-     *            AES加密过过的内容
-     * @param password
-     *            加密时的密码
-     * @return 明文
+     *            待解密内容
+     * @return
      */
-    private static byte[] decrypt(byte[] content, String password) {
+    public static String aes128Decrypt(String content,String strKey) {
         try {
-            SecretKey secretKey = getKey(password);
-            byte[] enCodeFormat = secretKey.getEncoded();// 返回基本编码格式的密钥
-            SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");// 转换为AES专用密钥
+            byte[] decryptFrom = parseHexStr2Byte(content);
             Cipher cipher = Cipher.getInstance("AES");// 创建密码器
-            cipher.init(Cipher.DECRYPT_MODE, key);// 初始化为解密模式的密码器
-            byte[] result = cipher.doFinal(content);
-            return result; // 明文
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
+            cipher.init(Cipher.DECRYPT_MODE, genKey(strKey));// 初始化
+            byte[] result = cipher.doFinal(decryptFrom);
+            return new String(result); // 加密
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    /**将二进制转换成16进制
+    /**
+     * 将二进制转换成16进制
+     *
      * @param buf
      * @return
      */
@@ -129,40 +86,45 @@ public class EncryptUtils {
         return sb.toString();
     }
 
-    /**将16进制转换为二进制
+    /**
+     * 将16进制转换为二进制
+     *
      * @param hexStr
      * @return
      */
     private static byte[] parseHexStr2Byte(String hexStr) {
         if (hexStr.length() < 1)
             return null;
-        byte[] result = new byte[hexStr.length()/2];
-        for (int i = 0;i< hexStr.length()/2; i++) {
-            int high = Integer.parseInt(hexStr.substring(i*2, i*2+1), 16);
-            int low = Integer.parseInt(hexStr.substring(i*2+1, i*2+2), 16);
+        byte[] result = new byte[hexStr.length() / 2];
+        for (int i = 0; i < hexStr.length() / 2; i++) {
+            int high = Integer.parseInt(hexStr.substring(i * 2, i * 2 + 1), 16);
+            int low = Integer.parseInt(hexStr.substring(i * 2 + 1, i * 2 + 2),
+                    16);
             result[i] = (byte) (high * 16 + low);
         }
         return result;
     }
 
     /**
-     * ase 128 加密
-     * @param word
+     * general aes 128 key
+     *
+     * @param strKey
      * @return
      */
-    public static String ase128_encrypt(String word){
-        byte[] encrypt = encrypt(word, ase128Pw);
-        return parseByte2HexStr(encrypt);
-    }
-    /**
-     * ase 128 解密
-     * @param crypt_word
-     * @return
-     */
-    public static String ase128_decrypt(String crypt_word){
-        byte[] twoStrResult = parseHexStr2Byte(crypt_word);
-        byte[] decrypt = decrypt(twoStrResult, ase128Pw);
-        return new String(decrypt);
+    private  static SecretKeySpec genKey(String strKey){
+        byte[] enCodeFormat = {0}; ;
+        try {
+            KeyGenerator kgen = KeyGenerator.getInstance("AES");
+            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+            secureRandom.setSeed(strKey.getBytes());
+            kgen.init(128, secureRandom);
+            SecretKey secretKey = kgen.generateKey();
+            enCodeFormat = secretKey.getEncoded();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new SecretKeySpec(enCodeFormat, "AES");
     }
 
     /**

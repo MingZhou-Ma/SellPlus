@@ -73,7 +73,7 @@ public class CusSellerResController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage());
+            return ResJson.errorRequestParam(jpe.getMessage()+" -> /api/cus/beSeller");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -136,7 +136,7 @@ public class CusSellerResController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage());
+            return ResJson.errorRequestParam(jpe.getMessage()+" -> /api/cus/bindSeller");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -163,7 +163,7 @@ public class CusSellerResController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage());
+            return ResJson.errorRequestParam(jpe.getMessage()+" -> /api/cus/showMySeller");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());

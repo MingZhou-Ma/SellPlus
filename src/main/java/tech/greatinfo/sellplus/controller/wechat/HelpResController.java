@@ -69,17 +69,8 @@ public class HelpResController {
     @RequestMapping(value = "/api/user/addHelp", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson addHelp(@RequestBody JSONObject jsonObject){
         try {
-            String token ;
-            Long activityId ;
-            try {
-                token = jsonObject.getString("token");
-                activityId = jsonObject.getLong("activityid");
-                if (token == null || activityId == null){
-                    return ResJson.errorRequestParam();
-                }
-            }catch (IllegalArgumentException ile){
-                return ResJson.errorRequestParam();
-            }
+            String token  = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            Long activityId = (Long) ParamUtils.getFromJson(jsonObject, "activityid", Long.class);
             Customer customer = null;
             if ((customer = (Customer) tokenService.getUserByToken(token))!=null){
                 Activity activity = null;
@@ -103,6 +94,8 @@ public class HelpResController {
             }else {
                 return ResJson.errorAccessToken();
             }
+        }catch (JsonParseException jse){
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/user/addHelp");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -122,17 +115,8 @@ public class HelpResController {
     @RequestMapping(value = "/api/user/helpOne", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson helpOne(@RequestBody JSONObject jsonObject){
         try {
-            String token ;
-            Long helpId ;
-            try {
-                token = jsonObject.getString("token");
-                helpId = jsonObject.getLong("helpid");
-                if (token == null || helpId == null){
-                    return ResJson.errorRequestParam();
-                }
-            }catch (IllegalArgumentException ile){
-                return ResJson.errorRequestParam();
-            }
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token",String.class);
+            Long helpId = (Long) ParamUtils.getFromJson(jsonObject, "helpid", Long.class);
             Customer customer = null;
             if ((customer = (Customer) tokenService.getUserByToken(token))!=null){
                 Help help = null;
@@ -142,6 +126,9 @@ public class HelpResController {
                 if (help.getCustomer().getOpenid().equals(customer.getOpenid())){
                     return ResJson.failJson(4005,"无法助力自己发布的活动",null);
                 }
+                if (historyService.findByCustomerAndHelp(customer,help) != null){
+                    return ResJson.failJson(4007,"have help this",null);
+                }
                 HelpHistory helpHistory = new HelpHistory();
                 helpHistory.setCustomer(customer);
                 helpHistory.setHelp(help);
@@ -150,6 +137,8 @@ public class HelpResController {
             }else {
                 return ResJson.errorAccessToken();
             }
+        }catch (JsonParseException jse){
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/user/helpOne");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -169,17 +158,8 @@ public class HelpResController {
     @RequestMapping(value = "/api/user/getHelpList", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson getHelpList(@RequestBody JSONObject jsonObject){
         try {
-            String token ;
-            Long state ;
-            try {
-                token = jsonObject.getString("token");
-                state = jsonObject.getLong("status");
-                if (token == null || state == null){
-                    return ResJson.errorRequestParam();
-                }
-            }catch (IllegalArgumentException ile){
-                return ResJson.errorRequestParam();
-            }
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token",String.class);
+            Long state = (Long) ParamUtils.getFromJson(jsonObject, "status", Long.class);
             Customer customer = null;
             if ((customer = (Customer) tokenService.getUserByToken(token))!=null){
                 List<Help> helpList = helpService.findAllByCustomer(customer);
@@ -193,6 +173,8 @@ public class HelpResController {
             }else {
                 return ResJson.errorAccessToken();
             }
+        }catch (JsonParseException jse){
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/user/getHelpList");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -226,14 +208,14 @@ public class HelpResController {
                     // 设置是否已经助力
                     help.setIsHelp(historyService.findByCustomerAndHelp(customer,help) != null?1:0);
                     // 设置已经助力的人数
-                    help.setHelpCount(historyService.findAllByHelp(help).size()+3);
+                    help.setHelpCount(historyService.findAllByHelp(help).size());
                     return ResJson.successJson("get help activity success",help);
                 }
             }else {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jse){
-            return ResJson.errorRequestParam(jse.getMessage());
+            return ResJson.errorRequestParam(jse.getMessage() +" -> /api/user/getHelpDetail");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
