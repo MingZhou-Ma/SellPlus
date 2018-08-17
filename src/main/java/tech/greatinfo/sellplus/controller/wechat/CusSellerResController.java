@@ -125,8 +125,10 @@ public class CusSellerResController {
     public ResJson bindSeller(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
-            String uid = (String) ParamUtils.getFromJson(jsonObject,"uid", String.class);
-
+            String uid = (String) ParamUtils.getFromJsonWithDefault(jsonObject,"uid", "null", String.class);
+            if (uid.equals("null")){
+                return ResJson.successJson("uid is null");
+            }
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
                 // 已经绑定了非默认 Seller

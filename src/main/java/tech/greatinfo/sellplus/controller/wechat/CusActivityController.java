@@ -3,6 +3,7 @@ package tech.greatinfo.sellplus.controller.wechat;
 import com.alibaba.fastjson.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.models.auth.In;
+import tech.greatinfo.sellplus.domain.Activity;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.CustomService;
@@ -24,7 +26,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  * Created by Ericwyn on 18-8-13.
  */
 @RestController
-public class CusActResController {
+public class CusActivityController {
 
     @Autowired
     ActivityService activityService;
@@ -48,12 +50,13 @@ public class CusActResController {
 
             Customer customer ;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
+                Page<Activity> res;
                 if (type == 0){
-                    return ResJson.successJson("find  Activity success",
-                            activityService.getAllHelpAct(start, num));
+                    res = activityService.getAllHelpAct(start, num);
+                    return ResJson.successJson("find  Activity success", res);
                 }else if (type == 1){
-                    return ResJson.successJson("find  Activity success",
-                            activityService.getAllGroupAct(start, num));
+                    res = activityService.getAllGroupAct(start, num);
+                    return ResJson.successJson("find  Activity success", res);
                 }else {
                     return ResJson.errorAccessToken();
                 }

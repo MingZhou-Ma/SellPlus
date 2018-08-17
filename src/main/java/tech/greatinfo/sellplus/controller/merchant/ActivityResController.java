@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import tech.greatinfo.sellplus.config.converter.StringToDateConverter;
@@ -47,15 +49,42 @@ public class ActivityResController {
     }
 
     // 增加活动
+
+    /**
+     *
+     * @param token
+     * @param isGroup
+     * @param pid
+     * @param headline
+     * @param helpNum
+     * @param groupPirce
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @RequestMapping(value = "/api/mer/addActivity",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public ResJson addActivity(@RequestParam(name = "token") String token,
-                               @ModelAttribute Activity activity,
-                               HttpServletRequest request){
+                               @RequestParam(name = "isGroup") Integer isGroup,
+                               @RequestParam(name = "product.id") Long pid,
+                               @RequestParam(name = "headline") String headline,
+                               @RequestParam(name = "helpNum") Integer helpNum,
+                               @RequestParam(name = "groupPrice") Double groupPirce,
+                               @RequestParam(name = "startDate") Date startDate,
+                               @RequestParam(name = "endDate") Date endDate){
         try {
             if (tokenService.getUserByToken(token) != null){
-                // TODO ModelAttribute 无法解析 Boolean 有点奇怪
-                activity.setGroup(request.getParameter("isGroup") != null &&
-                        (request.getParameter("isGroup").equals("true") || request.getParameter("isGroup").equals("1")));
+                Activity activity = new Activity();
+                activity.setGroup(isGroup == 1);
+                activity.setProduct(productService.findOne(pid));
+                activity.setHeadline(headline);
+                activity.setHelpNum(helpNum);
+                activity.setGroupPrice(groupPirce);
+
+                // TODO 日期存到数据库会有时间差，存入比起这里的会 + 13 小时
+//                startDate = new Date(startDate.getTime()-(1000 * 60 * 60 * 13));
+//                endDate = new Date(endDate.getTime()-(1000 * 60 * 60 * 13));
+                activity.setStartDate(startDate);
+                activity.setEndDate(endDate);
                 activityService.save(activity);
                 return ResJson.successJson("add activity success",activity);
             }else {

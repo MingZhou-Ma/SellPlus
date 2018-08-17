@@ -138,6 +138,6 @@ public class Seller {
     public boolean equals(Object obj) {
         return obj instanceof Seller
                 && this.getAccount().equals(((Seller) obj).getAccount())
-                && this.getOpenId().equals(((Seller) obj).getOpenId());
+                && this.getId().equals(((Seller) obj).getId());
     }
 }
