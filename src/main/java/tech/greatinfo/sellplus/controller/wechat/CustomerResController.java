@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.WebUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletResponse;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -19,6 +22,7 @@ import okhttp3.Response;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.CustomService;
+import tech.greatinfo.sellplus.service.QRcodeService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
@@ -53,11 +57,25 @@ public class CustomerResController {
     @Autowired
     SellerSerivce sellerSerivce;
 
+    @Autowired
+    QRcodeService qrService;
+
     // 阅读一篇文章
 
 
     // 微信用户登录
-    @RequestMapping(value = "/api/user/login",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+
+    /**
+     * 微信用户登录
+     *
+     * POST
+     *      code        前台调用微信接口返回
+     *      errMsg      同上
+     *
+     * @param jsonParam
+     * @return
+     */
+    @RequestMapping(value = "/api/cus/login",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public ResJson wechatLogin(@RequestBody JSONObject jsonParam) {
         String code = jsonParam.getString("code");
         String errMsg = jsonParam.getString("errMsg");
@@ -119,6 +137,18 @@ public class CustomerResController {
         }
     }
 
+    /**
+     * 该接口用来检查 accessToken 是否已经过期
+     *
+     * POST
+     *      token 旧的 accessToken
+     *
+     * 只会返回状态而不会返回新的 accessToken
+     * 若要能够返回新的 accessToken 的话需要修改登录接口， 返回 AES128 双重加密的可逆 accessToken
+     *
+     * @param jsonObject
+     * @return
+     */
     @RequestMapping(value = "/api/cus/checkToken", method = RequestMethod.POST)
     public ResJson checkToken(@RequestBody JSONObject jsonObject){
         try {
@@ -132,7 +162,7 @@ public class CustomerResController {
 //                if ((openid = tokenService.getOpenIdFromOldToken(token)) != null){
 //                    System.out.println("oldToken"+token);
 //                    System.out.println("get new Access Token");
-//                    HashMap<String,String> resMap = new HashMap<>();
+//                   HashMap<String,String> resMap = new HashMap<>();
 //                    Customer customer = customService.getByOpenId(openid);
 //                    System.out.println("find old customer");
 //                    AccessToken newToken = tokenService.saveToken(customer);
@@ -150,14 +180,30 @@ public class CustomerResController {
         }
     }
 
-    // 上传手机号码 (号码上传多次 ????)
-    @RequestMapping(value = "/api/cus/updataInfo")
+    /**
+     * 用户上传个人手机号码, 阅读营销文章时候可用
+     *
+     * POST
+     *      token   用户登录凭证
+     *      phone   电话号码
+     *
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/cus/setPhone")
     public ResJson updateInfo(@RequestBody JSONObject jsonObject){
         try {
-            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
-            Customer Customer = (Customer) ParamUtils.getFromJson(jsonObject,"customer",Customer.class);
-            // TODO具体的绑定逻辑
-            return null;
+            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            String phone = (String) ParamUtils.getFromJson(jsonObject, "phone", String.class);
+            Customer customer = new Customer();
+            if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
+                // TODO 手机号码的验证
+                customer.setPhone(phone);
+                customService.save(customer);
+                return ResJson.successJson("set Phone Success");
+            }else {
+                return ResJson.errorAccessToken();
+            }
         }catch (JsonParseException jpe){
             return ResJson.errorRequestParam(jpe.getMessage());
         }catch (Exception e){
@@ -166,10 +212,90 @@ public class CustomerResController {
         }
     }
 
-    // 获取用户的信息
+    /**
+     * 获取用户信息
+     *
+     * POST
+     *      token
+     *
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/cus/getCusInfo")
+    public ResJson getCusInfo(@RequestBody JSONObject jsonObject){
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            Customer customer;
+            if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
+                return ResJson.successJson("get customer info success", customer);
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (JsonParseException jpe){
+            return ResJson.errorRequestParam(jpe.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
 
-    // 获取列表
-
-    // 获取
-
+    /**
+     * 获取二维码图片接口
+     *
+     *  参数
+     *      token
+     *      title   海报标题
+     *      page    跳转的页面
+     *      scene   跳转所带参数
+     *
+     *
+     * @param response
+     * @param jsonObject
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/api/cus/getQRcode",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public ResJson getQRCode(HttpServletResponse response, @RequestBody JSONObject jsonObject) throws IOException {
+        try {
+            String token ;
+            String title;
+            String page;
+            String scene;
+            try {
+                token = jsonObject.getString("token");
+                title = jsonObject.getString("title");
+                page = jsonObject.getString("page");
+                scene = jsonObject.getString("scene");
+                if (token == null && title == null && page == null && scene == null){
+                    return ResJson.errorRequestParam();
+                }
+            }catch (Exception e){
+                return ResJson.errorRequestParam();
+            }
+            Customer customer = null;
+            if ((customer = (Customer) tokenService.getUserByToken(token))!=null){
+                String accessToken = WeChatUtils.getAccessToken();
+                if (accessToken != null){
+                    String path = qrService.getQRCode(accessToken, scene, page);
+                    if (path != null){
+                        if (path.contains("errcode")){
+                            return ResJson.failJson(5000,"get QR code fail, error : "+path,null);
+                        }
+                        HashMap<String,String> map = new HashMap<>();
+                        map.put("path",path);
+                        return ResJson.successJson("get QR code success",map);
+                    }else {
+                        return ResJson.successJson("get QRcode from wechat fail");
+                    }
+                }else {
+                    return ResJson.successJson("get access token error");
+                }
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
 }

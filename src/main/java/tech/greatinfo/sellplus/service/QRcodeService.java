@@ -46,6 +46,14 @@ public class QRcodeService {
         return repository.findByScenceAndPage(scene,page);
     }
 
+    /**
+     * 向腾讯api 获取 qr code
+     * @param token
+     * @param scene
+     * @param page
+     * @return
+     * @throws IOException
+     */
     public String getQRCode(String token, String scene, String page) throws IOException {
         QRcode code = repository.findByScenceAndPage(scene, page);
         if (code != null){

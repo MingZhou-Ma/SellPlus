@@ -19,6 +19,8 @@ import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
+ * 微信端 销售人员 相关接口
+ *
  * Created by Ericwyn on 18-8-14.
  */
 @RestController
@@ -32,18 +34,32 @@ public class CusSellerResController {
     @Autowired
     CustomService customService;
 
-    // 绑定成为 Seller
+    /**
+     * 绑定成为 Seller
+     * POST
+     *      token
+     *      account 销售人帐号
+     *      key     销售人帐号的key
+     *      name    名称
+     *      phone   销售人员电话号码
+     *      wechat  微信号码
+     *      intro   销售人员介绍
+     *      avatar  头像的 pic 地址
+     *
+     * @param jsonObject
+     * @return
+     */
     @RequestMapping(value = "/api/cus/beSeller",method = RequestMethod.POST)
     public ResJson beSeller(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
             String selleAccount = (String) ParamUtils.getFromJson(jsonObject,"account", String.class);
-            String key = (String) ParamUtils.getFromJson(jsonObject, "key", String.class);
-            String name = (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
-            String phone = (String) ParamUtils.getFromJson(jsonObject, "phone", String.class);
+            String key =    (String) ParamUtils.getFromJson(jsonObject, "key", String.class);
+            String name =   (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
+            String phone =  (String) ParamUtils.getFromJson(jsonObject, "phone", String.class);
             String wechat = (String) ParamUtils.getFromJson(jsonObject, "wechat", String.class);
-            String intro = (String) ParamUtils.getFromJson(jsonObject, "intro", String.class);
-            String pic = (String) ParamUtils.getFromJson(jsonObject, "avatar", String.class);
+            String intro =  (String) ParamUtils.getFromJson(jsonObject, "intro", String.class);
+            String pic =    (String) ParamUtils.getFromJson(jsonObject, "avatar", String.class);
 
             // 该帐号是公司帐号，默认销售
             // 公司简介
@@ -98,6 +114,10 @@ public class CusSellerResController {
      * 如果之前已经绑定了默认 Seller，当前可以绑定新的 Seller
      * 如果之前已经有绑定 Seller ， 那么不做处理
      *
+     * POST
+     *      token   当前用户的 token
+     *      uuid    上一级用户的 uuid
+     *
      * @param jsonObject
      * @return
      */
@@ -145,6 +165,10 @@ public class CusSellerResController {
 
     /**
      * 查看自己的 Seller 信息
+     *
+     * POST
+     *      token
+     *
      * @param jsonObject
      * @return
      */
@@ -169,9 +193,4 @@ public class CusSellerResController {
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
-
-    // TODO 查看用户是不是 Seller
-
-
-
 }

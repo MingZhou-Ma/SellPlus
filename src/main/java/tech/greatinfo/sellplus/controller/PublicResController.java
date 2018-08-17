@@ -9,14 +9,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.WebUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.domain.Activity;
@@ -67,7 +71,12 @@ public class PublicResController {
     @Autowired
     CustomService customService;
 
-    // 营销文章获取接口
+    /**
+     * 营销文章获取接口
+     * @param start
+     * @param num
+     * @return
+     */
     @RequestMapping(value = "/api/pub/listArticle", method = RequestMethod.POST)
     public ResJson listArticle(@RequestParam(value = "start",defaultValue = "0") Integer start,
                                @RequestParam(value = "num", defaultValue = "10") Integer num){
@@ -79,7 +88,10 @@ public class PublicResController {
         }
     }
 
-    // 获取首页公司信息
+    /**
+     * 获取公司首页信息
+     * @return
+     */
     @RequestMapping(value = "/api/pub/getMainInfo",method = RequestMethod.POST)
     public ResJson setMainInfo(){
 
@@ -108,7 +120,12 @@ public class PublicResController {
         }
     }
 
-    // 获取商品详情
+    /**
+     * 获取商品详情
+     *
+     * @param jsonObject
+     * @return
+     */
     @RequestMapping(value = "/api/pub/productInfo", method = RequestMethod.POST)
     public ResJson getProductInfo(@RequestBody JSONObject jsonObject){
         try {
@@ -145,8 +162,6 @@ public class PublicResController {
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
-
-
 
     // 获取商家信息
     @RequestMapping(value = "/api/pub/getMerInfo",method = RequestMethod.POST)

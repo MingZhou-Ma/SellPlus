@@ -33,7 +33,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  * Created by Ericwyn on 18-7-27.
  */
 @RestController
-public class HelpResController {
+public class CusHelpController {
     @Autowired
     ActivityService activityService;
 
@@ -66,7 +66,7 @@ public class HelpResController {
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/api/user/addHelp", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/api/cus/addHelp", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson addHelp(@RequestBody JSONObject jsonObject){
         try {
             String token  = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
@@ -95,7 +95,7 @@ public class HelpResController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jse){
-            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/user/addHelp");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/addHelp");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -112,7 +112,7 @@ public class HelpResController {
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/api/user/helpOne", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/api/cus/helpOne", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson helpOne(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token",String.class);
@@ -138,7 +138,7 @@ public class HelpResController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jse){
-            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/user/helpOne");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/helpOne");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -155,7 +155,7 @@ public class HelpResController {
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/api/user/getHelpList", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/api/cus/getHelpList", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson getHelpList(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token",String.class);
@@ -174,7 +174,7 @@ public class HelpResController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jse){
-            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/user/getHelpList");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/getHelpList");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -191,7 +191,7 @@ public class HelpResController {
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/api/user/getHelpDetail", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/api/cus/getHelpDetail", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson joinGroup(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
@@ -215,42 +215,10 @@ public class HelpResController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jse){
-            return ResJson.errorRequestParam(jse.getMessage() +" -> /api/user/getHelpDetail");
+            return ResJson.errorRequestParam(jse.getMessage() +" -> /api/cus/getHelpDetail");
         }catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
-
-//    //获取商家其他拼团活动
-//    @RequestMapping(value = "/api/user/getHelpRecommendList", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-//    public ResJson getGroupRecommendList(@RequestBody JSONObject jsonObject){
-//        try {
-//            String token ;
-//            Long activityId ;
-//            try {
-//                token = jsonObject.getString("token");
-//                activityId = jsonObject.getLong("activityid");
-//                if (token == null || activityId == null){
-//                    return ResJson.errorRequestParam();
-//                }
-//            }catch (IllegalArgumentException ile){
-//                return ResJson.errorRequestParam();
-//            }
-//            Customer customer = null;
-//            if ((customer = (Customer) tokenService.getUserByToken(token))!=null){
-//                Activity activity = null;
-//                if ((activity = activityService.findOne(activityId))==null){
-//                    return ResJson.failJson(4001,"the activity id error",null);
-//                }
-//                Merchant merchant = activity.getMerchant();
-//                return ResJson.successJson("get activity detail success",activityService.getAllHelpAct(merchant));
-//            }else {
-//                return ResJson.errorAccessToken();
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            return ResJson.serverErrorJson(e.getMessage());
-//        }
-//    }
 }
