@@ -3,12 +3,13 @@ package tech.greatinfo.sellplus.controller.wechat;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.WebUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,6 +40,8 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  */
 @RestController
 public class CustomerResController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CustomerResController.class);
 
     public static OkHttpClient client = WeChatUtils.client;
 
@@ -133,6 +136,7 @@ public class CustomerResController {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            logger.info("api/cus/listActivity -> ",e.getMessage());
             return ResJson.serverErrorJson("无法请求远程 openid");
         }
     }
@@ -172,9 +176,11 @@ public class CustomerResController {
 //                    return ResJson.errorAccessToken();
 //                }
             }
-        }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage());
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/checkToken");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/checkToken");
         }catch (Exception e){
+            logger.error("/api/cus/checkToken -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -204,9 +210,11 @@ public class CustomerResController {
             }else {
                 return ResJson.errorAccessToken();
             }
-        }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage());
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/setPhone");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/setPhone");
         }catch (Exception e){
+            logger.error("/api/cus/setPhone -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -231,9 +239,11 @@ public class CustomerResController {
             }else {
                 return ResJson.errorAccessToken();
             }
-        }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage());
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/getCusInfo");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/getCusInfo");
         }catch (Exception e){
+            logger.error("/api/cus/getCusInfo -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -294,6 +304,7 @@ public class CustomerResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/cus/getQRcode -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

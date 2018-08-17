@@ -1,7 +1,7 @@
 package tech.greatinfo.sellplus.controller.merchant;
 
-import com.sun.xml.internal.bind.v2.TODO;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import tech.greatinfo.sellplus.domain.Company;
@@ -28,6 +27,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  */
 @RestController
 public class CompanyResController {
+    private static final Logger logger = LoggerFactory.getLogger(CompanyResController.class);
 
     @Autowired
     TokenService tokenService;
@@ -68,6 +68,7 @@ public class CompanyResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/setMainInfo -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

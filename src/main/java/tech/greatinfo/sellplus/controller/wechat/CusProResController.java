@@ -2,16 +2,14 @@ package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.SqlResultSetMapping;
-
-import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.service.ProductService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
@@ -26,6 +24,9 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  */
 @RestController
 public class CusProResController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CusProResController.class);
+
     @Autowired
     TokenService tokenService;
 
@@ -43,9 +44,11 @@ public class CusProResController {
             }else {
                 return ResJson.errorAccessToken();
             }
-        }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage());
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/listProduct");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/listProduct");
         }catch (Exception e){
+            logger.error("/api/cus/listProduct -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

@@ -2,6 +2,8 @@ package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,8 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  */
 @RestController
 public class CusHelpController {
+    private static final Logger logger = LoggerFactory.getLogger(CusHelpController.class);
+
     @Autowired
     ActivityService activityService;
 
@@ -95,8 +99,10 @@ public class CusHelpController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/addHelp");
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/addHelp");
         }catch (Exception e){
+            logger.error("/api/cus/addHelp -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -138,8 +144,10 @@ public class CusHelpController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/helpOne");
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/helpOne");
         }catch (Exception e){
+            logger.error("/api/cus/helpOne -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -174,8 +182,10 @@ public class CusHelpController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/getHelpList");
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/getHelpList");
         }catch (Exception e){
+            logger.error(" /api/cus/getHelpList -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -215,8 +225,10 @@ public class CusHelpController {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jse){
-            return ResJson.errorRequestParam(jse.getMessage() +" -> /api/cus/getHelpDetail");
+            logger.info(jse.getMessage()+" -> /api/cus/getHelpDetail");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/getHelpDetail");
         }catch (Exception e){
+            logger.error("/api/cus/getHelpDetail -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

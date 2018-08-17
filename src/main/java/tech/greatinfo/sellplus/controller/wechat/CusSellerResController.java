@@ -2,6 +2,8 @@ package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,9 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  */
 @RestController
 public class CusSellerResController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CusSellerResController.class);
+
     @Autowired
     private TokenService tokenService;
 
@@ -88,9 +93,11 @@ public class CusSellerResController {
             }else {
                 return ResJson.errorAccessToken();
             }
-        }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage()+" -> /api/cus/beSeller");
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/beSeller");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/beSeller");
         }catch (Exception e){
+            logger.error("/api/cus/beSeller -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -157,9 +164,11 @@ public class CusSellerResController {
             }else {
                 return ResJson.errorAccessToken();
             }
-        }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage()+" -> /api/cus/bindSeller");
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/bindSeller");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/bindSeller");
         }catch (Exception e){
+            logger.error("/api/cus/bindSeller -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -188,9 +197,11 @@ public class CusSellerResController {
             }else {
                 return ResJson.errorAccessToken();
             }
-        }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage()+" -> /api/cus/showMySeller");
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/bindSeller");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/bindSeller");
         }catch (Exception e){
+            logger.error("/api/cus/bindSeller -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

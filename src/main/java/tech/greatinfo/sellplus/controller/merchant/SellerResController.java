@@ -14,6 +14,4 @@ public class SellerResController {
 
     // TODO 查看所有的销售列表
 
-    // TODO 对小程序前端 - 销售设置个人信息
-
 }

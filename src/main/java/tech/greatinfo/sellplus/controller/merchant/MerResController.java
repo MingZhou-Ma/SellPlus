@@ -1,5 +1,7 @@
 package tech.greatinfo.sellplus.controller.merchant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +26,8 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  */
 @RestController
 public class MerResController {
+    private static final Logger logger = LoggerFactory.getLogger(MerResController.class);
+
     @Autowired
     TokenService tokenService;
 
@@ -54,6 +58,7 @@ public class MerResController {
                 return ResJson.successJson("login Success",map);
             }
         }catch (Exception e){
+            logger.error("/api/mer/login -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

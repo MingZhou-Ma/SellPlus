@@ -1,5 +1,7 @@
 package tech.greatinfo.sellplus.controller.merchant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,8 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  */
 @RestController
 public class ArticleResController {
+    private static final Logger logger = LoggerFactory.getLogger(ArticleResController.class);
+
     @Autowired
     ArticleService articleService;
 
@@ -40,6 +44,7 @@ public class ArticleResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/addArticle -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -57,6 +62,7 @@ public class ArticleResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/addArticle -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

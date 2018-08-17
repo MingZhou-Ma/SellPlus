@@ -1,5 +1,7 @@
 package tech.greatinfo.sellplus.controller.merchant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -10,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
 
 import tech.greatinfo.sellplus.config.converter.StringToDateConverter;
 import tech.greatinfo.sellplus.domain.Activity;
@@ -29,6 +29,8 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  */
 @RestController
 public class ActivityResController {
+    private static final Logger logger = LoggerFactory.getLogger(ActivityResController.class);
+
 
     @Autowired
     TokenService tokenService;
@@ -91,6 +93,7 @@ public class ActivityResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/addActivity -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -118,6 +121,7 @@ public class ActivityResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/listActivity -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -136,6 +140,7 @@ public class ActivityResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/delActivity -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -161,6 +166,7 @@ public class ActivityResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/updateActivity -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

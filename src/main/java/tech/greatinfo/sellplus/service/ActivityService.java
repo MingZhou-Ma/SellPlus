@@ -10,8 +10,6 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 import tech.greatinfo.sellplus.domain.Activity;
-import tech.greatinfo.sellplus.domain.Customer;
-import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.group.Group;
 import tech.greatinfo.sellplus.domain.help.Help;
 import tech.greatinfo.sellplus.repository.ActivityRepository;

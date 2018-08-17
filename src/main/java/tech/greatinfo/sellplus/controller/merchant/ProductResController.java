@@ -1,5 +1,7 @@
 package tech.greatinfo.sellplus.controller.merchant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  */
 @RestController
 public class ProductResController {
+    private static final Logger logger = LoggerFactory.getLogger(ProductResController.class);
 
     @Autowired
     TokenService tokenService;
@@ -48,6 +51,7 @@ public class ProductResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/addProduct -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -66,6 +70,7 @@ public class ProductResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/listProduct -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -90,6 +95,7 @@ public class ProductResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/updateProduct -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -107,6 +113,7 @@ public class ProductResController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
+            logger.error("/api/mer/delProduct -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

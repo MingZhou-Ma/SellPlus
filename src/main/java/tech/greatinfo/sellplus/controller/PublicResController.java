@@ -2,6 +2,8 @@ package tech.greatinfo.sellplus.controller;
 
 import com.alibaba.fastjson.JSONObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,24 +11,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.WebUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.domain.Activity;
-import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Product;
-import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.ArticleService;
 import tech.greatinfo.sellplus.service.CompanyService;
@@ -49,6 +45,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  */
 @RestController
 public class PublicResController {
+    private static final Logger logger = LoggerFactory.getLogger(PublicResController.class);
 
     @Autowired
     ArticleService articleService;
@@ -83,6 +80,7 @@ public class PublicResController {
         try {
             return ResJson.successJson("list Article success", articleService.findByPage(start, num));
         }catch (Exception e){
+            logger.error("/api/pub/listArticle -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -115,6 +113,7 @@ public class PublicResController {
             resMap.put("notifys",notifyList);
             return ResJson.successJson("get company info success",resMap);
         }catch (Exception e){
+            logger.error("/api/pub/listArticle -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -136,9 +135,11 @@ public class PublicResController {
             }else {
                 return ResJson.failJson(-1,"product id error",null);
             }
-        }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage());
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/pub/getMainInfo");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/pub/getMainInfo");
         }catch (Exception e){
+            logger.error("/api/pub/getMainInfo -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -155,9 +156,11 @@ public class PublicResController {
             }else {
                 return ResJson.failJson(-1,"activity id error",null);
             }
-        }catch (JsonParseException jpe){
-            return ResJson.errorRequestParam(jpe.getMessage());
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/pub/getMainInfo");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/pub/getMainInfo");
         }catch (Exception e){
+            logger.error("/api/pub/getMainInfo -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -169,6 +172,7 @@ public class PublicResController {
         try {
             return ResJson.successJson("get merchant info success", merchantService.getMainMerchant());
         }catch (Exception e){
+            logger.error("/api/pub/getMerInfo -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -237,6 +241,7 @@ public class PublicResController {
             res.put("url", StaticConfig.SAVE_UPLOAD_PIC_PATH+"/"+dataFlag+"/"+fileMd5Name);
             return ResJson.successJson("upload pic success",res);
         }catch (Exception e){
+            logger.error("/api/pub/uploadPic -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -299,6 +304,7 @@ public class PublicResController {
                 return ResJson.failJson(7000,"base64 error",null);
             }
         }catch (Exception e){
+            logger.error("/api/pub/uploadBase64 -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
