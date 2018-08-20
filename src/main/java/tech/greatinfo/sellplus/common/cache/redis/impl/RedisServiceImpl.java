@@ -85,10 +85,12 @@ public class RedisServiceImpl implements RedisService {
 		return jedis;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void returnResource(Jedis jedis) {
 		redisPool.returnResource(jedis);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void returnResource(Jedis jedis, boolean broken) {
 		if (broken) {
 			redisPool.returnBrokenResource(jedis);

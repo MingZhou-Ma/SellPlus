@@ -10,6 +10,7 @@
  */
 package tech.greatinfo.sellplus.controller.coupons;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,8 +29,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import tech.greatinfo.sellplus.common.cache.redis.RedisConstant;
+import tech.greatinfo.sellplus.common.cache.redis.RedisLock;
+import tech.greatinfo.sellplus.common.cache.redis.impl.RedisServiceImpl;
 import tech.greatinfo.sellplus.common.vo.RespBody;
 import tech.greatinfo.sellplus.config.ehcache.constants.EhcacheConstant;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
@@ -37,6 +43,7 @@ import tech.greatinfo.sellplus.domain.coupons.enums.CouponState;
 import tech.greatinfo.sellplus.domain.coupons.enums.CouponType;
 import tech.greatinfo.sellplus.service.CouponService;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
+import tech.greatinfo.sellplus.utils.pk.PKGenerator;
 
 /**     
 * @Package：tech.greatinfo.sellplus.controller.coupons   
@@ -51,17 +58,23 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
 */
 @Api(tags="优惠券管理")
 @RestController
-//@RequestMapping(value="/api/v1/coupon",consumes=MediaType.APPLICATION_JSON_VALUE) //仅处理application/json请求
+//@RequestMapping(value="/api/v1/coupon",consumes=MediaType.APPLICATION_JSON_VALUE) //仅处理application/json请求、
 @RequestMapping(value="/api/v1/coupon")
 public class CouponController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(CouponController.class);
 	
 	@Autowired
-	CouponService couponService;
+	protected CouponService couponService;
+
+	@Autowired
+	protected RedisServiceImpl redisService;
+	
+	//@Autowired
+	//protected RedisLock redisLock;
 	
 	@Autowired 
-	EhCacheCacheManager appEhCacheCacheManager;
+	protected EhCacheCacheManager appEhCacheCacheManager;
 	
 	/**
 	 * @Description:获取优惠券列表
@@ -154,6 +167,11 @@ public class CouponController {
          return ResJson.successJson("更新优惠券信息", coupon);
     }
     
+    /**
+     * @Description: ehcache缓存测试
+     * @return RespBody
+     * @Autor: Jason
+     */
     @ApiOperation(value="ehcache缓存")  
     @RequestMapping(value = "/ehcache",method = RequestMethod.GET)
     public RespBody ehcache(){
@@ -175,6 +193,64 @@ public class CouponController {
         return respBody;
     }
     
-
+    /**
+     * @Description: redis 缓存测试
+     * @return RespBody
+     * @Autor: Jason
+     */
+    @ApiOperation(value="redis缓存")  
+    @RequestMapping(value = "/redis",method = RequestMethod.GET)
+    public RespBody redis(){
+    	RespBody respBody = new RespBody();
+    	Coupon coupon = new Coupon();
+    	coupon.setActName(PKGenerator.uuid32());
+    	coupon.setActNo(PKGenerator.uuid32());
+    	coupon.setCpCode(PKGenerator.uuid32());
+    	coupon.setEndDate(new Date());
+    	redisService.hset(RedisConstant.REDIS_BIZ_COUPONS_KEY, coupon.getActNo(),JSON.toJSONString(coupon));
+    	logger.info("Redis缓存数据,详细数据为:{}",JSON.toJSONString(redisService.hget(RedisConstant.REDIS_BIZ_COUPONS_KEY,coupon.getActNo())));
+    	respBody.addOK(coupon,"存入缓存成功!");
+        return respBody;
+    }
+    
+    
+    /**
+     * @Description: Redis锁测试
+     * @return RespBody
+     * @Autor: Jason
+     */
+    @ApiOperation(value="redis单机锁测试")  
+    @RequestMapping(value = "/redisLock",method = RequestMethod.GET)
+    public RespBody redisLock(){
+    	RespBody respBody = new RespBody();
+    	//String key, long timeout, int expire
+    	Long timeout = 1000L;//获取锁的超时时间
+    	Integer expire = 30; //锁的过期时间
+    	/*int threads = 100; //线程数
+    	ExecutorService executorService = Executors.newFixedThreadPool(threads);
+        for (int i = 0; i < threads; i++) {
+             executorService.execute(new Runnable() {
+				@Override
+				public void run() {
+				}
+			});
+        }*/
+    	String lockKey = "112";
+		boolean lockFlag = false;
+		RedisLock redisLock = new RedisLock(redisService.getRedisPool());
+		try {
+			do {
+				lockFlag = redisLock.singleLock(lockKey, timeout, expire); //锁
+				if (lockFlag) {
+					logger.info("lockKey:{},event:分布式锁获取,锁键-{}", lockKey);
+				}
+			} while (!lockFlag); //如果没有锁住的话 就一直去拿锁,锁住了就执行下面的业务
+			logger.info("业务处理!");
+		} finally {
+			redisLock.singleUnlock(lockKey);//无论加锁是否成功都需要解锁
+			logger.info("lockKey:{},event:分布式锁释放,锁键-{}", lockKey);
+		}
+		return respBody;
+    }
 
 }

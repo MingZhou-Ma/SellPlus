@@ -17,10 +17,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.alibaba.fastjson.JSON;
-
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import tech.greatinfo.sellplus.common.cache.redis.RedisLock;
 import tech.greatinfo.sellplus.common.cache.redis.impl.RedisServiceImpl;
 
 /**     
@@ -88,6 +87,12 @@ public class RedisConfig {
      */
     @Value("${redis.maxWaitMillis}")
     private Integer maxWaitMillis;
+    
+    /**
+     * 读取超时时间
+     */
+    @Value("${redis.readTimeOut}")
+    private Integer readTimeOut;
 
     /**
      * 连接的最小空闲时间
@@ -193,7 +198,7 @@ public class RedisConfig {
     @Bean(name="redisPool")
     public JedisPool bulidJedisPool() {
     	//config hostName port 超时 password index clientName
-    	JedisPool jedisPool = new JedisPool(bulidJedisPoolConfig(),hostName,port,maxWaitMillis,password,index,null);
+    	JedisPool jedisPool = new JedisPool(bulidJedisPoolConfig(),hostName,port,readTimeOut,password,index,null);
     	return jedisPool;
     }
     
@@ -227,11 +232,26 @@ public class RedisConfig {
      * @Autor: Jason
      */
     @Bean(name="redisService")
-    public RedisServiceImpl BulidRedisServiceImpl(){
+    public RedisServiceImpl bulidRedisServiceImpl(JedisPool redisPool){
     	RedisServiceImpl redisService = new RedisServiceImpl();
-    	redisService.setRedisPool(bulidJedisPool());
-    	logger.info("Redis单机版{}初始化成功!",JSON.toJSONString(redisService));
+    	redisService.setRedisPool(redisPool);
+    	logger.info("单机版RedisServiceBean初始化完成!");
+    	//logger.info("Redis单机版{}初始化成功!",JSON.toJSONString(redisService));
 		return redisService;
+    }
+    
+    
+    /**
+     * @Description: Redis单机锁Bean
+     * @param redisPool
+     * @return RedisLock
+     * @Autor: Jason
+     */
+    @Bean(name="redisLock")
+    public RedisLock bulidRedisLock(JedisPool redisPool){
+    	RedisLock redisLock = new RedisLock(redisPool);
+    	logger.info("单机版Redis锁初始化完成!");
+		return redisLock;
     }
     
 }

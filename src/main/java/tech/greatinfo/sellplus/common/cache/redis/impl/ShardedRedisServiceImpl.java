@@ -85,10 +85,12 @@ public class ShardedRedisServiceImpl implements RedisService {
 		return jedis;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void returnResource(ShardedJedis jedis) {
 		shardedJedisPool.returnResource(jedis);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void returnResource(ShardedJedis jedis, boolean broken) {
 		if (broken) {
 			shardedJedisPool.returnBrokenResource(jedis);

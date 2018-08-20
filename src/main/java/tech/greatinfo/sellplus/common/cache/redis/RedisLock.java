@@ -48,12 +48,15 @@ public class RedisLock {
 	/** 锁的超时时间（秒），过期删除 */
 	public static final int EXPIRE = 3 * 60;
 
-	/** 切片****/
+	/**
+	 * 切片
+	 */
 	private ShardedJedisPool shardedJedisPool;
 	private ShardedJedis shardedJedis;
 
 	/** 非切片 **/
 	private JedisPool redisPool;
+	
 	private Jedis singleJedis;
 
 	/** 切片redis锁状态标志  ***/
@@ -63,7 +66,7 @@ public class RedisLock {
 	private boolean singleLocked = false;
 
 	/**
-	 * This creates a shared RedisLock 
+	 * This creates a shared RedisLock  -- 切片锁
 	 * @param key
 	 * @param redisPool  
 	 */
@@ -73,7 +76,7 @@ public class RedisLock {
 	}
 
 	/**
-	 * This creates a single RedisLock 
+	 * This creates a single RedisLock  -- 单机锁
 	 * @param key
 	 * @param redisPool  
 	 */
@@ -107,11 +110,11 @@ public class RedisLock {
 	public boolean singleLock(String key, long timeout) {
 		long nano = System.nanoTime();
 		key = key.concat("_lock");
-		timeout *= MILLI_NANO_CONVERSION;
+		timeout *= MILLI_NANO_CONVERSION;//毫秒与毫微秒的换算单位 1毫秒 = 1000000毫微秒
 		try {
 			while ( ( System.nanoTime() - nano ) < timeout) {
 				if (this.singleJedis.setnx(key, LOCKED) == 1) {
-					this.singleJedis.expire(key, EXPIRE);
+					this.singleJedis.expire(key, EXPIRE);//EXPIRE 3分钟.
 					this.singleLocked = true;
 					return this.singleLocked;
 				}
@@ -119,7 +122,7 @@ public class RedisLock {
 				Thread.sleep(3, RANDOM.nextInt(500));
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Locking error", e);
+			throw new RuntimeException("Locking error 单机锁异常!", e);
 			//return false;
 		}
 		return false;
@@ -137,10 +140,10 @@ public class RedisLock {
 		long nano = System.nanoTime();
 		timeout *= MILLI_NANO_CONVERSION;
 		try {
-			while ( ( System.nanoTime() - nano ) < timeout) {
-				if (this.singleJedis.setnx(key, LOCKED) == 1) {
-					this.singleJedis.expire(key, expire);
-					this.singleLocked = true;
+			while ( ( System.nanoTime() - nano ) < timeout) {  //超时时间 - 位于这个范围
+				if (this.singleJedis.setnx(key, LOCKED) == 1) { //加锁标志
+					this.singleJedis.expire(key, expire);//设置锁的过期时间和key
+					this.singleLocked = true; //true锁住
 					return this.singleLocked;
 				}
 				// 短暂休眠，避免出现活锁  
