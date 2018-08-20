@@ -29,5 +29,14 @@ public class SystemConstant {
 	public static final String CONTENT_TYPE_APP_JSON = "application/json;charset=UTF-8";
 	
 	
+	/**
+	 * 验签基本常量
+	 */
+	public static final String STRING_SPLIT_CHAR = null;
+	public static final String SESSION_PLATFORM_USER_ACCOUNT_KEY = null;
+	public static final String STRING_AND_CHAR = null;
+	public static final String STRING_ASSIGN_CHAR = null;
+	
+	
 
 }

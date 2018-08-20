@@ -209,6 +209,7 @@ public class CouponController {
     	coupon.setActNo(PKGenerator.uuid32());
     	coupon.setCpCode(PKGenerator.uuid32());
     	coupon.setEndDate(new Date());
+    	
     	EhCacheUtil.put(EhcacheConstant.EHCACHE_VIEW_COUNT, coupon.getActNo(), JSON.toJSONString(coupon));
     	
     	logger.info("ehCache-k:{},v:{}",coupon.getActNo(),JSON.toJSONString(EhCacheUtil.get(EhcacheConstant.EHCACHE_VIEW_COUNT, coupon.getActNo())));
@@ -274,7 +275,7 @@ public class CouponController {
 			logger.info("进行了业务处理业务处理!当前时间为:{}",DateHelper.getCurrentTime());
 			respBody.addOK(new Date(), "进行了业务处理业务处理");
 		} finally {
-			Thread.sleep(1000);//延时1000ms
+			Thread.sleep(60000);//延时1000ms
 			redisLock.singleUnlock(lockKey);//无论加锁是否成功都需要解锁
 			logger.info("lockKey:{},event:分布式锁释放", lockKey);
 		}

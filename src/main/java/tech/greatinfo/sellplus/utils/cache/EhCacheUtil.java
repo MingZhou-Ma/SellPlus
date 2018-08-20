@@ -27,11 +27,12 @@ import net.sf.ehcache.Element;
  */
 public class EhCacheUtil {
 
-    /**
-     * 获取缓存
-     * @param cacheName
-     * @return
-     */
+	/**
+	 * @Description: 获取缓存
+	 * @param cacheName 缓存名字
+	 * @return Cache
+	 * @Autor: Jason
+	 */
     private static Cache getCache(String cacheName) {
         CacheManager cacheManager = CacheManager.getInstance();
         if (null == cacheManager) {
@@ -45,10 +46,11 @@ public class EhCacheUtil {
     }
 
     /**
-     * 新增缓存记录
-     * @param cacheName
-     * @param key
-     * @param value
+     * @Description:    新增缓存记录
+     * @param cacheName 缓存名字
+     * @param key       缓存key
+     * @param value 
+     * @Autor: Jason
      */
     public static void put(String cacheName, String key, Object value) {
         Cache cache = getCache(cacheName);
@@ -59,10 +61,11 @@ public class EhCacheUtil {
     }
 
     /**
-     * 删除缓存记录
-     * @param cacheName
-     * @param key
-     * @return
+     * @Description: 删除缓存记录 
+     * @param cacheName 缓存名字
+     * @param key       缓存key
+     * @return boolean
+     * @Autor: Jason
      */
     public static boolean remove(String cacheName, String key) {
         Cache cache = getCache(cacheName);
@@ -73,22 +76,23 @@ public class EhCacheUtil {
     }
 
     /**
-     * 删除全部缓存记录
-     * @param cacheName
-     * @return
+     * @Description: 删除全部缓存记录
+     * @param cacheName 
+     * @Autor: Jason
      */
     public static void removeAll(String cacheName) {
         Cache cache = getCache(cacheName);
         if (null != cache) {
-            cache.removeAll();
+            cache.removeAll();//logOnRemoveAllIfPinnedCache();
         }
     }
 
     /**
-     * 获取缓存记录
-     * @param cacheName
-     * @param key
-     * @return
+     * @Description: 获取缓存记录
+     * @param cacheName  缓存名字
+     * @param key        缓存key
+     * @return Object
+     * @Autor: Jason
      */
     public static Object get(String cacheName, String key) {
         Cache cache = getCache(cacheName);

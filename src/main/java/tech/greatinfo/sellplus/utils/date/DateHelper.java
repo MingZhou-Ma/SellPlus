@@ -676,4 +676,26 @@ public class DateHelper {
 		now.set(now.DATE, last_day_of_week);
 		return now.getTime();
 	}
+	
+	public static void main(String[] args) {
+		Date value = new Date();
+		System.out.println(getCurrentYear(value));
+		System.out.println(getCurrentMonth(value));
+		System.out.println(getCurrentDay(value));
+		System.out.println(getCurrentHour(value));
+		System.out.println(getCurrentMinute(value));
+		
+		System.out.println(getCurrentYMDHM());
+		System.out.println(getCurrentYMDHMS());
+		System.out.println(getCurrentWeek(value));
+	}
 }
+//Outputs - test
+//2018
+//8
+//20
+//17
+//51
+//201808201751
+//20180820175144
+//星期一
