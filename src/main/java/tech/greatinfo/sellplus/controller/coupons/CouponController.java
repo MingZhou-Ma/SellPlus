@@ -42,6 +42,8 @@ import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.enums.CouponState;
 import tech.greatinfo.sellplus.domain.coupons.enums.CouponType;
 import tech.greatinfo.sellplus.service.CouponService;
+import tech.greatinfo.sellplus.utils.cache.EhCacheUtil;
+import tech.greatinfo.sellplus.utils.date.DateHelper;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 import tech.greatinfo.sellplus.utils.pk.PKGenerator;
 
@@ -207,6 +209,10 @@ public class CouponController {
     	coupon.setActNo(PKGenerator.uuid32());
     	coupon.setCpCode(PKGenerator.uuid32());
     	coupon.setEndDate(new Date());
+    	EhCacheUtil.put(EhcacheConstant.EHCACHE_VIEW_COUNT, coupon.getActNo(), JSON.toJSONString(coupon));
+    	
+    	logger.info("ehCache-k:{},v:{}",coupon.getActNo(),JSON.toJSONString(EhCacheUtil.get(EhcacheConstant.EHCACHE_VIEW_COUNT, coupon.getActNo())));
+    	
     	redisService.hset(RedisConstant.REDIS_BIZ_COUPONS_KEY, coupon.getActNo(),JSON.toJSONString(coupon));
     	logger.info("Redis缓存数据,详细数据为:{}",JSON.toJSONString(redisService.hget(RedisConstant.REDIS_BIZ_COUPONS_KEY,coupon.getActNo())));
     	respBody.addOK(coupon,"存入缓存成功!");
@@ -217,38 +223,60 @@ public class CouponController {
     /**
      * @Description: Redis锁测试
      * @return RespBody
+     * @throws InterruptedException 
      * @Autor: Jason
      */
     @ApiOperation(value="redis单机锁测试")  
     @RequestMapping(value = "/redisLock",method = RequestMethod.GET)
-    public RespBody redisLock(){
+    public RespBody redisLock() throws InterruptedException{
     	RespBody respBody = new RespBody();
     	//String key, long timeout, int expire
     	Long timeout = 1000L;//获取锁的超时时间
     	Integer expire = 30; //锁的过期时间
-    	/*int threads = 100; //线程数
-    	ExecutorService executorService = Executors.newFixedThreadPool(threads);
+    	
+    /*	int threads = 100; //线程数
+        ExecutorService executorService = Executors.newFixedThreadPool(threads);
         for (int i = 0; i < threads; i++) {
              executorService.execute(new Runnable() {
 				@Override
 				public void run() {
+					String lockKey = DateHelper.getCurrentYMDHM();
+					boolean lockFlag = false;
+					RedisLock redisLock = new RedisLock(redisService.getRedisPool());
+					try {
+						do {
+							lockFlag = redisLock.singleLock(lockKey, timeout, expire); //锁
+							if (lockFlag) {
+								logger.info("lockKey:{},event:分布式锁获取", lockKey);
+								respBody.addOK(lockKey, "分布式锁获取");
+							}
+						} while (!lockFlag); //如果没有锁住的话 就一直去拿锁,锁住了就执行下面的业务
+						logger.info("进行了业务处理业务处理!当前时间为:{}",DateHelper.getCurrentTime());
+						respBody.addOK(new Date(), "进行了业务处理业务处理");
+					} finally {
+						redisLock.singleUnlock(lockKey);//无论加锁是否成功都需要解锁
+						logger.info("lockKey:{},event:分布式锁释放", lockKey);
+					}
 				}
 			});
         }*/
-    	String lockKey = "112";
+    	String lockKey = DateHelper.getCurrentYMDHM();
 		boolean lockFlag = false;
 		RedisLock redisLock = new RedisLock(redisService.getRedisPool());
 		try {
 			do {
-				lockFlag = redisLock.singleLock(lockKey, timeout, expire); //锁
+				lockFlag = redisLock.singleLock(lockKey, timeout, expire); //锁key - 超时时间 -  过期时间
 				if (lockFlag) {
-					logger.info("lockKey:{},event:分布式锁获取,锁键-{}", lockKey);
+					logger.info("lockKey:{},event:分布式锁获取", lockKey);
+					respBody.addOK(lockKey, "分布式锁获取");
 				}
 			} while (!lockFlag); //如果没有锁住的话 就一直去拿锁,锁住了就执行下面的业务
-			logger.info("业务处理!");
+			logger.info("进行了业务处理业务处理!当前时间为:{}",DateHelper.getCurrentTime());
+			respBody.addOK(new Date(), "进行了业务处理业务处理");
 		} finally {
+			Thread.sleep(1000);//延时1000ms
 			redisLock.singleUnlock(lockKey);//无论加锁是否成功都需要解锁
-			logger.info("lockKey:{},event:分布式锁释放,锁键-{}", lockKey);
+			logger.info("lockKey:{},event:分布式锁释放", lockKey);
 		}
 		return respBody;
     }
