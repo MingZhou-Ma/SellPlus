@@ -44,6 +44,10 @@ public class CouponServiceImpl implements CouponService{
 	@Autowired
 	CouponRepository couponRepository;
 	
+	//@Autowired
+	//RedisService redisService;
+	
+	
 	@Override
 	public List<Coupon> findAll() {
 		return couponRepository.findAll();
@@ -69,7 +73,8 @@ public class CouponServiceImpl implements CouponService{
 	public void insertCoupon(Coupon coupon) {
 		try {
 			Assert.notNull(coupon,"coupon不允许为空!");
-			couponRepository.save(coupon);
+			couponRepository.save(coupon);//存入的时候存一份缓存
+			//redisService.hset("key", "a", "good");
 		} catch (Exception e) {
 			logger.error("插入优惠券异常:{}", e);
 			throw new SystemException(e);
@@ -99,12 +104,23 @@ public class CouponServiceImpl implements CouponService{
 	}
 
 	@Override
-	public Page<Coupon> findByPage(Pageable pageable) {
+	public Page<Coupon> findCouponByPage(Pageable pageable) {
 		try {
 			Assert.notNull(pageable,"pageable不允许为Null!");
 			return couponRepository.findAll(pageable);
 		} catch (Exception e) {
 			logger.error("分页查询优惠券异常:{}", e);
+			throw new SystemException(e);
+		}
+	}
+
+	@Override
+	public List<Coupon> getCouponsBySearch(Coupon search) {
+		try {
+			Assert.notNull(search,"优惠券条件不允许为null");
+			return couponRepository.findAll();
+		} catch (Exception e) {
+			logger.error("根据条件获取优惠券异常:{}", e);
 			throw new SystemException(e);
 		}
 	}

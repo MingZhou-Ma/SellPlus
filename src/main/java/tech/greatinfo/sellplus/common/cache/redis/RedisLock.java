@@ -66,9 +66,8 @@ public class RedisLock {
 	private boolean singleLocked = false;
 
 	/**
-	 * This creates a shared RedisLock  -- 切片锁
-	 * @param key
-	 * @param redisPool  
+	* RedisLock.  This creates a shared RedisLock  -- 切片锁
+	* @param shardedJedisPool
 	 */
 	public RedisLock(final ShardedJedisPool shardedJedisPool) {
 		this.shardedJedisPool = shardedJedisPool;
@@ -76,9 +75,8 @@ public class RedisLock {
 	}
 
 	/**
-	 * This creates a single RedisLock  -- 单机锁
-	 * @param key
-	 * @param redisPool  
+	* RedisLock.  This creates a single RedisLock  -- 单机锁
+	* @param redisPool
 	 */
 	public RedisLock(final JedisPool redisPool) {
 		try {
@@ -90,6 +88,11 @@ public class RedisLock {
 		}
 	}
 
+	/**
+ 	 * @Description: shardedJedisPool
+	 * @param shardedJedisPool 
+	 * @Autor: Jason
+	 */
 	public void setShardedJedisPool(final ShardedJedisPool shardedJedisPool) {
 		this.shardedJedisPool = shardedJedisPool;
 		this.shardedJedis = this.shardedJedisPool.getResource();
@@ -112,13 +115,13 @@ public class RedisLock {
 		key = key.concat("_lock");
 		timeout *= MILLI_NANO_CONVERSION;//毫秒与毫微秒的换算单位 1毫秒 = 1000000毫微秒
 		try {
-			while ( ( System.nanoTime() - nano ) < timeout) {
-				if (this.singleJedis.setnx(key, LOCKED) == 1) {
-					this.singleJedis.expire(key, EXPIRE);//EXPIRE 3分钟.
-					this.singleLocked = true;
-					return this.singleLocked;
+			while ( ( System.nanoTime() - nano ) < timeout) { //锁没有超时
+				if (this.singleJedis.setnx(key, LOCKED) == 1) { //not exsist 
+					this.singleJedis.expire(key, EXPIRE);//EXPIRE 默认3分钟.
+					this.singleLocked = true;  //设置锁
+					return this.singleLocked;   //锁标志
 				}
-				// 短暂休眠，避免出现活锁  
+				// 短暂休眠，避免出现活锁 millis -  nanos
 				Thread.sleep(3, RANDOM.nextInt(500));
 			}
 		} catch (Exception e) {

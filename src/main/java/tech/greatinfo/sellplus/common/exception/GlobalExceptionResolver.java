@@ -11,8 +11,6 @@
 package tech.greatinfo.sellplus.common.exception;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import tech.greatinfo.sellplus.common.vo.RespBody;
 
 /**
 * @Package：tech.greatinfo.sellplus.common.exception   
@@ -45,12 +45,67 @@ public class GlobalExceptionResolver {
 		logger.info("启用全局异常处理器...");
 	}
 
+	/**
+	 * @Description: SQLException 
+	 * @param request
+	 * @param e
+	 * @return RespBody
+	 * @Autor: Jason
+	 */
 	@ExceptionHandler(value = SQLException.class)
 	@ResponseBody
-	public Map<String, String> sqlExceptionHandler(HttpServletRequest request, SQLException e) {
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("statusCode", "100005");
-		return map;
+	public RespBody sqlExceptionHandler(HttpServletRequest request, SQLException e) {
+		RespBody respBody = new RespBody();
+		respBody.addError(e.getMessage());
+		return respBody;
 	}
+	
+	/**
+	 * @Description: RuntimeException 运行时异常处理
+	 * @param request
+	 * @param e
+	 * @return RespBody
+	 * @Autor: Jason
+	 */
+	@ExceptionHandler(value = RuntimeException.class)
+	@ResponseBody
+	public RespBody runtimeExceptionHandler(HttpServletRequest request, RuntimeException e) {
+		RespBody respBody = new RespBody();
+		respBody.addError(e.getMessage());
+		return respBody;
+	}
+	
+	
+	/**
+	 * @Description: SystemException 自定义异常的统一处理
+	 * @param request
+	 * @param e
+	 * @return RespBody
+	 * @Autor: Jason
+	 */
+	@ExceptionHandler(value = SystemException.class)
+	@ResponseBody
+	public RespBody systemExceptionHandler(HttpServletRequest request, SystemException e) {
+		RespBody respBody = new RespBody();
+		respBody.addError(e.getMessage());
+		return respBody;
+	}
+	
+	
+	/**
+	 * @Description: BizException 自定义的异常处理
+	 * @param request
+	 * @param e
+	 * @return RespBody
+	 * @Autor: Jason
+	 */
+	@ExceptionHandler(value = BizException.class)
+	@ResponseBody
+	public RespBody bizExceptionHandler(HttpServletRequest request, BizException e) {
+		RespBody respBody = new RespBody();
+		respBody.addError(e.getMessage());
+		return respBody;
+	}
+	
 
 }

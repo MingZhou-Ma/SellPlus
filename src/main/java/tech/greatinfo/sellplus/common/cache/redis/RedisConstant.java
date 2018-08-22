@@ -50,6 +50,11 @@ public class RedisConstant {
 	 */
 	public static final String REDIS_BIZ_COUPONS_KEY = "coupons_key";
 	
+	/**
+	 * 用户判断数据库中是否已经存在当前的优惠券券码 - 保证唯一性 - 随机大写字母+10位数字  (24+10)^6
+	 */
+	public static final String REDIS_BIZ_COUPONS_CODE_KEY = "coupons_code_key";
+	
 	
 	
 	

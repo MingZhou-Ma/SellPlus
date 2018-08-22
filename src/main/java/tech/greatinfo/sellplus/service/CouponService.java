@@ -79,7 +79,7 @@ public interface CouponService {
 	 * @return Page<Coupon>
 	 * @Autor: Jason
 	 */
-	public Page<Coupon> findByPage(Pageable pageable);
+	public Page<Coupon> findCouponByPage(Pageable pageable);
 	
 	
 	/**
@@ -97,5 +97,13 @@ public interface CouponService {
 	 */
 	public Coupon findById(String id);
 	
+	
+	/**
+	 * @Description: 根据条件获取券
+	 * @param search
+	 * @return List<Coupon>
+	 * @Autor: Jason
+	 */
+	List<Coupon> getCouponsBySearch(Coupon search);
 
 }

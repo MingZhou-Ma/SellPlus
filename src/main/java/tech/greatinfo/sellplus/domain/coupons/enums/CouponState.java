@@ -29,8 +29,14 @@ public enum CouponState {
     CHARGED(3,"已对账"), //已对账
     EXPIRE(4,"已过期");//已过期
      
+	/**
+	 * 状态码
+	 */
 	private int code;
 	
+	/**
+	 * 状态
+	 */
     private String state;
     
 	private CouponState(int code, String state) {

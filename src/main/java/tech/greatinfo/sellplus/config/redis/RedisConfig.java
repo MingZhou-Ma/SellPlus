@@ -236,7 +236,6 @@ public class RedisConfig {
     	RedisServiceImpl redisService = new RedisServiceImpl();
     	redisService.setRedisPool(redisPool);
     	logger.info("单机版RedisServiceBean初始化完成!");
-    	//logger.info("Redis单机版{}初始化成功!",JSON.toJSONString(redisService));
 		return redisService;
     }
     

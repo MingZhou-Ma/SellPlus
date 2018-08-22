@@ -28,14 +28,22 @@
 	  <persistence strategy="localTempSwap"/>
 	</defaultCache>
     
-    
-    
     <!-- 防止恶意刷访问量   访问量统计 -->
     <cache name="viewCount"  	
            maxEntriesLocalHeap="2000" 	
-           eternal="false"				
-           timeToIdleSeconds="3600"		
-           timeToLiveSeconds="0"		
+           eternal="false"
+           timeToIdleSeconds="3600"	
+           timeToLiveSeconds="0"
+           overflowToDisk="false"		
+           statistics="true">
+    </cache>
+    
+    <!--  当前在线人数统计 -->
+    <cache name="onlinePerson"  	
+           maxEntriesLocalHeap="2000" 	
+           eternal="false"
+           timeToIdleSeconds="3600"	
+           timeToLiveSeconds="0"
            overflowToDisk="false"		
            statistics="true">
     </cache>

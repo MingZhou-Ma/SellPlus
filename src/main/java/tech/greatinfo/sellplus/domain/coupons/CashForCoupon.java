@@ -61,6 +61,9 @@ public class CashForCoupon {
 	@GeneratedValue(generator="idGenerator")
 	@Column(length = 32,columnDefinition = "VARCHAR(32) COMMENT '服务id'")
     private String serviceId;
+	
+	
+	
 
 	public String getId() {
 		return id;

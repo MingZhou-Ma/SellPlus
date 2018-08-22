@@ -27,4 +27,10 @@ public class EhcacheConstant {
 	 * 访问次数缓存 
 	 */
 	public static final String EHCACHE_VIEW_COUNT = "viewCount";
+	
+	/**
+	 * 系统当前的在线人数
+	 */
+	public static final String EHCACHE_ONLINE_PERSON = "onlinePerson";
+	
 }

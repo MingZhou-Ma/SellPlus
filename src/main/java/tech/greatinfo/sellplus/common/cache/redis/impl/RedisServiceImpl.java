@@ -46,6 +46,9 @@ public class RedisServiceImpl implements RedisService {
 	
 	protected JedisPool redisPool;
 
+	/**
+	 * 获取jedis池
+	 */
 	public JedisPool getRedisPool() {
 		return redisPool;
 	}
@@ -57,10 +60,16 @@ public class RedisServiceImpl implements RedisService {
 		this.redisPool = redisPool;
 	}
 
+	/**
+	 * @Description: getRedisClient 获取jedis 客户端.
+	 * @return
+	 * @throws SystemException Jedis
+	 * @Autor: Jason
+	 */
 	public Jedis getRedisClient() throws SystemException {
 		boolean isContinue = true;
 		Jedis jedis = null;
-		int count = 3;
+		int count = 3; //尝试拿3次
 		try {
 			do {
 				try {
@@ -2371,6 +2380,9 @@ public class RedisServiceImpl implements RedisService {
 		return result;
 	}
 
+	/**
+	 * 右边set
+	 */
 	public String lset(byte[] key, int index, byte[] value) {
 		String result = null;
 		Jedis jedis = getRedisClient();
@@ -2409,6 +2421,9 @@ public class RedisServiceImpl implements RedisService {
 		return result;
 	}
 
+	/**
+	 * 左边弹出
+	 */
 	public byte[] lpop(byte[] key) {
 		byte[] result = null;
 		Jedis jedis = getRedisClient();
@@ -2431,6 +2446,9 @@ public class RedisServiceImpl implements RedisService {
 		return result;
 	}
 
+	/**
+	 * rpop 右边弹出pop
+	 */
 	public byte[] rpop(byte[] key) {
 		byte[] result = null;
 		Jedis jedis = getRedisClient();
@@ -3455,6 +3473,9 @@ public class RedisServiceImpl implements RedisService {
 		return result;
 	}
 
+	/**
+	 * hash get
+	 */
 	@Override
 	public <T> T hget(String key, String field, Class<T> clazz) {
 		T t = null;

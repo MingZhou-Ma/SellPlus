@@ -67,7 +67,7 @@ public class SwaggerConfig {
         .termsOfServiceUrl("http://wanguo.com")
         .contact(new Contact("Wubin", "https://wanguo.com/", "wubin@wanguo.com"))
         .version("v1.0")
-        //.license("China Licence Version 1.0").licenseUrl("#")
+        .license("China GUANGZHOU WANGUO TECH-INFO CO,.LTD Licence Version 1.0").licenseUrl("#")
         .build();
     }
 

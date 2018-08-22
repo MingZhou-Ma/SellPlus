@@ -27,7 +27,7 @@ public class ApplicationContextListener implements ApplicationListener<ContextRe
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         if(null == contextRefreshedEvent.getApplicationContext().getParent()) {
-        	logger.info("开始初始化Ehcache Reids缓存数据配置信息等...");
+        	logger.info("开始初始化Ehcache Reids缓存数据配置信息等 >>>");
         	init();//初始化方法  可以用来初始化redis缓存等 ..
         	logger.info(">>>> 喜大普奔 恭喜您 您的容器Context初始化成功.<<<");
         }
@@ -45,7 +45,7 @@ public class ApplicationContextListener implements ApplicationListener<ContextRe
 		} catch (InterruptedException e) {
 		}
     	long lastTime = System.currentTimeMillis() - startTime;
-    	logger.info("初始化缓存数据Ehcache Reids配置信息等完毕... 耗时:{}ms",lastTime);
+    	logger.info(">>> 初始化缓存数据Ehcache Reids配置信息等完毕... 耗时:{}ms <<<",lastTime);
     	
     }
 

@@ -23,17 +23,24 @@ package tech.greatinfo.sellplus.domain.coupons.enums;
 */
 public enum CouponType {
 	
-	/**
-	 * jpa 按照顺序处理 
-	 */
-	VOUCHER(0,"消费券"), //消费券
-	COUPON(1,"折扣券"),//折扣券
-	OLDER_DIVER(2,"老司机券");//老司机券
+	CASH(0,"现金券"), //现金券
+	COUPON(1,"优惠券"),//优惠券
+	PHYSICAL(4,"实物券"),//实物券
+	OLDER_DIVER(4,"老司机券"),//老司机券
+	//..etc
+	;
      
+	/**
+	 * code
+	 */
 	private int code;
 	
+	/**
+	 * 类型
+	 */
     private String type;
 
+    
 	private CouponType(int code, String type) {
 		this.code = code;
 		this.type = type;

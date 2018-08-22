@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>SellPlus</name>
-    <description>Demo project for Spring Boot</description>
+    <description>SellPlus For Wechat-Micro-Application.</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -27,6 +27,7 @@
         <!-- commons.version  -->
         <commons.version>3.7</commons.version>
         <java.version>1.8</java.version>
+        <quartz.version>2.2.3</quartz.version>
     </properties>
 
     <dependencies>
@@ -118,6 +119,13 @@
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
+        </dependency>
+        
+        <!--quartz依赖-->
+        <dependency> 
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
         </dependency>
 
 

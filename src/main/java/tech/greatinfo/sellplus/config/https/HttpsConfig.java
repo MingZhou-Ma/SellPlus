@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
 * @version    V1.0
  */
 @Configuration
-@ConditionalOnProperty(name = "enable", havingValue = "true",prefix="https",matchIfMissing=false)
+@ConditionalOnProperty(name = "enabled", havingValue = "true",prefix="https",matchIfMissing=false)
 public class HttpsConfig {
 	
 	/**

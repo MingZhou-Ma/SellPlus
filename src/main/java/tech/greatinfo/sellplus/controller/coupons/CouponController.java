@@ -140,7 +140,7 @@ public class CouponController {
     public ResJson page(){
     	 Sort sort = new Sort(Sort.Direction.ASC,"id");
          Pageable pageable = new PageRequest(1,2,sort);//page  size
-         Page<Coupon> pageList = couponService.findByPage(pageable);
+         Page<Coupon> pageList = couponService.findCouponByPage(pageable);
          return ResJson.successJson("分页查询数据", pageList);
     }
     
@@ -281,5 +281,28 @@ public class CouponController {
 		}
 		return respBody;
     }
+    
+    
+    
+    @ApiOperation(value="parseJson解析枚举字段")  
+    @RequestMapping(value = "/parse",method = RequestMethod.GET)
+    public RespBody parse(){
+    	RespBody respBody = new RespBody();
+    	Coupon coupon = new Coupon();
+    	coupon.setActName(PKGenerator.uuid32());
+    	coupon.setActNo(PKGenerator.uuid32());
+    	coupon.setCpCode(PKGenerator.uuid32());
+    	coupon.setEndDate(new Date());
+    	coupon.setCouponState(CouponState.USED);
+    	EhCacheUtil.put(EhcacheConstant.EHCACHE_VIEW_COUNT, coupon.getActNo(), JSON.toJSONString(coupon));
+    	String jsonObj = (String) EhCacheUtil.get(EhcacheConstant.EHCACHE_VIEW_COUNT, coupon.getActNo());
+    	Coupon parseObject = JSON.parseObject(jsonObj, Coupon.class); //parseObj
+    	logger.info("状态为:{}",parseObject.getCouponState().getCode());
+    	respBody.addOK(parseObject,"存入缓存成功!");
+        return respBody;
+    }
+    
+    
+    
 
 }
