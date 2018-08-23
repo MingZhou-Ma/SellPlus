@@ -30,7 +30,7 @@ import tech.greatinfo.sellplus.service.CouponService;
 * @ClassName：CouponServiceImpl   
 * @Description：   <p> CouponServiceImpl </p>
 * @Author： - Jason   
-* @CreatTime：2018年8月14日 下午3:07:20   
+* @CreatTime：2018年8月14日 - 下午  - 3:07:20   
 * @Modify By：   
 * @ModifyTime：  2018年8月14日
 * @Modify marker：   
@@ -107,7 +107,7 @@ public class CouponServiceImpl implements CouponService{
 	public Page<Coupon> findCouponByPage(Pageable pageable) {
 		try {
 			Assert.notNull(pageable,"pageable不允许为Null!");
-			int a = 1/0; //产生异常
+			//int a = 1/0; //产生异常
 			return couponRepository.findAll(pageable);
 		} catch (Exception e) {
 			logger.error("分页查询优惠券异常:{}", e);

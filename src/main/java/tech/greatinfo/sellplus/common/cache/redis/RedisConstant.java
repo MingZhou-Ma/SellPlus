@@ -55,6 +55,11 @@ public class RedisConstant {
 	 */
 	public static final String REDIS_BIZ_COUPONS_CODE_KEY = "coupons_code_key";
 	
+	/**
+	 * redis set集合去重
+	 */
+	public static final String REDIS_BIZ_CP_CODE_SET_KEY = "coupons_code_set_key";
+	
 	
 	
 	

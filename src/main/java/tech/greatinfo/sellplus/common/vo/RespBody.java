@@ -40,12 +40,12 @@ public class RespBody implements Serializable{
 	/**
 	 * 结果
 	 */
-	private Object result;
+	private Object data;
 	
 	/**
 	 * 消息描述
 	 */
-	private String message;
+	private String msg;
 
 	public RespBody() {
 		super();
@@ -56,36 +56,36 @@ public class RespBody implements Serializable{
 		this.status = status;
 	}
 
-	public RespBody(Status status, String message) {
+	public RespBody(Status status, String msg) {
 		super();
 		this.status = status;
-		this.message = message;
+		this.msg = msg;
 	}
 
-	public RespBody(Status status, Object result) {
+	public RespBody(Status status, Object data) {
 		super();
 		this.status = status;
-		this.result = result;
+		this.data = data;
 	}
 
-	public RespBody(Status status, Object result, String message) {
+	public RespBody(Status status, Object data, String msg) {
 		super();
 		this.status = status;
-		this.result = result;
-		this.message = message;
+		this.data = data;
+		this.msg = msg;
 	}
 	
 	/**  
 	* RespBody. 
 	* @param status
 	* @param code
-	* @param message  
+	* @param msg  
 	*/  
-	public RespBody(Status status, Integer code, String message) {
+	public RespBody(Status status, Integer code, String msg) {
 		super();
 		this.status = status;
 		this.code = code;
-		this.message = message;
+		this.msg = msg;
 	}
 
 
@@ -99,70 +99,70 @@ public class RespBody implements Serializable{
 	/**
 	 * 添加成功结果信息
 	 */
-	public void addOK(String message) {
-		this.message = message;
+	public void addOK(String msg) {
+		this.msg = msg;
 		this.status = Status.OK;
 	}
 
 	/**
 	 * 添加成功结果信息
 	 */
-	public void addOK(Object result, String message) {
+	public void addOK(Object data, String msg) {
 		this.code=200;
-		this.message = message;
+		this.msg = msg;
 		this.status = Status.OK;
-		this.result = result;
+		this.data = data;
 	}
 
 	/**
 	 * 添加错误消息
 	 */
-	public void addError(String message) {
-		this.message = message;
+	public void addError(String msg) {
+		this.msg = msg;
 		this.status = Status.ERROR;
 	}
 	
 	/**
 	 * @Description: 异常信息
-	 * @param message
+	 * @param msg
 	 * @param code void
 	 * @Autor: Jason
 	 */
-	public void addError(String message,Integer code) {
-		this.message = message;
+	public void addError(String msg,Integer code) {
+		this.msg = msg;
 		this.code = code; 
 		this.status = Status.ERROR;
 	}
 	
 	/**
 	 * @Description: 添加异常信息
-	 * @param message 
+	 * @param msg 
 	 * @Autor: Jason
 	 */
-	public void addException(String message) {
-		this.message = message;
+	public void addException(String msg) {
+		this.msg = msg;
 		this.status = Status.EXCEPTION;
 	}
 	
 	/**
 	 * @Description: 异常处理
-	 * @param message
+	 * @param msg
 	 * @param code 
 	 * @Autor: Jason
 	 */
-	public void addException(String message,Integer code) {
-		this.message = message;
+	public void addException(String msg,Integer code) {
+		this.msg = msg;
 		this.code = code;
 		this.status = Status.EXCEPTION;
 	}
 	
-	public void addFail(String message) {
-		this.message = message;
+	public void addFail(String msg) {
+		this.msg = msg;
 		this.status = Status.ERROR;
 	}
 	
-	public void addFail(String message,Integer code) {
-		this.message = message;
+	public void addFail(String msg,Integer code) {
+		this.msg = msg;
 		this.code = code;
 		this.status = Status.ERROR;
 	}
@@ -175,20 +175,20 @@ public class RespBody implements Serializable{
 		this.status = status;
 	}
 
-	public Object getResult() {
-		return result;
+	public Object getdata() {
+		return data;
 	}
 
-	public void setResult(Object result) {
-		this.result = result;
+	public void setdata(Object data) {
+		this.data = data;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getmsg() {
+		return msg;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setmsg(String msg) {
+		this.msg = msg;
 	}
 
 	public Integer getCode() {
