@@ -33,6 +33,11 @@ public class RespBody implements Serializable{
 	private Status status;
 	
 	/**
+	 * 状态码
+	 */
+	private Integer code;
+	
+	/**
 	 * 结果
 	 */
 	private Object result;
@@ -69,12 +74,26 @@ public class RespBody implements Serializable{
 		this.result = result;
 		this.message = message;
 	}
+	
+	/**  
+	* RespBody. 
+	* @param status
+	* @param code
+	* @param message  
+	*/  
+	public RespBody(Status status, Integer code, String message) {
+		super();
+		this.status = status;
+		this.code = code;
+		this.message = message;
+	}
+
 
 	/**
 	 * 结果类型信息
 	 */
 	public enum Status {
-		OK, ERROR, FAIL
+		OK, ERROR, FAIL,EXCEPTION
 	}
 
 	/**
@@ -89,6 +108,7 @@ public class RespBody implements Serializable{
 	 * 添加成功结果信息
 	 */
 	public void addOK(Object result, String message) {
+		this.code=200;
 		this.message = message;
 		this.status = Status.OK;
 		this.result = result;
@@ -102,8 +122,48 @@ public class RespBody implements Serializable{
 		this.status = Status.ERROR;
 	}
 	
+	/**
+	 * @Description: 异常信息
+	 * @param message
+	 * @param code void
+	 * @Autor: Jason
+	 */
+	public void addError(String message,Integer code) {
+		this.message = message;
+		this.code = code; 
+		this.status = Status.ERROR;
+	}
+	
+	/**
+	 * @Description: 添加异常信息
+	 * @param message 
+	 * @Autor: Jason
+	 */
+	public void addException(String message) {
+		this.message = message;
+		this.status = Status.EXCEPTION;
+	}
+	
+	/**
+	 * @Description: 异常处理
+	 * @param message
+	 * @param code 
+	 * @Autor: Jason
+	 */
+	public void addException(String message,Integer code) {
+		this.message = message;
+		this.code = code;
+		this.status = Status.EXCEPTION;
+	}
+	
 	public void addFail(String message) {
 		this.message = message;
+		this.status = Status.ERROR;
+	}
+	
+	public void addFail(String message,Integer code) {
+		this.message = message;
+		this.code = code;
 		this.status = Status.ERROR;
 	}
 
@@ -131,4 +191,13 @@ public class RespBody implements Serializable{
 		this.message = message;
 	}
 
+	public Integer getCode() {
+		return code;
+	}
+	
+	public void setCode(Integer code) {
+		this.code = code;
+	}
+
+	
 }

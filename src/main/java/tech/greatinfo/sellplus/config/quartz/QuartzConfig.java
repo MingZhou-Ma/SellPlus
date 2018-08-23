@@ -45,31 +45,31 @@ public class QuartzConfig {
 	private static String TARGET_METHOD = "startUp";
 	
 	/**
-	 * 延迟启动 - 默认1秒
+	 * 延迟启动 - 默认60秒
 	 */
 	@Value("${quartz.scheduler.startupDelay:60}")
     private Integer startupDelay;
 	
 	/**
-	 * 核心池大小
+	 * 核心池大小 - 默认5
 	 */
 	@Value("${quartz.executor.corePoolSize:5}")
     private Integer corePoolSize;
 	
 	/**
-	 * 保持时间
+	 * 保持时间 - 默认300
 	 */
 	@Value("${quartz.executor.keepAliveSeconds:300}")
     private Integer keepAliveSeconds;
 	
 	/**
-	 * 最大池大小
+	 * 最大池大小-默认10
 	 */
 	@Value("${quartz.executor.maxPoolSize:10}")
     private Integer maxPoolSize;
 	
 	/**
-	 * 队列容量
+	 * 队列容量-默认25
 	 */
 	@Value("${quartz.executor.queueCapacity:25}")
     private Integer queueCapacity;

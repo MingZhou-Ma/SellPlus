@@ -107,10 +107,11 @@ public class CouponServiceImpl implements CouponService{
 	public Page<Coupon> findCouponByPage(Pageable pageable) {
 		try {
 			Assert.notNull(pageable,"pageable不允许为Null!");
+			int a = 1/0; //产生异常
 			return couponRepository.findAll(pageable);
 		} catch (Exception e) {
 			logger.error("分页查询优惠券异常:{}", e);
-			throw new SystemException(e);
+			throw new SystemException(10010,"分页查询优惠券异常:%s",e);
 		}
 	}
 

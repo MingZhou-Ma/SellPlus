@@ -10,10 +10,12 @@
  */
 package tech.greatinfo.sellplus.common.exception;
 
+import tech.greatinfo.sellplus.common.constants.ExceptionConstant;
+
 /**
 * @Package：tech.greatinfo.sellplus.common.exception   
 * @ClassName：BizException   
-* @Description：   <p> 业务异常基类 </p>
+* @Description：   <p> 业务异常基类 - 统一的异常码的处理 </p>
 * @Author： - Jason   
 * @CreatTime：2018年8月14日 下午4:18:59   
 * @Modify By：   
@@ -24,7 +26,12 @@ package tech.greatinfo.sellplus.common.exception;
 public class BizException extends RuntimeException {
 
     private static final long serialVersionUID = -5875371379845226068L;
-
+    
+    /**
+     * 会话超时　获取session时
+     */
+    public static final BizException SESSION_IS_OUT_TIME = new BizException(ExceptionConstant.BIZ_SESSION_IS_OUT_TIME, "Seesion会话超时");
+    
     /**
      * 异常信息
      */

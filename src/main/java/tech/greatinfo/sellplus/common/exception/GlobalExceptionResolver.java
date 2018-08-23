@@ -87,7 +87,7 @@ public class GlobalExceptionResolver {
 	@ResponseBody
 	public RespBody systemExceptionHandler(HttpServletRequest request, SystemException e) {
 		RespBody respBody = new RespBody();
-		respBody.addError(e.getMessage());
+		respBody.addException(e.getMessage(), e.getCode());
 		return respBody;
 	}
 	
@@ -103,7 +103,7 @@ public class GlobalExceptionResolver {
 	@ResponseBody
 	public RespBody bizExceptionHandler(HttpServletRequest request, BizException e) {
 		RespBody respBody = new RespBody();
-		respBody.addError(e.getMessage());
+		respBody.addException(e.getMessage(), e.getCode());
 		return respBody;
 	}
 	
