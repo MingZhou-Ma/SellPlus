@@ -43,8 +43,6 @@ public class ReadHistory {
     public ReadHistory() {
     }
 
-    @Column(columnDefinition = "DOUBLE COMMENT '拼团价格'")
-
     public Long getId() {
         return id;
     }

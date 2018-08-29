@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import tech.greatinfo.sellplus.domain.intf.User;
+
 /**
  *
  * 销售人员
@@ -17,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "seller")
-public class Seller {
+public class Seller implements User {
     private static final long serialVersionUID = -1L;
 
     @Id

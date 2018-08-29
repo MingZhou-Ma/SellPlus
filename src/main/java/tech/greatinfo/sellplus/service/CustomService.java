@@ -1,12 +1,15 @@
 package tech.greatinfo.sellplus.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.repository.CustomRepository;
 
 /**
@@ -50,5 +53,9 @@ public class CustomService {
 
     public Customer getByUid(String uid){
         return repository.getByUid(uid);
+    }
+
+    public Page<Customer> getAllBySeller(Seller seller, Pageable pageable){
+        return repository.getAllBySeller(seller, pageable);
     }
 }
