@@ -16,12 +16,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "CompanyInfo")
 public class Company {
-    @Id
-    @GeneratedValue
-    @PrimaryKeyJoinColumn
-    private Long id;
 
-    @Column
+    @Id
+    @PrimaryKeyJoinColumn
+    @Column(length = 32,columnDefinition = "VARCHAR(32) COMMENT '主键 key'")
     private String k;
 
     @Column
@@ -33,14 +31,6 @@ public class Company {
     public Company(String key, String value) {
         this.k = key;
         this.v = value;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getK() {

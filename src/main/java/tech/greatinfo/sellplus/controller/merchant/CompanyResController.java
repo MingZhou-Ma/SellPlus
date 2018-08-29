@@ -51,17 +51,39 @@ public class CompanyResController {
                                @RequestParam(value = "notify1",required = false) String notify1,
                                @RequestParam(value = "notify2",required = false) String notify2,
                                @RequestParam(value = "notify3",required = false) String notify3,
+                               @RequestParam(value = "curtain",required = false) String curtain,
                                @RequestParam(value = "token") String token){
 
         try {
             if (tokenService.getUserByToken(token) != null){
                 List<Company> list = new ArrayList<>();
-                list.add(new Company("banner1",banner1));
-                list.add(new Company("banner2",banner2));
-                list.add(new Company("banner3",banner3));
-                list.add(new Company("notify1",notify1));
-                list.add(new Company("notify2",notify2));
-                list.add(new Company("notify3",notify3));
+                if (banner1 != null){
+                    list.add(new Company("banner1",banner1));
+                }
+
+                if (banner2 != null){
+                    list.add(new Company("banner2",banner2));
+                }
+
+                if (banner3 != null){
+                    list.add(new Company("banner3",banner3));
+                }
+
+                if (notify1 != null){
+                    list.add(new Company("notify1",notify1));
+                }
+
+                if (notify2 != null){
+                    list.add(new Company("notify2",notify2));
+                }
+
+                if (notify3 != null){
+                    list.add(new Company("notify3",notify3));
+                }
+
+                if (curtain != null){
+                    list.add(new Company("curtain",curtain));
+                }
                 companyService.saveMainInfo(list);
                 return ResJson.successJson("set company info success");
             }else {
