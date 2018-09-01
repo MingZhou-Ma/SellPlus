@@ -13,7 +13,7 @@ package tech.greatinfo.sellplus.utils.biz;
 /**     
 * @Package：tech.greatinfo.sellplus.utils   
 * @ClassName：CouponUtil   
-* @Description：   <p> 优惠券工具类 生成券码等..</p>
+* @Description：   <p> 优惠券工具类 生成券码等.. / 废除 - 采用RandomUtils随机数据 -  {@code RandomUtils}</p>
 * @Author： - Jason   
 * @CreatTime：2018年8月15日 下午4:33:33   
 * @Modify By：   

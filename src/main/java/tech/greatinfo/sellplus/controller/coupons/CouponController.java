@@ -134,7 +134,11 @@ public class CouponController {
         return "Welcome,"+username;
     }
     
-    
+    /**
+     * @Description: PageHelper 分页查询
+     * @return ResJson
+     * @Autor: Jason
+     */
     @ApiOperation(value="PageHelper 分页查询")  
     @RequestMapping(value = "/page",method = RequestMethod.GET)
     public ResJson page(){
@@ -144,6 +148,11 @@ public class CouponController {
          return ResJson.successJson("分页查询数据", pageList);
     }
     
+    /**
+     * @Description: 新增优惠券
+     * @return ResJson
+     * @Autor: Jason
+     */
     @ApiOperation(value="新增优惠券")  
     @RequestMapping(value = "/add",method = RequestMethod.GET)
     public ResJson add(){
@@ -156,7 +165,13 @@ public class CouponController {
          return ResJson.successJson("优惠券信息", coupon);
     }
     
-    
+    /**
+     * @Description: 更新优惠券
+     * @param name
+     * @param remark
+     * @return ResJson
+     * @Autor: Jason
+     */
     @ApiOperation(value="更新优惠券")  
     @RequestMapping(value = "/update/{name}/{remark}",method = RequestMethod.GET)
     public ResJson update(@PathVariable String name,@PathVariable String remark){
@@ -283,7 +298,11 @@ public class CouponController {
     }
     
     
-    
+    /**
+     * @Description: parseJson解析枚举字段
+     * @return RespBody
+     * @Autor: Jason
+     */
     @ApiOperation(value="parseJson解析枚举字段")  
     @RequestMapping(value = "/parse",method = RequestMethod.GET)
     public RespBody parse(){
