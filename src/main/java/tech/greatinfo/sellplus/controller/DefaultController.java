@@ -23,7 +23,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  * Created by Ericwyn on 18-8-8.
  */
 @RestController
-public class DefaultResController {
+public class DefaultController {
     @Autowired
     MerchantService merchantService;
 

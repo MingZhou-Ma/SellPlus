@@ -46,23 +46,25 @@ public class CouponsTask {
 	//private CouponService CouponService;
 	
 	public void startUp(){
-		long count = counter.incrementAndGet();
-		if (logger.isInfoEnabled()) {
-			logger.info("第 " + count + " 个定时任务开始对优惠券进行处理......");
-		}
-		Long statrTime = Calendar.getInstance().getTimeInMillis();
-		
-		
-		//-----------------------------biz 业务处理开始--------------------------
-		CouponsCollector couponsCollector = new CouponsCollector();
-		couponsCollector.startCollector(); //开启处理
-		//-----------------------------biz 业务处理结束--------------------------
-		
-		
-		Long endTime = Calendar.getInstance().getTimeInMillis();
-		if (logger.isInfoEnabled()) {
-			logger.info("第 " + count + " 个定时任务开始对优惠券进行处理结束 ,耗费时间" + ( endTime - statrTime ) + " Millis");
-		}
+
+
+//		long count = counter.incrementAndGet();
+//		if (logger.isInfoEnabled()) {
+//			logger.info("第 " + count + " 个定时任务开始对优惠券进行处理......");
+//		}
+//		Long statrTime = Calendar.getInstance().getTimeInMillis();
+//
+//
+//		//-----------------------------biz 业务处理开始--------------------------
+//		CouponsCollector couponsCollector = new CouponsCollector();
+//		couponsCollector.startCollector(); //开启处理
+//		//-----------------------------biz 业务处理结束--------------------------
+//
+//
+//		Long endTime = Calendar.getInstance().getTimeInMillis();
+//		if (logger.isInfoEnabled()) {
+//			logger.info("第 " + count + " 个定时任务开始对优惠券进行处理结束 ,耗费时间" + ( endTime - statrTime ) + " Millis");
+//		}
 	}
 	
 }

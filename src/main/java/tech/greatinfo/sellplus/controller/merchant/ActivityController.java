@@ -28,8 +28,8 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  * Created by Ericwyn on 18-8-6.
  */
 @RestController
-public class ActivityResController {
-    private static final Logger logger = LoggerFactory.getLogger(ActivityResController.class);
+public class ActivityController {
+    private static final Logger logger = LoggerFactory.getLogger(ActivityController.class);
 
 
     @Autowired

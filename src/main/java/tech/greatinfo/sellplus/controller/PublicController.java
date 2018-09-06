@@ -44,8 +44,8 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  * Created by Ericwyn on 18-8-9.
  */
 @RestController
-public class PublicResController {
-    private static final Logger logger = LoggerFactory.getLogger(PublicResController.class);
+public class PublicController {
+    private static final Logger logger = LoggerFactory.getLogger(PublicController.class);
 
     @Autowired
     ArticleService articleService;

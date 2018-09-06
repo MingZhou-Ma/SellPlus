@@ -25,8 +25,8 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  * Created by Ericwyn on 18-8-29.
  */
 @RestController
-public class SellerResController {
-    private static final Logger logger = LoggerFactory.getLogger(SellerResController.class);
+public class SellerController {
+    private static final Logger logger = LoggerFactory.getLogger(SellerController.class);
 
     @Autowired
     TokenService tokenService;

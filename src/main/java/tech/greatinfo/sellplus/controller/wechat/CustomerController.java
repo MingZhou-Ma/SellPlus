@@ -39,9 +39,9 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  * Created by Ericwyn on 18-8-9.
  */
 @RestController
-public class CustomerResController {
+public class CustomerController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomerResController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     public static OkHttpClient client = WeChatUtils.client;
 
