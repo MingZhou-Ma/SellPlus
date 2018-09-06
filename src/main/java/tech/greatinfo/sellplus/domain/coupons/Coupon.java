@@ -1,5 +1,7 @@
 package tech.greatinfo.sellplus.domain.coupons;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +18,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "Coupons")
-public class Coupons {
+public class Coupon {
 
     private static final long serialVersionUID = -1L;
 
@@ -35,7 +37,13 @@ public class Coupons {
     @Column(columnDefinition = "INT COMMENT '优惠卷数量'")
     private Integer num;
 
-    public Coupons() {
+    @Column(name = "startDate", columnDefinition = "TIMESTAMP COMMENT '开始的有效时间'")
+    private Date startDate;
+
+    @Column(name = "endDate", columnDefinition = "TIMESTAMP COMMENT '过期时间'")
+    private Date endDate;
+
+    public Coupon() {
     }
 
     public String getContent() {

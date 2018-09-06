@@ -55,6 +55,9 @@ public class Customer implements User, Serializable {
     @Column(columnDefinition = "BIT COMMENT '是否是销售人员'")
     private boolean bSell;
 
+    @Column(columnDefinition = "BIT COMMENT '是否是老司机'")
+    private boolean frequenter;
+
     public Customer() {
     }
 
@@ -112,5 +115,13 @@ public class Customer implements User, Serializable {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public boolean isFrequenter() {
+        return frequenter;
+    }
+
+    public void setFrequenter(boolean frequenter) {
+        this.frequenter = frequenter;
     }
 }

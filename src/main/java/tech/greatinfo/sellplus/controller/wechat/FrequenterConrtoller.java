@@ -1,9 +1,32 @@
 package tech.greatinfo.sellplus.controller.wechat;
 
+import com.alibaba.fastjson.JSONObject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import tech.greatinfo.sellplus.controller.merchant.CompanyController;
+import tech.greatinfo.sellplus.domain.Company;
+import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.Seller;
+import tech.greatinfo.sellplus.domain.coupons.Coupon;
+import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
+import tech.greatinfo.sellplus.service.CompanyService;
+import tech.greatinfo.sellplus.service.CouponsObjService;
+import tech.greatinfo.sellplus.service.CouponsService;
+import tech.greatinfo.sellplus.service.CustomService;
+import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.utils.ParamUtils;
+import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
@@ -52,38 +75,210 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  * Created by Ericwyn on 18-9-4.
  */
 public class FrequenterConrtoller {
+    private static final Logger logger = LoggerFactory.getLogger(FrequenterConrtoller.class);
 
+    @Autowired
+    TokenService tokenService;
 
-    // 老司机通过 Seller 的顾客链接来注册成为老司机
+    @Autowired
+    CouponsService modelService;
+
+    @Autowired
+    CouponsObjService objService;
+
+    @Autowired
+    CompanyService companyService;
+
+    @Autowired
+    CustomService customService;
+    /**
+     * 老司机通过 Seller 的顾客链接来注册成为老司机
+     * 该链接是给前端的一个特殊页面调用的，特殊页面固定地址，Seller 分享的时候就是分享这个特殊页面
+     * 特殊页面里面调用 ajax ，向接口发送数据，完成绑定
+     *
+     * POST
+     *      token
+     *      cusid     这个 cusid 必须跟当前的登录用户一致，才能完成绑定
+     *
+     * @param jsonObject
+     * @return
+     */
     @RequestMapping(value = "/api/freq/beFreq",method = RequestMethod.POST)
-    public ResJson beFreq(@RequestParam("cus") Long cusId,
-                          @RequestParam("token") String token){
-        return null;
+    public ResJson beFreq(@RequestBody JSONObject jsonObject){
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Long cusId = (Long) ParamUtils.getFromJson(jsonObject,"cusid",Long.class);
+            Customer customer;
+            if ((customer = (Customer) tokenService.getUserByToken(token)) != null && customer.getId().equals(cusId)){
+                customer.setFrequenter(true);
+                return ResJson.successJson("be freq success");
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/beFreq");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/beFreq");
+        }catch (Exception e){
+            logger.error("/api/freq/beFreq -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
     }
 
-    // 发卷无需使用接口，老司机那边生成一个链接就好了
-    // 链接格式是下面这个接口 + 老司机 id
-    // 用户通过这个接口来领取老司机发的优惠卷
-    @RequestMapping(value = "/api/freq/general?freq",method = RequestMethod.POST)
-    public ResJson general(@RequestParam("freq") String freq,
-                           @RequestParam("token") String token){
-        return null;
+    /**
+     * 发卷无需使用接口，老司机那边生成一个链接就好了
+     * 前端生成一个特定的页面链接，带上老司机 id 参数
+     *
+     * 用户访问那个特定页面的时候，上传 url 参数中的老司机 id 以及 token 来获得卷
+     * 用户通过这个接口来领取老司机发的优惠卷
+     *
+     * POST
+     *      cusid       老司机用户的 id
+     *      token
+     *
+     * @return
+     */
+    @RequestMapping(value = "/api/freq/general",method = RequestMethod.POST)
+    public ResJson general(@RequestBody JSONObject jsonObject){
+//        return null;
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Long cusId = (Long) ParamUtils.getFromJson(jsonObject,"cusid",Long.class);
+            Customer customer;
+            if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
+                Customer freq;
+                if ((freq = customService.getOne(cusId)) == null){
+                    return ResJson.failJson(-1,"老司机 id 错误",null);
+                }
+                Company couponSet = companyService.findByKey("coupon2");
+                if (couponSet == null){
+                    return ResJson.failJson(-1,"默认奖励优惠卷未设置，请到后台设置",null);
+                }else {
+                    Long couponId = Long.parseLong(couponSet.getV());
+                    Coupon coupon = modelService.findOne(couponId);
+                    if (coupon == null){
+                        return ResJson.failJson(-1,"默认奖励优惠卷不存在",null);
+                    }else {
+                        CouponsObj couponsObj = new CouponsObj();
+                        couponsObj.setCoupons(coupon);
+                        couponsObj.setExpired(false);
+                        couponsObj.setCode(objService.getRandomCouponCode());
+                        couponsObj.setOrigin(freq);
+                        couponsObj.setOwn(customer);
+                        objService.save(couponsObj);
+                        return ResJson.successJson("领卷成功");
+                    }
+                }
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/general");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/general");
+        }catch (Exception e){
+            logger.error("/api/freq/general -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
     }
 
 
-    // 获取自己发卷历史以及卷使用历史
-    // 总共发了多少张卷
-    // 有多少人核销了卷
+    /**
+     *
+     * 获取自己的老司机数据（发了多少卷，有多少人核销了）
+     *
+     * POST
+     *      token
+     *
+     * 返回格式如下
+     *
+     *  {
+     *      xxx
+     *      xxx
+     *      data:{
+     *          ""
+     *      }
+     *  }
+     *
+     * @return
+     */
     @RequestMapping(value = "/api/freq/getFreqInfo",method = RequestMethod.POST)
-    public ResJson getFreqInfo(@RequestParam("token") String token){
-        return null;
+    public ResJson getFreqInfo(@RequestBody JSONObject jsonObject){
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Customer customer;
+            if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
+                Long send = objService.countAllByOrigin(customer);
+                Long success = objService.countAllByOriginAndExpiredTrue(customer);
+                HashMap<String,Long> map = new HashMap<>();
+                map.put("send", send);
+                map.put("success", success);
+                return ResJson.successJson("get freq info success", map);
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/getFreqInfo");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/getFreqInfo");
+        }catch (Exception e){
+            logger.error("/api/freq/getFreqInfo -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
     }
 
 
-    // 老司机将推广名额兑换成老司机卷
+    /**
+     * 老司机兑换自己的推广名额
+     *
+     * POST
+     *      token
+     *
+     * @return
+     */
     @RequestMapping(value = "/api/freq/convert",method = RequestMethod.POST)
-    public ResJson convert(@RequestParam("token") String token){
-        return null;
+    public ResJson convert(@RequestBody JSONObject jsonObject){
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Customer customer;
+            if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
+                Long success = objService.countAllByOriginAndExpiredTrue(customer);
+                Company promotionSet = companyService.findByKey("promotion");
+                Company couponSet = companyService.findByKey("coupon1");
+                if (promotionSet == null){
+                    return ResJson.failJson(-1,"老司机奖励阈值未设置，请到后台设置",null);
+                }
+                if (couponSet == null){
+                    return ResJson.failJson(-1,"老司机奖励卷未设置，请到后台设置",null);
+                }
+                Coupon coupon;
+                if ((coupon = modelService.findOne(Long.parseLong(couponSet.getV()))) == null){
+                    return ResJson.failJson(-1,"老司机奖励卷设置错误，请到后台设置",null);
+                }
+                Integer promotion = Integer.parseInt(promotionSet.getV());
+                int convertNum = success.intValue()/ promotion;
+                List<CouponsObj> saveList = new ArrayList<>();
+                for (int i=0;i<convertNum;i++){
+                    CouponsObj couponsObj = new CouponsObj();
+                    couponsObj.setOwn(customer);
+                    couponsObj.setCode(objService.getRandomCouponCode());
+                    couponsObj.setExpired(false);
+                    couponsObj.setCoupons(coupon);
+                    saveList.add(couponsObj);
+                }
+                objService.save(saveList);
+                return ResJson.successJson("兑换成功");
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/convert");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/convert");
+        }catch (Exception e){
+            logger.error("/api/freq/convert -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
     }
 
 }

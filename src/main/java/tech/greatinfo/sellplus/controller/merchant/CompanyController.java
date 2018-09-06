@@ -12,8 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tech.greatinfo.sellplus.domain.Company;
+import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.CompanyService;
+import tech.greatinfo.sellplus.service.CouponsObjService;
+import tech.greatinfo.sellplus.service.CouponsService;
 import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.ProductService;
 import tech.greatinfo.sellplus.service.TokenService;
@@ -44,6 +47,12 @@ public class CompanyController {
     @Autowired
     CompanyService companyService;
 
+    @Autowired
+    CouponsService couModelService;
+
+    @Autowired
+    CouponsObjService couObjService;
+
     /**
      * 参数说明
      *
@@ -55,8 +64,8 @@ public class CompanyController {
      *      notify3
      *      curtain         弹幕内容
      *      promotion       老司机推广人数达标阈值，达到这个值将可以领取一张老司机推广专属优惠卷
-     *      juan1           用来奖励给老司机的特殊优惠卷的卷 id
-     *      juan2           老司机用来发给新顾客的卷的卷 id
+     *      coupon1         用来奖励给老司机的特殊优惠卷的卷 id
+     *      coupon2         老司机用来发给新顾客的卷的卷 id
      *
      *      token
      *
@@ -72,7 +81,8 @@ public class CompanyController {
                                @RequestParam(value = "notify3",required = false) String notify3,
                                @RequestParam(value = "curtain",required = false) String curtain,
                                @RequestParam(value = "promotion",required = false) String promotion,
-                               @RequestParam(value = "juan1",required = false) String juan1,
+                               @RequestParam(value = "coupon1",required = false) String coupon1,
+                               @RequestParam(value = "coupon2",required = false) String coupon2,
                                @RequestParam(value = "token") String token){
 
         try {
@@ -99,11 +109,15 @@ public class CompanyController {
                 if (curtain != null){
                     list.add(new Company("curtain",curtain));
                 }
+                // TODO 卷的权限判断（是否存在，是否是数量无限制的优惠卷）
                 if (promotion != null){
                     list.add(new Company("promotion",promotion));
                 }
-                if (juan1 != null){
-                    list.add(new Company("juan1",juan1));
+                if (coupon1 != null){
+                    list.add(new Company("coupon1",coupon1));
+                }
+                if (coupon2 != null){
+                    list.add(new Company("coupon1",coupon2));
                 }
                 companyService.saveMainInfo(list);
                 return ResJson.successJson("set company info success");

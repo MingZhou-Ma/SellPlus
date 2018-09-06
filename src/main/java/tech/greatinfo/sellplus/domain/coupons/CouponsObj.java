@@ -33,8 +33,8 @@ public class CouponsObj {
     private String code;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "coupons_id", columnDefinition = "BIGINT COMMENT '卷模板外键'")
-    private Coupons coupons;
+    @JoinColumn(name = "coupon_id", columnDefinition = "BIGINT COMMENT '卷模板外键'")
+    private Coupon coupon;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
@@ -45,12 +45,6 @@ public class CouponsObj {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "own", columnDefinition = "BIGINT COMMENT '所属人'")
     private Customer own;
-
-    @Column(name = "startDate", columnDefinition = "TIMESTAMP COMMENT '卷的创建时间'")
-    private Date startDate;
-
-    @Column(name = "endDate", columnDefinition = "TIMESTAMP COMMENT '卷的过期时间'")
-    private Date endDate;
 
     @Column(name = "expired", columnDefinition = "BIT COMMENT '是否已经核销'")
     private Boolean expired;
@@ -66,12 +60,12 @@ public class CouponsObj {
         this.code = code;
     }
 
-    public Coupons getCoupons() {
-        return coupons;
+    public Coupon getCoupons() {
+        return coupon;
     }
 
-    public void setCoupons(Coupons coupons) {
-        this.coupons = coupons;
+    public void setCoupons(Coupon coupons) {
+        this.coupon = coupons;
     }
 
     public Customer getOrigin() {
@@ -88,22 +82,6 @@ public class CouponsObj {
 
     public void setOwn(Customer own) {
         this.own = own;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
     }
 
     public Boolean getExpired() {
