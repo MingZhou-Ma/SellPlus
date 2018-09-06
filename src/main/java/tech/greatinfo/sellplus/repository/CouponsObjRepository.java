@@ -1,6 +1,7 @@
 package tech.greatinfo.sellplus.repository;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -19,4 +20,5 @@ public interface CouponsObjRepository extends JpaRepository<CouponsObj, Long>,
 
     Long countAllByOriginAndExpiredTrue(Customer origin);
 
+    Page<CouponsObj> getAllByOwn(Customer customer,Pageable pageable);
 }

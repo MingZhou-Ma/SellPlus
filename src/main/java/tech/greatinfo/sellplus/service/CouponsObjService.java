@@ -49,6 +49,10 @@ public class CouponsObjService {
         return objRepository.countAllByOriginAndExpiredTrue(origin);
     }
 
+    public Page<CouponsObj> getAllByOwn(Customer own,int start,int num){
+        return objRepository.getAllByOwn(own,new PageRequest(start,num));
+    }
+
     /**
      * 生成卷 code ，由 大小写，和 0 ~ 9 组成的 6 位数字
      * @return

@@ -91,6 +91,7 @@ public class FrequenterConrtoller {
 
     @Autowired
     CustomService customService;
+
     /**
      * 老司机通过 Seller 的顾客链接来注册成为老司机
      * 该链接是给前端的一个特殊页面调用的，特殊页面固定地址，Seller 分享的时候就是分享这个特殊页面
@@ -196,7 +197,8 @@ public class FrequenterConrtoller {
      *      xxx
      *      xxx
      *      data:{
-     *          ""
+     *          "send":10,                      // 发送的卷数量
+     *          "success":8                     // 核销的卷数量
      *      }
      *  }
      *
