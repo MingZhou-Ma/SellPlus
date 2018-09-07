@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,11 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 
-import tech.greatinfo.sellplus.domain.Activity;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.article.Article;
 import tech.greatinfo.sellplus.domain.article.ReadHistory;
-import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.ArticleService;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.ReadHistoryService;

@@ -10,15 +10,15 @@
  */
 package tech.greatinfo.sellplus.common.exception;
 
-import java.sql.SQLException;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.sql.SQLException;
+
+import javax.servlet.http.HttpServletRequest;
 
 import tech.greatinfo.sellplus.common.vo.RespBody;
 

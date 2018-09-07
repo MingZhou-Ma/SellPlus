@@ -8,10 +8,10 @@
  */
 package tech.greatinfo.sellplus.task.biz.callable;
 
-import java.util.concurrent.Callable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.Callable;
 
 import tech.greatinfo.sellplus.task.biz.vo.TaskResultInfo;
 

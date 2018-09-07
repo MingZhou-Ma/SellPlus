@@ -17,7 +17,6 @@ import redis.clients.jedis.BinaryClient.LIST_POSITION;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.Tuple;
-
 import tech.greatinfo.sellplus.common.exception.SystemException;
 
 /**

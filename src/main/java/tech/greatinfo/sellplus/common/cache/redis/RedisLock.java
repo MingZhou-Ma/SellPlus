@@ -8,10 +8,10 @@
  */
 package tech.greatinfo.sellplus.common.cache.redis;
 
-import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Random;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;

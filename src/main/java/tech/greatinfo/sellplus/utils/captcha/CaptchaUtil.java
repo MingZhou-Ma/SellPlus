@@ -10,12 +10,15 @@
  */
 package tech.greatinfo.sellplus.utils.captcha;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 /**
 * @Package：tech.greatinfo.sellplus.utils.captcha   

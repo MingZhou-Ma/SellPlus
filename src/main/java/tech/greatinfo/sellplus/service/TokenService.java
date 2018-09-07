@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.intf.User;
 import tech.greatinfo.sellplus.utils.EncryptUtils;
-import tech.greatinfo.sellplus.utils.encrypt.EncryptUtil;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 
 

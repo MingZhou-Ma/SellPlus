@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tech.greatinfo.sellplus.domain.Company;
-import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.CompanyService;
 import tech.greatinfo.sellplus.service.CouponsObjService;

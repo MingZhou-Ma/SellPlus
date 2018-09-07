@@ -8,8 +8,6 @@
  */
 package tech.greatinfo.sellplus.config.quartz;
 
-import java.io.IOException;
-
 import org.quartz.Trigger;
 import org.quartz.ee.servlet.QuartzInitializerListener;
 import org.slf4j.Logger;
@@ -22,6 +20,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+
+import java.io.IOException;
 
 import tech.greatinfo.sellplus.task.biz.taskitem.CouponsTask;
 

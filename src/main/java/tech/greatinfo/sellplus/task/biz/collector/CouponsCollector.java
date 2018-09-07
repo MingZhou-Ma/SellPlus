@@ -8,20 +8,8 @@
  */
 package tech.greatinfo.sellplus.task.biz.collector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import tech.greatinfo.sellplus.common.threadpool.SimpleThreadFactory;
-import tech.greatinfo.sellplus.task.biz.callable.CouponsCollectCall;
-import tech.greatinfo.sellplus.task.biz.vo.TaskResultInfo;
-import tech.greatinfo.sellplus.task.constant.TaskConstant;
 
 /**     
 * @Package：tech.greatinfo.sellplus.task.biz.collector   

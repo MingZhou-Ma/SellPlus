@@ -8,16 +8,13 @@
  */
 package tech.greatinfo.sellplus.task.biz.taskitem;
 
-import java.util.Calendar;
-import java.util.concurrent.atomic.AtomicLong;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
-import tech.greatinfo.sellplus.task.biz.collector.CouponsCollector;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**     
 * @Package：tech.greatinfo.sellplus.task.biz.taskitem   
