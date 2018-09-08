@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import tech.greatinfo.sellplus.domain.Customer;
-import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.repository.CouponsObjRepository;
 
@@ -36,7 +35,7 @@ public class CouponsObjService {
         return objRepository.findAll(new PageRequest(start,num));
     }
 
-    public void deleteByMode(Coupon model){
+    public void deleteByMode(tech.greatinfo.sellplus.domain.coupons.Coupon model){
         objRepository.deleteAllByCoupon(model);
     }
 

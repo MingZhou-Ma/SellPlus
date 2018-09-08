@@ -65,6 +65,8 @@ public class CompanyController {
      *      promotion       老司机推广人数达标阈值，达到这个值将可以领取一张老司机推广专属优惠卷
      *      coupon1         用来奖励给老司机的特殊优惠卷的卷 id
      *      coupon2         老司机用来发给新顾客的卷的卷 id
+     *      diaryReadNum    用户分享阅读数量领卷下限
+     *      diaryCoupon     心得分享的奖励优惠卷
      *
      *      token
      *
@@ -82,6 +84,8 @@ public class CompanyController {
                                @RequestParam(value = "promotion",required = false) String promotion,
                                @RequestParam(value = "coupon1",required = false) String coupon1,
                                @RequestParam(value = "coupon2",required = false) String coupon2,
+                               @RequestParam(value = "diaryReadNum",required = false) String diaryReadNum,
+                               @RequestParam(value = "diaryCoupon",required = false) String diaryCoupon,
                                @RequestParam(value = "token") String token){
 
         try {
@@ -118,6 +122,14 @@ public class CompanyController {
                 if (coupon2 != null){
                     list.add(new Company("coupon1",coupon2));
                 }
+                if (diaryReadNum != null){
+                    list.add(new Company("diaryReadNum",diaryReadNum));
+                }
+                // TODO 卷的权限判断（是否存在，是否是数量无限制的优惠卷）
+                if (diaryCoupon != null){
+                    list.add(new Company("diaryCoupon",diaryCoupon));
+                }
+
                 companyService.saveMainInfo(list);
                 return ResJson.successJson("set company info success");
             }else {

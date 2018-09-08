@@ -75,7 +75,7 @@ public class CouponsController {
                         // 新建 num 个尚未发出去的卷
                         CouponsObj obj = new CouponsObj();
                         obj.setCode(objService.getRandomCouponCode());
-                        obj.setCoupons(coupons);
+                        obj.setCoupon(coupons);
                         obj.setExpired(false);
                         objService.save(obj);
                     }

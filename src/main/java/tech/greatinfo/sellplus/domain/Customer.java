@@ -124,4 +124,10 @@ public class Customer implements User, Serializable {
     public void setFrequenter(boolean frequenter) {
         this.frequenter = frequenter;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Customer
+                && ((Customer) obj).getOpenid().equals(this.openid);
+    }
 }

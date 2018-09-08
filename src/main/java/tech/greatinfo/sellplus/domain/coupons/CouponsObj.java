@@ -2,6 +2,8 @@ package tech.greatinfo.sellplus.domain.coupons;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -47,6 +49,12 @@ public class CouponsObj {
     @Column(name = "expired", columnDefinition = "BIT COMMENT '是否已经核销'")
     private Boolean expired;
 
+    @Column(name = "note", columnDefinition = "VARCHAR(64) COMMENT '64 字节备注'")
+    private String note;
+
+    @Column(name = "generalTime", columnDefinition = "TIMESTAMP COMMENT '生成时间'")
+    private Date generalTime;
+
     public CouponsObj() {
     }
 
@@ -58,11 +66,11 @@ public class CouponsObj {
         this.code = code;
     }
 
-    public Coupon getCoupons() {
+    public Coupon getCoupon() {
         return coupon;
     }
 
-    public void setCoupons(Coupon coupons) {
+    public void setCoupon(Coupon coupons) {
         this.coupon = coupons;
     }
 
@@ -88,5 +96,29 @@ public class CouponsObj {
 
     public void setExpired(Boolean expired) {
         this.expired = expired;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getGeneralTime() {
+        return generalTime;
+    }
+
+    public void setGeneralTime(Date generalTime) {
+        this.generalTime = generalTime;
     }
 }

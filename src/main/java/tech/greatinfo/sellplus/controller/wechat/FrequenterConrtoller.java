@@ -158,7 +158,7 @@ public class FrequenterConrtoller {
                         return ResJson.failJson(-1,"默认奖励优惠卷不存在",null);
                     }else {
                         CouponsObj couponsObj = new CouponsObj();
-                        couponsObj.setCoupons(coupon);
+                        couponsObj.setCoupon(coupon);
                         couponsObj.setExpired(false);
                         couponsObj.setCode(objService.getRandomCouponCode());
                         couponsObj.setOrigin(freq);
@@ -262,7 +262,7 @@ public class FrequenterConrtoller {
                     couponsObj.setOwn(customer);
                     couponsObj.setCode(objService.getRandomCouponCode());
                     couponsObj.setExpired(false);
-                    couponsObj.setCoupons(coupon);
+                    couponsObj.setCoupon(coupon);
                     saveList.add(couponsObj);
                 }
                 objService.save(saveList);
