@@ -5,11 +5,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 import tech.greatinfo.sellplus.domain.Activity;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.Product;
+import tech.greatinfo.sellplus.domain.article.Article;
 import tech.greatinfo.sellplus.service.ActivityService;
+import tech.greatinfo.sellplus.service.ArticleService;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.ProductService;
@@ -35,6 +39,9 @@ public class DefaultController {
 
     @Autowired
     CustomService customService;
+
+    @Autowired
+    ArticleService articleService;
 
     @RequestMapping(value = "/api/default/setMerchant",method = RequestMethod.GET)
     public ResJson setDefaultSet(){
@@ -169,6 +176,41 @@ public class DefaultController {
         one.setPhone("2220 8888");
         one.setShopName("超级无敌大商店");
         merchantService.save(one);
+        return null;
+    }
+
+    @RequestMapping(value = "/api/defalut/setArticle")
+    public ResJson test223(){
+        Merchant one = merchantService.findOne(1L);
+        Article article = new Article();
+        article.setAuthor("作者");
+        article.setContent("内容2018-09-10 22:03:50.209 [WARN ] org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver - Resolved exception caused by Handler execution: org.springframework.orm.jpa.JpaSystemException: Null value was assigned to a property [class tech.greatinfo.sellplus.domain.Customer.frequenter] of primitive type setter of tech.greatinfo.sellplus.domain.Customer.frequenter; nested exception is org.hibernate.PropertyAccessException: Null value was assigned to a property [class tech.greatinfo.sellplus.domain.Customer.frequenter] of primitive type setter of tech.greatinfo.sellplus.domain.Customer.frequenter\n");
+        article.setCreateDate(new Date());
+        article.setTitle("标题1");
+        articleService.save(article);
+
+
+        article = new Article();
+        article.setAuthor("作者2");
+        article.setContent("内容2018-09-10 22:03:50.209 [WARN ] org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver - Resolved exception caused by Handler execution: org.springframework.orm.jpa.JpaSystemException: Null value was assigned to a property [class tech.greatinfo.sellplus.domain.Customer.frequenter] of primitive type setter of tech.greatinfo.sellplus.domain.Customer.frequenter; nested exception is org.hibernate.PropertyAccessException: Null value was assigned to a property [class tech.greatinfo.sellplus.domain.Customer.frequenter] of primitive type setter of tech.greatinfo.sellplus.domain.Customer.frequenter\n");
+        article.setCreateDate(new Date());
+        article.setTitle("标题2");
+        articleService.save(article);
+
+        article = new Article();
+        article.setAuthor("作者3");
+        article.setContent("内容2018-09-10 22:03:50.209 [WARN ] org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver - Resolved exception caused by Handler execution: org.springframework.orm.jpa.JpaSystemException: Null value was assigned to a property [class tech.greatinfo.sellplus.domain.Customer.frequenter] of primitive type setter of tech.greatinfo.sellplus.domain.Customer.frequenter; nested exception is org.hibernate.PropertyAccessException: Null value was assigned to a property [class tech.greatinfo.sellplus.domain.Customer.frequenter] of primitive type setter of tech.greatinfo.sellplus.domain.Customer.frequenter\n");
+        article.setCreateDate(new Date());
+        article.setTitle("标题3");
+        articleService.save(article);
+
+        article = new Article();
+        article.setAuthor("作者4");
+        article.setContent("内容2018-09-10 22:03:50.209 [WARN ] org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver - Resolved exception caused by Handler execution: org.springframework.orm.jpa.JpaSystemException: Null value was assigned to a property [class tech.greatinfo.sellplus.domain.Customer.frequenter] of primitive type setter of tech.greatinfo.sellplus.domain.Customer.frequenter; nested exception is org.hibernate.PropertyAccessException: Null value was assigned to a property [class tech.greatinfo.sellplus.domain.Customer.frequenter] of primitive type setter of tech.greatinfo.sellplus.domain.Customer.frequenter\n");
+        article.setCreateDate(new Date());
+        article.setTitle("标题4");
+        articleService.save(article);
+
         return null;
     }
 
