@@ -117,6 +117,7 @@ public class CustomerController {
                         customer.setSessionKey(obj.getString("session_key"));
                         customer.setUid(UUID.randomUUID().toString().replaceAll("-",""));
                         customer.setbSell(false);
+                        customer.setFrequenter(false);
                         customer.setSeller(sellerSerivce.getDefaultSeller());
                         customService.save(customer);
                     }
