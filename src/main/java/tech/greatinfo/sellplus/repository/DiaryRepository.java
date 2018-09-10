@@ -17,4 +17,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long>,
 
     List<Diary> findAllByCustomerAndGeneral(Customer customer, Boolean general);
 
+    //List<Diary> findAllByCustomerAndGeneralOrderByGeneralTimeDesc()
+
+    Diary findFirstByCustomerAndGeneralOrderByGeneralTimeDesc(Customer customer, Boolean general);
 }

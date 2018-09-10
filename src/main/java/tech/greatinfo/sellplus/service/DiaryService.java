@@ -28,4 +28,8 @@ public class DiaryService {
     public List<Diary> findAllByCustomerAndGeneral(Customer customer, Boolean general) {
         return repository.findAllByCustomerAndGeneral(customer, general);
     }
+
+    public Diary findFirstByCustomerAndGeneralOrderByGeneralTimeDesc(Customer customer, Boolean general) {
+        return repository.findFirstByCustomerAndGeneralOrderByGeneralTimeDesc(customer, general);
+    }
 }
