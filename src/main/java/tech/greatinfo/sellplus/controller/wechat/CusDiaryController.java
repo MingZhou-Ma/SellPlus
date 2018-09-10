@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -84,6 +85,7 @@ public class CusDiaryController {
                 diary.setCustomer(customer);
                 diary.setGeneral(false);
                 diary.setReadHistory("");
+                diary.setGeneralTime(null);
                 diaryService.save(diary);
                 return ResJson.successJson("save diary success");
             }else {
@@ -132,12 +134,33 @@ public class CusDiaryController {
                     count++;
                     // 达到兑换标准，新线程完成卷的兑换
                     if (!diary.isGeneral() && count >= companyService.getDiaryReadNum()){
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                generalCoupon(diaryId);
+                        // 在兑换优惠券线程开启之前判断是否在领取优惠券的间隔时间内
+                        // 查询发布该海报的用户的所有已经兑换过优惠券的记录
+                        List<Diary> list = diaryService.findAllByCustomerAndGeneral(diary.getCustomer(), true);
+                        boolean flag = true; // 是否允许兑换的标志
+                        Date currentTime = new Date();
+                        for (Diary d : list) {
+                            //通过时间秒毫秒数判断两个时间的间隔天数，可以做成工具类
+                            Date generalTime = d.getGeneralTime();
+                            if (null == generalTime) {  // 保险一点再加多一层判断
+                                continue;
                             }
-                        }).start();
+                            int days = (int) ((generalTime.getTime() - currentTime.getTime()) / (1000 * 3600 * 24));
+                            if (days < companyService.getDiaryIntervals()) {
+                                // 不允许兑换了
+                                flag = false;
+                                // for循环找出找到不符合条件的，则立即退出
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    generalCoupon(diaryId);
+                                }
+                            }).start();
+                        }
                     }
                 }
                 return ResJson.successJson("read diary success");
@@ -170,6 +193,7 @@ public class CusDiaryController {
                 couponsObj.setGeneralTime(new Date());
                 couponsObjService.save(couponsObj);
                 diary.setGeneral(true);
+                diary.setGeneralTime(new Date()); // 设置获取优惠券的时间
                 diaryService.save(diary);
             }
         }

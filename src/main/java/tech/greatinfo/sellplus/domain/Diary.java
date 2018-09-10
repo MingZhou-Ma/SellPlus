@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  *
@@ -34,6 +35,9 @@ public class Diary {
     // 标明这篇心得分享的阅读量是否已经被兑换成了优惠卷
     @Column(name = "general", columnDefinition = "BIT COMMENT '是否已经兑换优惠卷'")
     private boolean general;
+
+    @Column(columnDefinition = "TIMESTAMP COMMENT '兑换优惠券的时间'")
+    private Date generalTime;
 
     public Diary() {
     }
@@ -68,5 +72,13 @@ public class Diary {
 
     public void setGeneral(boolean general) {
         this.general = general;
+    }
+
+    public Date getGeneralTime() {
+        return generalTime;
+    }
+
+    public void setGeneralTime(Date generalTime) {
+        this.generalTime = generalTime;
     }
 }

@@ -65,5 +65,21 @@ public class CompanyService {
         }
     }
 
+    /**
+     * 返回心得分享获取优惠券的间隔时间（即获得一张券之后隔多久才能再次获取优惠券）
+     * @return
+     */
+    public int getDiaryIntervals() {
+        Company company = companyRepository.findByK("diaryIntervals");
+        if (null == company) {
+            return -1;
+        }
+        try {
+            return Integer.parseInt(company.getV());
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
     // TODO 完成各种公司设置的 get 方法，就像上面两个方法一样
 }
