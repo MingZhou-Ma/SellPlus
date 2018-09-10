@@ -126,7 +126,7 @@ public class CusDiaryController {
                 int count = read.split(",").length;
                 // 自己无法阅读自己的心得分享
                 if (!customer.equals(diary.getCustomer())
-                        && read.contains(customer.getOpenid())
+                        && !read.contains(customer.getOpenid())
                         && count < companyService.getDiaryReadNum()){
                     // TODO 数据库锁，read history 会有同步问题
                     diary.setReadHistory(read+customer.getOpenid()+",");
