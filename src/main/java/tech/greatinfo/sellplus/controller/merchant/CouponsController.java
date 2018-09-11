@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import tech.greatinfo.sellplus.config.converter.StringToDateConverter;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
@@ -63,11 +65,19 @@ public class CouponsController {
      * @return
      */
     @RequestMapping(value = "/api/mer/addCouponModel",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    @Transactional
     public ResJson addProduct(@RequestParam(name = "token") String token,
+//                              @RequestParam(name = "content") String content,
+//                              @RequestParam(name = "finite") String finite,
+//                              @RequestParam(name = "num") Integer num,
+//                              @RequestParam(name = "startDate") Date startDate,
+//                              @RequestParam(name = "startDate") Date startDate,
+
                               @ModelAttribute Coupon coupons){
         try {
             Merchant merchant;
             if ((merchant = (Merchant) tokenService.getUserByToken(token)) != null){
+                modelService.save(coupons);
                 if (coupons.getFinite()){
                     int num = coupons.getNum();
                     List<CouponsObj> list = new ArrayList<>(num);
@@ -81,7 +91,6 @@ public class CouponsController {
                     }
                     objService.save(list);
                 }
-                modelService.save(coupons);
                 return ResJson.successJson("add coupons success", coupons);
             }else {
                 return ResJson.errorAccessToken();
@@ -104,7 +113,7 @@ public class CouponsController {
     @RequestMapping(value = "/api/mer/getCouponModel",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public ResJson getCouponModel(@RequestParam(name = "token") String token,
                               @RequestParam(name = "start",defaultValue = "0") Integer start,
-                              @RequestParam(name = "end",defaultValue = "999") Integer num){
+                              @RequestParam(name = "num",defaultValue = "999") Integer num){
         try {
             Merchant merchant;
             if ((merchant = (Merchant) tokenService.getUserByToken(token)) != null){
@@ -135,7 +144,7 @@ public class CouponsController {
     @RequestMapping(value = "/api/mer/getCouponObj",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public ResJson getCouponObj(@RequestParam(name = "token") String token,
                               @RequestParam(name = "start",defaultValue = "0") Integer start,
-                              @RequestParam(name = "end",defaultValue = "999") Integer num){
+                              @RequestParam(name = "num",defaultValue = "999") Integer num){
         try {
             Merchant merchant;
             if ((merchant = (Merchant) tokenService.getUserByToken(token)) != null){
@@ -169,9 +178,7 @@ public class CouponsController {
             Merchant merchant;
             if ((merchant = (Merchant) tokenService.getUserByToken(token)) != null){
                 Coupon coupon = modelService.findOne(cid);
-                // TODO 最好改为级联删除
                 if (coupon != null){
-                    objService.deleteByMode(coupon);
                     modelService.delete(coupon);
                     return ResJson.successJson("delete success");
                 }else {

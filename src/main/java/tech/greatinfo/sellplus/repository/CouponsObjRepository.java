@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 
 /**
@@ -13,11 +14,16 @@ import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
  */
 public interface CouponsObjRepository extends JpaRepository<CouponsObj, Long>,
         JpaSpecificationExecutor<CouponsObj> {
-    void deleteAllByCoupon(tech.greatinfo.sellplus.domain.coupons.Coupon coupon);
+    void deleteAllByCoupon(Coupon coupon);
 
     Long countAllByOrigin(Customer origin);
 
     Long countAllByOriginAndExpiredTrue(Customer origin);
 
     Page<CouponsObj> getAllByOwn(Customer customer,Pageable pageable);
+
+    Page<CouponsObj> getAllByOwnAndExpiredTrue(Customer customer,Pageable pageable);
+    Page<CouponsObj> getAllByOwnAndExpiredFalse(Customer customer,Pageable pageable);
+
+    CouponsObj findByCode(String code);
 }

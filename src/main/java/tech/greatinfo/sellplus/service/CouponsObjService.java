@@ -51,29 +51,51 @@ public class CouponsObjService {
         return objRepository.getAllByOwn(own,new PageRequest(start,num));
     }
 
+    public Page<CouponsObj> getAllByOwnAndUnUsed(Customer own,int start,int num){
+        return objRepository.getAllByOwnAndExpiredFalse(own,new PageRequest(start,num));
+    }
+
+    public Page<CouponsObj> getAllByOwnAndUsed(Customer own,int start,int num){
+        return objRepository.getAllByOwnAndExpiredTrue(own,new PageRequest(start,num));
+    }
+
     /**
      * 生成卷 code ，由 大小写，和 0 ~ 9 组成的 6 位数字
      * @return
      */
     public String getRandomCouponCode(){
         int temp;
-        int temp2;
         char ch;
-        String res = "";
-        for (int i=0;i<8;i++){
+        String code = "";
+        for (int i=0;i<6;i++){
             temp = (int)(Math.random()*3);
             switch (temp){
                 case 0:
-                    res += (int)(Math.random()*10);
+                    // 数字
+                    code += (int)(Math.random()*9)+1;
                     break;
                 case 1:
-                    res += (char)((int)(Math.random()*26)+65);
+                    // 小写
+                    // 去除 L l O o 这些容易混淆的
+                    ch = (char)((int)(Math.random()*26)+65);
+                    while (ch == 'l' || ch == 'o'){
+                        ch = (char)((int)(Math.random()*26)+97);
+                    }
+                    code += ch;
                     break;
                 case 2:
-                    res += (char)((int)(Math.random()*26)+97);
+                    // 大写
+                    ch = (char)((int)(Math.random()*26)+97);
+                    while (ch == 'L' || ch == 'O' || ch == 'I'){
+                        ch = (char)((int)(Math.random()*26)+97);
+                    }
+                    code += ch;
                     break;
             }
         }
-        return res;
+        if (objRepository.findByCode(code)!=null){
+            return getRandomCouponCode();
+        }
+        return code;
     }
 }

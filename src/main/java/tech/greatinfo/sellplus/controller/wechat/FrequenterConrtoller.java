@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import tech.greatinfo.sellplus.domain.Company;
 import tech.greatinfo.sellplus.domain.Customer;
@@ -21,6 +20,7 @@ import tech.greatinfo.sellplus.service.CompanyService;
 import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.CouponsService;
 import tech.greatinfo.sellplus.service.CustomService;
+import tech.greatinfo.sellplus.service.FreqService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
@@ -71,6 +71,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
  *
  * Created by Ericwyn on 18-9-4.
  */
+@RestController
 public class FrequenterConrtoller {
     private static final Logger logger = LoggerFactory.getLogger(FrequenterConrtoller.class);
 
@@ -88,6 +89,9 @@ public class FrequenterConrtoller {
 
     @Autowired
     CustomService customService;
+
+    @Autowired
+    FreqService freqService;
 
     /**
      * 老司机通过 Seller 的顾客链接来注册成为老司机
@@ -109,6 +113,7 @@ public class FrequenterConrtoller {
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null && customer.getId().equals(cusId)){
                 customer.setFrequenter(true);
+                customService.save(customer);
                 return ResJson.successJson("be freq success");
             }else {
                 return ResJson.errorAccessToken();
@@ -256,16 +261,8 @@ public class FrequenterConrtoller {
                 }
                 Integer promotion = Integer.parseInt(promotionSet.getV());
                 int convertNum = success.intValue()/ promotion;
-                List<CouponsObj> saveList = new ArrayList<>();
-                for (int i=0;i<convertNum;i++){
-                    CouponsObj couponsObj = new CouponsObj();
-                    couponsObj.setOwn(customer);
-                    couponsObj.setCode(objService.getRandomCouponCode());
-                    couponsObj.setExpired(false);
-                    couponsObj.setCoupon(coupon);
-                    saveList.add(couponsObj);
-                }
-                objService.save(saveList);
+
+                freqService.generalFreqConpons(convertNum,customer,coupon);
                 return ResJson.successJson("兑换成功");
             }else {
                 return ResJson.errorAccessToken();

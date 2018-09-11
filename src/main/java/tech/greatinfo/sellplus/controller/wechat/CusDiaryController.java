@@ -11,14 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
-import java.util.List;
-
-import javax.transaction.Transactional;
 
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Diary;
-import tech.greatinfo.sellplus.domain.coupons.Coupon;
-import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.service.CompanyService;
 import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.DiaryService;
@@ -134,29 +129,31 @@ public class CusDiaryController {
                     count++;
                     // 达到兑换标准，新线程完成卷的兑换
                     if (!diary.isGeneral() && count >= companyService.getDiaryReadNum()){
-                        // 在兑换优惠券线程开启之前判断是否在领取优惠券的间隔时间内
-                        // 查询发布该海报的用户的最近一条已经兑换过优惠券的记录
-                        boolean flag = true; // 是否允许兑换的标志
-                        Diary d = diaryService.findFirstByCustomerAndGeneralOrderByGeneralTimeDesc(diary.getCustomer(), true);
-                        if (null != d) {
-                            Date generalTime = d.getGeneralTime();
-                            if (null != generalTime) {
-                                //通过时间秒毫秒数判断两个时间的间隔天数，可以做成工具类
-                                int days = (int) ((new Date().getTime() - generalTime.getTime()) / (1000 * 3600 * 24));
-                                if (days < companyService.getDiaryIntervals()) {
-                                    // 不允许兑换了
-                                    flag = false;
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // 在兑换优惠券线程开启之前判断是否在领取优惠券的间隔时间内
+                                // 查询发布该海报的用户的最近一条已经兑换过优惠券的记录
+                                boolean flag = true; // 是否允许兑换的标志
+                                Diary d = diaryService.findFirstByCustomerAndGeneralOrderByGeneralTimeDesc(diary.getCustomer(), true);
+                                if (null != d) {
+                                    Date generalTime = d.getGeneralTime();
+                                    if (null != generalTime) {
+                                        // 通过时间秒毫秒数判断两个时间的间隔天数，可以做成工具类
+                                        int days = (int) ((new Date().getTime() - generalTime.getTime()) / (1000 * 3600 * 24));
+                                        if (days < companyService.getDiaryIntervals()) {
+                                            // 不允许兑换了
+                                            flag = false;
+                                        }
+                                    }
+                                }
+                                // 达到兑换标准
+                                if (flag){
+                                    diaryService.generalCoupon(diaryId);
                                 }
                             }
-                        }
-                        if (flag) {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    generalCoupon(diaryId);
-                                }
-                            }).start();
-                        }
+                        }).start();
+
                     }
                 }
                 return ResJson.successJson("read diary success");
@@ -170,28 +167,6 @@ public class CusDiaryController {
             logger.error("/api/freq/beFreq -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
-        }
-    }
-
-    @Transactional
-    public synchronized void generalCoupon(String diaryId){
-        Diary diary = diaryService.findOne(diaryId);
-        if (!diary.isGeneral() && diary.getReadHistory().split(",").length >= companyService.getDiaryReadNum()){
-            Coupon coupon = companyService.getDiaryCoupon();
-            if (coupon == null){
-                logger.info("尚未设置心得分享的奖励优惠卷");
-            }else {
-                CouponsObj couponsObj = new CouponsObj();
-                couponsObj.setCoupon(coupon);
-                couponsObj.setCode(couponsObjService.getRandomCouponCode());
-                couponsObj.setOwn(diary.getCustomer());
-                couponsObj.setNote("心得分享奖励优惠卷");
-                couponsObj.setGeneralTime(new Date());
-                couponsObjService.save(couponsObj);
-                diary.setGeneral(true);
-                diary.setGeneralTime(new Date()); // 设置获取优惠券的时间
-                diaryService.save(diary);
-            }
         }
     }
 }

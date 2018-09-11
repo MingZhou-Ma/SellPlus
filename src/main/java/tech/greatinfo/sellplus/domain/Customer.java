@@ -53,10 +53,10 @@ public class Customer implements User, Serializable {
     private Seller seller;
 
     @Column(columnDefinition = "BIT COMMENT '是否是销售人员'")
-    private boolean bSell;
+    private Boolean bSell;
 
     @Column(columnDefinition = "BIT COMMENT '是否是老司机'")
-    private boolean frequenter;
+    private Boolean frequenter;
 
     public Customer() {
     }
@@ -101,14 +101,6 @@ public class Customer implements User, Serializable {
         this.seller = seller;
     }
 
-    public boolean isbSell() {
-        return bSell;
-    }
-
-    public void setbSell(boolean bSell) {
-        this.bSell = bSell;
-    }
-
     public String getUid() {
         return uid;
     }
@@ -117,11 +109,19 @@ public class Customer implements User, Serializable {
         this.uid = uid;
     }
 
-    public boolean isFrequenter() {
+    public Boolean getbSell() {
+        return bSell;
+    }
+
+    public void setbSell(Boolean bSell) {
+        this.bSell = bSell;
+    }
+
+    public Boolean getFrequenter() {
         return frequenter;
     }
 
-    public void setFrequenter(boolean frequenter) {
+    public void setFrequenter(Boolean frequenter) {
         this.frequenter = frequenter;
     }
 
