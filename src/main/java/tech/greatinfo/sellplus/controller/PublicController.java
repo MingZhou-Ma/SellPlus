@@ -22,6 +22,7 @@ import java.util.List;
 
 import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.domain.Activity;
+import tech.greatinfo.sellplus.domain.Company;
 import tech.greatinfo.sellplus.domain.Product;
 import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.ArticleService;
@@ -103,7 +104,6 @@ public class PublicController {
                 }
             }
             resMap.put("banners",bannerList);
-
             List<String> notifyList = new ArrayList<>();
             for (int i=1;i<=3;i++){
                 if ((vTemp = companyService.findByKey("notify"+i).getV())!=null && !vTemp.equals("null")){
@@ -111,6 +111,11 @@ public class PublicController {
                 }
             }
             resMap.put("notifys",notifyList);
+            for (Company company:companyService.findAll()){
+                if (!company.getK().contains("notify") && !company.getK().contains("banner")){
+                    resMap.put(company.getK(),company.getV());
+                }
+            }
             return ResJson.successJson("get company info success",resMap);
         }catch (Exception e){
             logger.error("/api/pub/listArticle -> ",e.getMessage());

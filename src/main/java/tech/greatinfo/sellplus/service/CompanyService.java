@@ -30,6 +30,10 @@ public class CompanyService {
         return companyRepository.findByK(key);
     }
 
+    public List<Company> findAll(){
+        return companyRepository.findAll();
+    }
+
     /**
      * 返回心得分享阅读数量阈值
      * @return
