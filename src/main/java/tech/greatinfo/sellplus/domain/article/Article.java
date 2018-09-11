@@ -37,6 +37,9 @@ public class Article {
     @Column(columnDefinition = "TIMESTAMP COMMENT '创建时间'")
     private Date createDate;
 
+    @Column(columnDefinition = "TEXT COMMENT '文章简介'")
+    private String intro;
+
     public Article() {
     }
 
@@ -78,5 +81,13 @@ public class Article {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 }

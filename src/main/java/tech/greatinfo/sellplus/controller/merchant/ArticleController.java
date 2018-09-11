@@ -52,7 +52,7 @@ public class ArticleController {
      *      content 文章内容
      *      author  作者
      *      createDate  创建时间 (yyyy-MM-dd hh:mm:ss)
-     *
+     *      intro   文章简介
      *
      * @param token
      * @param article
