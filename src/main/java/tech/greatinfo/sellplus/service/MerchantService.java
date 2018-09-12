@@ -28,6 +28,7 @@ public class MerchantService {
     }
 
     public Merchant getMainMerchant(){
+        // TODO 有bug，得先判断是否列表为空
         return merchantRepository.findAll().get(0);
     }
 }

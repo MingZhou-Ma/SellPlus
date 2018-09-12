@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -119,6 +120,9 @@ public class CustomerController {
                         customer.setbSell(false);
                         customer.setFrequenter(false);
                         customer.setSeller(sellerSerivce.getDefaultSeller());
+                        /*customer.setType(1);  // 用户类型：1代表潜在客户   2代表老客户
+                        customer.setOrigin(""); // 用户来源：默认什么鬼
+                        customer.setCreateTime(new Date());*/
                         customService.save(customer);
                     }
                     token = new AccessToken();

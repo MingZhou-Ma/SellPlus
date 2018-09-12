@@ -3,6 +3,7 @@ package tech.greatinfo.sellplus.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +19,6 @@ import javax.persistence.Transient;
 import tech.greatinfo.sellplus.domain.intf.User;
 
 /**
- *
  * 微信用户
  * Created by Ericwyn on 18-7-20.
  */
@@ -49,7 +49,7 @@ public class Customer implements User, Serializable {
     private String phone;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "seller_id",columnDefinition = "BIGINT COMMENT '所属销售的外键'")
+    @JoinColumn(name = "seller_id", columnDefinition = "BIGINT COMMENT '所属销售的外键'")
     private Seller seller;
 
     @Column(columnDefinition = "BIT COMMENT '是否是销售人员'")
@@ -57,6 +57,22 @@ public class Customer implements User, Serializable {
 
     @Column(columnDefinition = "BIT COMMENT '是否是老司机'")
     private Boolean frequenter;
+
+    @Column(columnDefinition = "VARCHAR(20) COMMENT '销售渠道'")
+    private String sellerChannel; // 格式：属于哪个销售的uuid+ ":" + 销售渠道名称  （例如：uuid:大众饭店）
+
+
+//    @Column(columnDefinition = "VARCHAR(20) COMMENT '实名'")
+//    private String name;
+//
+//    @Column(columnDefinition = "TINYINT(2) COMMENT '用户类型'")
+//    private Integer type;
+//
+//    @Column(columnDefinition = "VARCHAR(20) COMMENT '用户来源'")
+//    private String origin;
+//
+//    @Column(columnDefinition = "TIMESTAMP COMMENT '用户第一次使用小程序的时间，相当于注册时间吧，客户列表按时间排序要用到'")
+//    private Date createTime;
 
     public Customer() {
     }
@@ -123,6 +139,15 @@ public class Customer implements User, Serializable {
 
     public void setFrequenter(Boolean frequenter) {
         this.frequenter = frequenter;
+    }
+
+
+    public String getSellerChannel() {
+        return sellerChannel;
+    }
+
+    public void setSellerChannel(String sellerChannel) {
+        this.sellerChannel = sellerChannel;
     }
 
     @Override

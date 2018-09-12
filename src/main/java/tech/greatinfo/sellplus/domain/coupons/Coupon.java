@@ -43,6 +43,9 @@ public class Coupon {
     @Column(name = "endDate", columnDefinition = "TIMESTAMP COMMENT '过期时间'")
     private Date endDate;
 
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '金额'")
+    private String amount;
+
     public Coupon() {
     }
 
@@ -92,5 +95,13 @@ public class Coupon {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 }
