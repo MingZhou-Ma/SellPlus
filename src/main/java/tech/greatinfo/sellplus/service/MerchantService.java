@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.repository.MerchantRepository;
 
+import java.util.List;
+
 
 /**
  * Created by Ericwyn on 18-7-27.
@@ -28,7 +30,11 @@ public class MerchantService {
     }
 
     public Merchant getMainMerchant(){
-        // TODO 有bug，得先判断是否列表为空
-        return merchantRepository.findAll().get(0);
+        List<Merchant> list = merchantRepository.findAll();
+        // 如果列表为空，直接get(0)会报空指针异常
+        if (null != list && !list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
     }
 }

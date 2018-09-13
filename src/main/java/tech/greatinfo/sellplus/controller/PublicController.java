@@ -99,15 +99,22 @@ public class PublicController {
             List<String> bannerList = new ArrayList<>();
             String vTemp;
             for (int i=1;i<=3;i++){
-                if ((vTemp = companyService.findByKey("banner"+i).getV())!=null && !vTemp.equals("null")){
-                    bannerList.add(companyService.findByKey("banner"+i).getV());
+                // 这里.getV()有可能空指针异常
+                Company bannerCompany = companyService.findByKey("banner" + i);
+                if (null != bannerCompany) {
+                    if ((vTemp = bannerCompany.getV())!=null && !vTemp.equals("null")){
+                        bannerList.add(bannerCompany.getV());
+                    }
                 }
             }
             resMap.put("banners",bannerList);
             List<String> notifyList = new ArrayList<>();
             for (int i=1;i<=3;i++){
-                if ((vTemp = companyService.findByKey("notify"+i).getV())!=null && !vTemp.equals("null")){
-                    notifyList.add(companyService.findByKey("notify"+i).getV());
+                Company notifyCompany = companyService.findByKey("notify" + i);
+                if (null != notifyCompany) {
+                    if ((vTemp = notifyCompany.getV())!=null && !vTemp.equals("null")){
+                        notifyList.add(notifyCompany.getV());
+                    }
                 }
             }
             resMap.put("notifys",notifyList);

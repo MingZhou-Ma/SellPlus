@@ -135,7 +135,7 @@ public class CusDiaryController {
                                 // 在兑换优惠券线程开启之前判断是否在领取优惠券的间隔时间内
                                 // 查询发布该海报的用户的最近一条已经兑换过优惠券的记录
                                 boolean flag = true; // 是否允许兑换的标志
-                                Diary d = diaryService.findFirstByCustomerAndGeneralOrderByGeneralTimeDesc(diary.getCustomer(), true);
+                                Diary d = diaryService.findFirstByCustomerAndGeneralTrueOrderByGeneralTimeDesc(diary.getCustomer());
                                 if (null != d) {
                                     Date generalTime = d.getGeneralTime();
                                     if (null != generalTime) {

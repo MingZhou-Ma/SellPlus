@@ -5,17 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Diary;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.repository.DiaryRepository;
+
+import javax.transaction.Transactional;
+import java.util.Date;
 
 /**
  * Created by Ericwyn on 18-9-8.
@@ -35,32 +32,28 @@ public class DiaryService {
     CouponsObjService objService;
 
 
-    public Diary save(Diary diary){
+    public Diary save(Diary diary) {
         return repository.save(diary);
     }
 
-    public Diary findOne(String diaryId){
+    public Diary findOne(String diaryId) {
         return repository.findByDiaryId(diaryId);
     }
 
-    public List<Diary> findAllByCustomerAndGeneral(Customer customer, Boolean general) {
-        return repository.findAllByCustomerAndGeneral(customer, general);
-    }
-
-    public Diary findFirstByCustomerAndGeneralOrderByGeneralTimeDesc(Customer customer, Boolean general) {
-        return repository.findFirstByCustomerAndGeneralOrderByGeneralTimeDesc(customer, general);
+    public Diary findFirstByCustomerAndGeneralTrueOrderByGeneralTimeDesc(Customer customer) {
+        return repository.findFirstByCustomerAndGeneralTrueOrderByGeneralTimeDesc(customer);
     }
 
     // 加注解代表事务
     @Transactional
     @Modifying
-    public synchronized void generalCoupon(String diaryId){
+    public synchronized void generalCoupon(String diaryId) {
         Diary diary = repository.findByDiaryId(diaryId);
-        if (!diary.isGeneral() && diary.getReadHistory().split(",").length >= companyService.getDiaryReadNum()){
+        if (!diary.isGeneral() && diary.getReadHistory().split(",").length >= companyService.getDiaryReadNum()) {
             Coupon coupon = companyService.getDiaryCoupon();
-            if (coupon == null){
+            if (coupon == null) {
                 logger.info("尚未设置心得分享的奖励优惠卷");
-            }else {
+            } else {
                 CouponsObj couponsObj = new CouponsObj();
                 couponsObj.setCoupon(coupon);
                 couponsObj.setCode(objService.getRandomCouponCode());
