@@ -40,6 +40,9 @@ public class Article {
     @Column(columnDefinition = "TEXT COMMENT '文章简介'")
     private String intro;
 
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '提图'")
+    private String pic;
+
     public Article() {
     }
 
@@ -89,5 +92,13 @@ public class Article {
 
     public void setIntro(String intro) {
         this.intro = intro;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 }

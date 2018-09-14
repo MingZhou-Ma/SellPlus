@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
+import tech.greatinfo.sellplus.domain.SellerCode;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
@@ -81,6 +82,13 @@ public class CusSellerController {
                     seller.setIntro(intro);
                     seller.setPic(WeChatUtils.getBigAvatarURL(pic));
                     sellerSerivce.save(seller);
+
+                    // 插入默认销售渠道
+                    SellerCode sellerCode = new SellerCode();
+                    sellerCode.setName("默认渠道");
+                    sellerCode.setPath("");
+                    sellerCode.setCustomer(customer);
+
                     // 成为 Seller
                     customer.setbSell(true);
                     customer.setSeller(seller);
@@ -133,6 +141,9 @@ public class CusSellerController {
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
             String uid = (String) ParamUtils.getFromJsonWithDefault(jsonObject,"uid", "null", String.class);
+
+            String channel = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "channel", "null", String.class);
+
             if (uid.equals("null")){
                 return ResJson.successJson("uid is null");
             }
@@ -148,15 +159,31 @@ public class CusSellerController {
                     if ((preCustomer = customService.getByUid(uid)) != null){
                         if ((seller = preCustomer.getSeller()) != null){
                             customer.setSeller(seller);
+
+                            //记录销售渠道
+                            customer.setSellerChannel(uid + (null==channel?"":":"+channel));
+
                             customService.save(customer);
                         }else {
                             preCustomer.setSeller(sellerSerivce.getDefaultSeller());
+
+                            //记录销售渠道
+                            preCustomer.setSellerChannel(uid + (null==channel?"":":"+channel));
+
                             customer.setSeller(sellerSerivce.getDefaultSeller());
+
+                            //记录销售渠道
+                            customer.setSellerChannel(uid + (null==channel?"":":"+channel));
+
                             customService.save(preCustomer);
                             customService.save(customer);
                         }
                     }else {
                         customer.setSeller(sellerSerivce.getDefaultSeller());
+
+                        //记录销售渠道
+                        customer.setSellerChannel(uid + (null==channel?"":":"+channel));
+
                         customService.save(customer);
                     }
                 }
