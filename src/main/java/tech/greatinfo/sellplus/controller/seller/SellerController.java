@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.service.CustomService;
@@ -16,8 +19,6 @@ import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
-
-import java.util.HashMap;
 
 /**
  * Seller 后台相关接口
@@ -64,7 +65,7 @@ public class SellerController {
                 AccessToken accessToken = new AccessToken();
                 accessToken.setUser(seller);
                 HashMap<String, String> map = new HashMap<>();
-                map.put("accsessToken", accessToken.getUuid());
+                map.put("accessToken", accessToken.getUuid());
                 return ResJson.successJson("login Success", map);
             }
         } catch (Exception e) {
@@ -102,7 +103,7 @@ public class SellerController {
             if ((seller = (Seller) tokenService.getUserByToken(token)) != null) {
                 return ResJson.successJson("get my customer success",
                         customService.getAllBySeller(seller, new PageRequest(start,num)));
-                        //customService.getAllBySellerAndOriginOrderByCreateTimeDesc(seller, origin, new PageRequest(start, num)));
+                //customService.getAllBySellerAndOriginOrderByCreateTimeDesc(seller, origin, new PageRequest(start, num)));
             } else {
                 return ResJson.errorAccessToken();
             }
