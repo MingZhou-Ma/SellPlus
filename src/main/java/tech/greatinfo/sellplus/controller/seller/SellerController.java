@@ -64,7 +64,7 @@ public class SellerController {
                 AccessToken accessToken = new AccessToken();
                 accessToken.setUser(seller);
                 HashMap<String, String> map = new HashMap<>();
-                map.put("accsessToken",accessToken.getUuid());
+                map.put("accessToken",accessToken.getUuid());
                 return ResJson.successJson("login Success",map);
             }
         }catch (Exception e){

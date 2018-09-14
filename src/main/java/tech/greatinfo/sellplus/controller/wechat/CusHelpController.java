@@ -64,9 +64,6 @@ public class CusHelpController {
      *      token
      *      activityid
      *
-     *
-     *
-     *
      * @param jsonObject
      * @return
      */

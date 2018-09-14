@@ -54,7 +54,7 @@ public class MerchantController {
                 accessToken.setUser(merchant);
                 tokenService.saveToken(accessToken);
                 HashMap<String, String> map = new HashMap<String, String>() ;
-                map.put("accsessToken",accessToken.getUuid());
+                map.put("accessToken",accessToken.getUuid());
                 return ResJson.successJson("login Success",map);
             }
         }catch (Exception e){
