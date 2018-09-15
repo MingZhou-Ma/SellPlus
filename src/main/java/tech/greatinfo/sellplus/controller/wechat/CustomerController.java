@@ -259,7 +259,7 @@ public class CustomerController {
      *
      *  参数
      *      token
-     *      title   海报标题
+     *      //title   海报标题
      *      page    跳转的页面
      *      scene   跳转所带参数
      *
@@ -273,15 +273,16 @@ public class CustomerController {
     public ResJson getQRCode(HttpServletResponse response, @RequestBody JSONObject jsonObject) throws IOException {
         try {
             String token ;
-            String title;
+            //String title;
             String page;
             String scene;
             try {
                 token = jsonObject.getString("token");
-                title = jsonObject.getString("title");
+                //title = jsonObject.getString("title");
                 page = jsonObject.getString("page");
                 scene = jsonObject.getString("scene");
-                if (token == null && title == null && page == null && scene == null){
+                //if (token == null && title == null && page == null && scene == null){
+                if (token == null && page == null && scene == null){
                     return ResJson.errorRequestParam();
                 }
             }catch (Exception e){
