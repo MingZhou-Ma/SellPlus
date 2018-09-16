@@ -3,12 +3,19 @@ package tech.greatinfo.sellplus.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.Seller;
+import tech.greatinfo.sellplus.domain.coupons.CouponsHistory;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
+import tech.greatinfo.sellplus.repository.CouponsHistoryRepository;
 import tech.greatinfo.sellplus.repository.CouponsObjRepository;
 
 /**
@@ -18,6 +25,9 @@ import tech.greatinfo.sellplus.repository.CouponsObjRepository;
 public class CouponsObjService {
     @Autowired
     CouponsObjRepository objRepository;
+
+    @Autowired
+    CouponsHistoryRepository historyRepository;
 
     public CouponsObj save(CouponsObj obj){
         return objRepository.save(obj);
@@ -58,6 +68,23 @@ public class CouponsObjService {
     public Page<CouponsObj> getAllByOwnAndUsed(Customer own,int start,int num){
         return objRepository.getAllByOwnAndExpiredTrue(own,new PageRequest(start,num));
     }
+
+    public CouponsObj findByCode(String code){
+        return objRepository.findByCode(code);
+    }
+
+    @Transactional
+    @Modifying
+    public void writeOffCoupons(CouponsObj coupon, Seller seller){
+        coupon.setExpired(true);
+        objRepository.save(coupon);
+        CouponsHistory history = new CouponsHistory();
+        history.setCouponObj(coupon);
+        history.setDate(new Date());
+        history.setSeller(seller);
+        historyRepository.save(history);
+    }
+
 
     /**
      * 生成卷 code ，由 大小写，和 0 ~ 9 组成的 6 位数字

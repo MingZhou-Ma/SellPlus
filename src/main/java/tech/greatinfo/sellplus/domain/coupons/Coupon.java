@@ -43,7 +43,7 @@ public class Coupon {
     @Column(name = "endDate", columnDefinition = "TIMESTAMP COMMENT '过期时间'")
     private Date endDate;
 
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '金额'")
+    @Column(name = "amount", columnDefinition = "VARCHAR(255) COMMENT '金额'")
     private String amount;
 
     public Coupon() {

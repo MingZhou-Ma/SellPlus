@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.domain.SellerCode;
+import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
+import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
@@ -40,6 +42,8 @@ public class CusSellerController {
     @Autowired
     CustomService customService;
 
+    @Autowired
+    CouponsObjService objService;
     /**
      * 绑定成为 Seller
      * POST
@@ -229,6 +233,45 @@ public class CusSellerController {
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/bindSeller");
         }catch (Exception e){
             logger.error("/api/cus/bindSeller -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     *
+     * 电脑端 seller 核销优惠卷
+     *
+     * POST
+     *      token   微信销售用户登录的 token
+     *      code    优惠卷的 code
+     *
+     * @return
+     */
+    @RequestMapping(value = "/api/cus/writeOffCoupons", method = RequestMethod.POST)
+    public ResJson getCustomerNews(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            String couponCode = (String) ParamUtils.getFromJson(jsonObject,"code", String.class);
+            Customer customer;
+            if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
+                customer = customService.getOne(1L);
+                if (!customer.getbSell()){
+                    return ResJson.failJson(-1,"没有 seller 权限",null);
+                }
+                CouponsObj coupon = objService.findByCode(couponCode);
+                if (coupon == null){
+                    return ResJson.failJson(-1,"优惠卷代码错误",null);
+                }else {
+                    // 核销优惠卷, 如果微信已经注册成为 seller 的话，那么绑定的 seller 就是他的上级 seller
+                    objService.writeOffCoupons(coupon,customer.getSeller());
+                    return  ResJson.successJson("write off coupon success");
+                }
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        } catch (Exception e) {
+            logger.error("/api/cus/writeOffCoupons -> ", e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

@@ -13,6 +13,9 @@ import java.util.HashMap;
 
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
+import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
+import tech.greatinfo.sellplus.service.CouponsHistoryService;
+import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.ReadHistoryService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
@@ -40,6 +43,12 @@ public class SellerController {
 
     @Autowired
     ReadHistoryService readHistoryService;
+
+    @Autowired
+    CouponsObjService objService;
+
+    @Autowired
+    CouponsHistoryService couponsHistoryService;
 
     /**
      * Seller 登录
@@ -175,6 +184,71 @@ public class SellerController {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
-
     }
+
+    /**
+     *
+     * 电脑端 seller 核销优惠卷
+     *
+     * POST
+     *      token   电脑端 seller 登录 token
+     *      code    优惠卷的 code
+     *
+     * @param token
+     * @param couponCode
+     * @return
+     */
+    @RequestMapping(value = "/api/sell/writeOffCoupons", method = RequestMethod.POST)
+    public ResJson getCustomerNews(@RequestParam("token") String token,
+                                   @RequestParam(value = "code") String couponCode) {
+        try {
+            Seller seller;
+            if ((seller = (Seller) tokenService.getUserByToken(token)) != null) {
+                CouponsObj coupon = objService.findByCode(couponCode);
+                if (coupon == null){
+                    return ResJson.failJson(-1,"优惠卷代码错误",null);
+                }else {
+                    // 核销优惠卷
+                    objService.writeOffCoupons(coupon,seller);
+                    return  ResJson.successJson("write off coupon success");
+                }
+            } else {
+                return ResJson.errorAccessToken();
+            }
+        } catch (Exception e) {
+            logger.error("/api/sell/writeOffCoupons -> ", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 销售后台获取所有的核销记录
+     *
+     * POST
+     *      token 销售登录后获取的 token
+     *      start 分页开始，默认为 0
+     *      num   分页一个页面含有的数据量，默认为 999
+     *
+     * @param token
+     * @return
+     */
+    @RequestMapping(value = "/api/sell/writeOffHistory", method = RequestMethod.POST)
+    public ResJson writeOffHistory(@RequestParam("token") String token,
+                                   @RequestParam(value = "start", defaultValue = "0") Integer start,
+                                   @RequestParam(value = "num", defaultValue = "9999") Integer num) {
+        try {
+            Seller seller;
+            if ((seller = (Seller) tokenService.getUserByToken(token)) != null) {
+                return ResJson.successJson("get all write off history success",couponsHistoryService.getHistoryBySeller(seller,start,num));
+            } else {
+                return ResJson.errorAccessToken();
+            }
+        } catch (Exception e) {
+            logger.error("/api/sell/writeOffCoupons -> ", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
 }
