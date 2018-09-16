@@ -3,6 +3,7 @@ package tech.greatinfo.sellplus.controller.merchant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,10 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tech.greatinfo.sellplus.domain.Company;
+import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.service.ActivityService;
 import tech.greatinfo.sellplus.service.CompanyService;
 import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.CouponsService;
+import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.ProductService;
 import tech.greatinfo.sellplus.service.TokenService;
@@ -52,6 +55,8 @@ public class CompanyController {
     @Autowired
     CouponsObjService couObjService;
 
+    @Autowired
+    CustomService customService;
     /**
      * 参数说明
      *
@@ -89,7 +94,8 @@ public class CompanyController {
                                @RequestParam(value = "token") String token){
 
         try {
-            if (tokenService.getUserByToken(token) != null){
+
+            if (tokenService.getUserByToken(token) != null && tokenService.getUserByToken(token) instanceof Merchant){
                 List<Company> list = new ArrayList<>();
                 if (banner1 != null){
                     list.add(new Company("banner1",banner1));
@@ -142,8 +148,27 @@ public class CompanyController {
         }
     }
 
-    // 获取接口在 public Res Controller
+    // 公司设置获取接口在 public Res Controller
 
+    // 获取所有的客户
+    @RequestMapping(value = "/api/mer/getMyCustomer", method = RequestMethod.POST)
+    public ResJson getMyCustomer(@RequestParam("token") String token,
+                                 @RequestParam(value = "start", defaultValue = "0") Integer start,
+                                 @RequestParam(value = "num", defaultValue = "999") Integer num
+    ) {
+        try {
+            if (tokenService.getUserByToken(token) != null && tokenService.getUserByToken(token) instanceof Merchant){
+                return ResJson.successJson("get all customer success",
+                        customService.findAll(new PageRequest(start,num)));
+            } else {
+                return ResJson.errorAccessToken();
+            }
+        } catch (Exception e) {
+            logger.error("/api/sell/getMyCustomer -> ", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
 
 
 }
