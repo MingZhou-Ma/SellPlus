@@ -22,6 +22,7 @@ import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
+import tech.greatinfo.sellplus.service.CouponsHistoryService;
 import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.CouponsService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
@@ -47,6 +48,9 @@ public class CouponsController {
 
     @Autowired
     SellerSerivce sellerSerivce;
+
+    @Autowired
+    CouponsHistoryService couponsHistoryService;
 
     @InitBinder
     public void intDate(WebDataBinder dataBinder){
@@ -231,6 +235,36 @@ public class CouponsController {
                     return  ResJson.successJson("write off coupon success");
                 }
             } else {
+                return ResJson.errorAccessToken();
+            }
+        } catch (Exception e) {
+            logger.error("/api/sell/writeOffCoupons -> ", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+
+    /**
+     * 销售后台获取所有的核销记录
+     *
+     * POST
+     *      token 销售登录后获取的 token
+     *      start 分页开始，默认为 0
+     *      num   分页一个页面含有的数据量，默认为 999
+     *
+     * @param token
+     * @return
+     */
+    @RequestMapping(value = "/api/mer/writeOffHistory", method = RequestMethod.POST)
+    public ResJson writeOffHistory(@RequestParam("token") String token,
+                                   @RequestParam(value = "start", defaultValue = "0") Integer start,
+                                   @RequestParam(value = "num", defaultValue = "9999") Integer num) {
+        try {
+            Merchant merchat;
+            if ((merchat = (Merchant) tokenService.getUserByToken(token)) != null) {
+                return ResJson.successJson("get all write off history success", couponsHistoryService.findAll(start, num));
+            }else {
                 return ResJson.errorAccessToken();
             }
         } catch (Exception e) {

@@ -20,4 +20,8 @@ public class CouponsHistoryService {
     public Page<CouponsHistory> getHistoryBySeller(Seller seller,int start, int num){
         return repository.findAllBySeller(seller,new PageRequest(start, num));
     }
+
+    public Page<CouponsHistory> findAll(int start, int num){
+        return repository.findAll(new PageRequest(start, num));
+    }
 }
