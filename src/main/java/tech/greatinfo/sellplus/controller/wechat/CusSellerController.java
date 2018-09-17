@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -240,7 +242,7 @@ public class CusSellerController {
 
     /**
      *
-     * 电脑端 seller 核销优惠卷
+     * 微信端 seller 核销优惠卷
      *
      * POST
      *      token   微信销售用户登录的 token
@@ -255,7 +257,6 @@ public class CusSellerController {
             String couponCode = (String) ParamUtils.getFromJson(jsonObject,"code", String.class);
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
-                customer = customService.getOne(1L);
                 if (!customer.getbSell()){
                     return ResJson.failJson(-1,"没有 seller 权限",null);
                 }
@@ -267,6 +268,42 @@ public class CusSellerController {
                     objService.writeOffCoupons(coupon,customer.getSeller());
                     return  ResJson.successJson("write off coupon success");
                 }
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        } catch (Exception e) {
+            logger.error("/api/cus/writeOffCoupons -> ", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+
+    /**
+     *
+     * 微信端 seller 获取自己的用户
+     *
+     * POST
+     *      token   微信销售用户登录的 token
+     *      start   开始页数默认为 0
+     *      num     分页每页的信息数量默认为 999
+     *
+     * @return
+     */
+    @RequestMapping(value = "/api/cus/getAllMyCustomer", method = RequestMethod.POST)
+    public ResJson getAllMyCustomer(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Integer start = (Integer) ParamUtils.getFromJsonWithDefault(jsonObject,"start", 0, Integer.class);
+            Integer num = (Integer) ParamUtils.getFromJsonWithDefault(jsonObject,"num", 999 ,Integer.class);
+            Customer customer;
+            if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
+                System.out.println(customer.getOpenid());
+                if (!customer.getbSell()){
+                    return ResJson.failJson(-1,"没有 seller 权限",null);
+                }
+                Page<Customer> allBySeller = customService.getAllBySeller(customer.getSeller(), new PageRequest(start, num));
+                return ResJson.successJson("get all my customer success",allBySeller);
             }else {
                 return ResJson.errorAccessToken();
             }

@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
+import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 
@@ -20,6 +21,10 @@ public class SellPlusApplication {
         customer.setOpenid("openidTest");
         customer.setUid("3f1217d51a264f5eb34b527c6fdc78e4");
         customer.setSessionKey("sessionKeyTest");
+        customer.setbSell(true);
+        Seller seller = new Seller();
+        seller.setId(5L);
+        customer.setSeller(seller);
         token.setUser(customer);
         token.setUuid("testtoken");
         tokenService.saveToken(token);

@@ -41,7 +41,6 @@ public class CouponsObj {
     @JoinColumn(name = "origin", columnDefinition = "BIGINT COMMENT '发卷人'")
     private Customer origin;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "own", columnDefinition = "BIGINT COMMENT '所属人'")
     private Customer own;
