@@ -188,7 +188,7 @@ public class CouponsController {
                 return ResJson.errorAccessToken();
             }
         }catch (Exception e){
-            logger.error("/api/mer/getCouponObj -> ",e.getMessage());
+            logger.error("/api/mer/delCouponModel -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

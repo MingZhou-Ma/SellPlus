@@ -14,7 +14,7 @@ import tech.greatinfo.sellplus.domain.intf.User;
  */
 public class AccessToken {
     //token 有效期 60 分钟
-    private static final int MAX_EXPIRED_TIME = 60;
+    private static final int MAX_EXPIRED_TIME = 120;
     //唯一编码
     private String uuid;
     //用户对象

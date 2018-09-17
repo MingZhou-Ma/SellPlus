@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
+import tech.greatinfo.sellplus.repository.CouponsHistoryRepository;
 import tech.greatinfo.sellplus.repository.CouponsObjRepository;
 import tech.greatinfo.sellplus.repository.CouponsRepository;
 
@@ -22,6 +23,9 @@ public class CouponsService {
 
     @Autowired
     CouponsObjRepository objRepository;
+
+    @Autowired
+    CouponsHistoryRepository historyRepository;
 
     public Coupon save(Coupon coupons){
         return couponsRepository.save(coupons);
@@ -39,6 +43,7 @@ public class CouponsService {
     @Modifying
     public void delete(Coupon coupon){
         // TODO 最好改为级联删除
+        historyRepository.deleteAllByCouponObj_Coupon(coupon);
         objRepository.deleteAllByCoupon(coupon);
         couponsRepository.delete(coupon);
     }
