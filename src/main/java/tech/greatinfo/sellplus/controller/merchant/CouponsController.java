@@ -19,10 +19,12 @@ import javax.transaction.Transactional;
 
 import tech.greatinfo.sellplus.config.converter.StringToDateConverter;
 import tech.greatinfo.sellplus.domain.Merchant;
+import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.CouponsService;
+import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
@@ -42,6 +44,9 @@ public class CouponsController {
     @Autowired
     TokenService tokenService;
     // 获取全部优惠卷模板信息
+
+    @Autowired
+    SellerSerivce sellerSerivce;
 
     @InitBinder
     public void intDate(WebDataBinder dataBinder){
@@ -189,6 +194,47 @@ public class CouponsController {
             }
         }catch (Exception e){
             logger.error("/api/mer/delCouponModel -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+
+    /**
+     *
+     * 商家端后台端核销优惠卷
+     *
+     * POST
+     *      token   电脑端公司管理员的登录 token
+     *      code    优惠卷的 code
+     *
+     * @param token
+     * @param couponCode
+     * @return
+     */
+    @RequestMapping(value = "/api/mer/writeOffCoupons", method = RequestMethod.POST)
+    public ResJson getCustomerNews(@RequestParam("token") String token,
+                                   @RequestParam(value = "code") String couponCode) {
+        try {
+            Merchant merchat;
+            if ((merchat = (Merchant) tokenService.getUserByToken(token)) != null) {
+                CouponsObj coupon = objService.findByCode(couponCode);
+                if (coupon == null){
+                    return ResJson.failJson(-1,"优惠卷代码错误",null);
+                }else {
+                    // 核销优惠卷
+                    Seller seller = sellerSerivce.getDefaultSeller();
+                    if (seller == null){
+                        return ResJson.failJson(-1,"尚未设置默认销售信息，请联系开发人员",null);
+                    }
+                    objService.writeOffCoupons(coupon,seller);
+                    return  ResJson.successJson("write off coupon success");
+                }
+            } else {
+                return ResJson.errorAccessToken();
+            }
+        } catch (Exception e) {
+            logger.error("/api/sell/writeOffCoupons -> ", e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
