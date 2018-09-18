@@ -46,8 +46,8 @@ public class CustomerController {
 
     public static OkHttpClient client = WeChatUtils.client;
 
-    private static final String appid = "wx0ad95240d57cb5ee";
-    private static final String appsecret="07618c31603772e3836d003d2262c87c";
+    private static final String appid = "wxa305d3fc1a539d2d";
+    private static final String appsecret="c6535d168b4688517a46a543b5cb9161";
 
     @Autowired
     ActivityService activityService;
