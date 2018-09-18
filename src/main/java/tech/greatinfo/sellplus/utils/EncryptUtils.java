@@ -32,7 +32,7 @@ public class EncryptUtils {
     public static String aes128Encrypt(String content, String strKey) {
 
         try {
-            Cipher cipher = Cipher.getInstance("AES");// 创建密码器
+            Cipher cipher = Cipher.getInstance("AESCoder");// 创建密码器
             byte[] byteContent = content.getBytes("utf-8");
             cipher.init(Cipher.ENCRYPT_MODE, genKey(strKey));// 初始化
             byte[] result = cipher.doFinal(byteContent);
@@ -53,7 +53,7 @@ public class EncryptUtils {
     public static String aes128Decrypt(String content,String strKey) {
         try {
             byte[] decryptFrom = parseHexStr2Byte(content);
-            Cipher cipher = Cipher.getInstance("AES");// 创建密码器
+            Cipher cipher = Cipher.getInstance("AESCoder");// 创建密码器
             cipher.init(Cipher.DECRYPT_MODE, genKey(strKey));// 初始化
             byte[] result = cipher.doFinal(decryptFrom);
             return new String(result); // 加密
@@ -109,7 +109,7 @@ public class EncryptUtils {
     private  static SecretKeySpec genKey(String strKey){
         byte[] enCodeFormat = {0}; ;
         try {
-            KeyGenerator kgen = KeyGenerator.getInstance("AES");
+            KeyGenerator kgen = KeyGenerator.getInstance("AESCoder");
             SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
             secureRandom.setSeed(strKey.getBytes());
             kgen.init(128, secureRandom);
@@ -119,7 +119,7 @@ public class EncryptUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new SecretKeySpec(enCodeFormat, "AES");
+        return new SecretKeySpec(enCodeFormat, "AESCoder");
     }
 
     /**

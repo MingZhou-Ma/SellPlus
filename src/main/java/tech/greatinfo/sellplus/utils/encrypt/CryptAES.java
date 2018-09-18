@@ -20,7 +20,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class CryptAES {
 
-	private static final String AESTYPE = "AES/ECB/PKCS5Padding";
+	private static final String AESTYPE = "AESCoder/ECB/PKCS5Padding";
 
 	public static String AES_Encrypt(String keyStr, String plainText) {
 		byte[] encrypt = null;
@@ -50,7 +50,7 @@ public class CryptAES {
 
 	private static Key generateKey(String key) throws Exception {
 		try {
-			SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
+			SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AESCoder");
 			return keySpec;
 		} catch (Exception e) {
 			e.printStackTrace();

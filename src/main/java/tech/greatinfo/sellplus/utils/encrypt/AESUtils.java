@@ -29,7 +29,7 @@ class AESUtils {
      * @return
      * @throws Exception
      */
-    protected static String decrypt(String encryptValue, String key) throws Exception {  
+    protected static String decrypt(String encryptValue, String key) throws Exception {
         return aesDecryptByBytes(base64Decode(encryptValue), key);  
     }
     
@@ -54,21 +54,21 @@ class AESUtils {
     }  
       
     private static byte[] aesEncryptToBytes(String content, String encryptKey) throws Exception {  
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");  
+        KeyGenerator kgen = KeyGenerator.getInstance("AESCoder");
         kgen.init(128, new SecureRandom(encryptKey.getBytes()));  
   
-        Cipher cipher = Cipher.getInstance("AES");  
-        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(kgen.generateKey().getEncoded(), "AES"));  
+        Cipher cipher = Cipher.getInstance("AESCoder");
+        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(kgen.generateKey().getEncoded(), "AESCoder"));
           
         return cipher.doFinal(content.getBytes("utf-8"));  
     }  
       
     private static String aesDecryptByBytes(byte[] encryptBytes, String decryptKey) throws Exception {  
-        KeyGenerator kgen = KeyGenerator.getInstance("AES");  
+        KeyGenerator kgen = KeyGenerator.getInstance("AESCoder");
         kgen.init(128, new SecureRandom(decryptKey.getBytes()));  
           
-        Cipher cipher = Cipher.getInstance("AES");  
-        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(kgen.generateKey().getEncoded(), "AES"));  
+        Cipher cipher = Cipher.getInstance("AESCoder");
+        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(kgen.generateKey().getEncoded(), "AESCoder"));
         byte[] decryptBytes = cipher.doFinal(encryptBytes);  
           
         return new String(decryptBytes);  

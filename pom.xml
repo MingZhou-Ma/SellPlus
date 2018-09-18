@@ -151,6 +151,14 @@
             <version>1.3.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.wanguo</groupId>
+            <artifactId>bcprov-ext-jdk15on-152</artifactId>
+            <version>0.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/bcprov-ext-jdk15on-152.jar</systemPath>
+        </dependency>
+
 
 
     </dependencies>

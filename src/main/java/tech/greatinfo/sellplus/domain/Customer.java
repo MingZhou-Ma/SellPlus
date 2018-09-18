@@ -48,6 +48,9 @@ public class Customer implements User, Serializable {
     @Column(columnDefinition = "VARCHAR(20) COMMENT '手机号码'")
     private String phone;
 
+    @Column(columnDefinition = "VARCHAR(20) COMMENT '电话来源'")
+    private String phoneOrigin;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "seller_id", columnDefinition = "BIGINT COMMENT '所属销售的外键'")
     private Seller seller;
@@ -101,6 +104,14 @@ public class Customer implements User, Serializable {
         this.sessionKey = sessionKey;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -109,20 +120,20 @@ public class Customer implements User, Serializable {
         this.phone = phone;
     }
 
+    public String getPhoneOrigin() {
+        return phoneOrigin;
+    }
+
+    public void setPhoneOrigin(String phoneOrigin) {
+        this.phoneOrigin = phoneOrigin;
+    }
+
     public Seller getSeller() {
         return seller;
     }
 
     public void setSeller(Seller seller) {
         this.seller = seller;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public Boolean getbSell() {
@@ -140,7 +151,6 @@ public class Customer implements User, Serializable {
     public void setFrequenter(Boolean frequenter) {
         this.frequenter = frequenter;
     }
-
 
     public String getSellerChannel() {
         return sellerChannel;
