@@ -16,8 +16,12 @@ import tech.greatinfo.sellplus.domain.intf.User;
  * Created by Ericwyn on 18-1-12.
  */
 public class AccessToken {
-    //token 有效期 60 分钟
-    public static final int MAX_EXPIRED_TIME = 120;
+    //token 有效期 ,分钟
+    public static final int MAX_EXPIRED_TIME_WEB = 60 * 2;
+
+    public static final int MAX_EXPIRED_TIME_WECHAT = 60 * 24 * 3;
+
+
     private static final int USER_MERCHANT = 1;
     private static final int USER_CUSTOMER = 2;
     private static final int USER_SELLER = 3;
@@ -50,8 +54,8 @@ public class AccessToken {
         }
     }
 
-    public static int getMaxExpiredTime() {
-        return MAX_EXPIRED_TIME;
+    public static int getMaxExpiredTimeWeb() {
+        return MAX_EXPIRED_TIME_WEB;
     }
 
     public Long getCreateTime() {
@@ -95,10 +99,21 @@ public class AccessToken {
         }
     }
 
+    public int getExpireTime(){
+        switch (userType){
+            case USER_MERCHANT:
+            case USER_SELLER:
+                return MAX_EXPIRED_TIME_WEB;
+            case USER_CUSTOMER:
+                return MAX_EXPIRED_TIME_WECHAT;
+        }
+        return MAX_EXPIRED_TIME_WEB;
+    }
+
     //判断验证码是否过期，过期了返回true
     // 减 1000 是为了让他过期的更快, 这样的话 refresh 的时候不那么容易出现冲突
     public boolean isExpired(){
-        return (System.currentTimeMillis()-createTime)>(1000 * 60 * MAX_EXPIRED_TIME-1000);
+        return (System.currentTimeMillis()-createTime)>(1000 * 60 * getExpireTime() -1000);
     }
 
     public void refresh(){

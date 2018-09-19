@@ -32,12 +32,12 @@ public class TokenService {
     public void saveToken(final AccessToken token) {
 //        startClearCheckCodeMap();
         // token 过期时间由 redis 维护
-        stringRedisTemplate.opsForValue().set(token.getUuid(), JSONObject.toJSONString(token),AccessToken.MAX_EXPIRED_TIME,TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(token.getUuid(), JSONObject.toJSONString(token),token.getExpireTime(),TimeUnit.MINUTES);
     }
 
-    public boolean isTokenExpired(AccessToken token) {
-        return token.isExpired();
-    }
+//    public boolean isTokenExpired(AccessToken token) {
+//        return token.isExpired();
+//    }
 
     public AccessToken getToken(String token) {
 //        startClearCheckCodeMap();
@@ -57,11 +57,12 @@ public class TokenService {
     public User getUserByToken(String token){
         AccessToken tokenTemp = null;
         if((tokenTemp=getToken(token))!=null){
-            if(tokenTemp.isExpired()){
-                return null;
-            }else {
-                return tokenTemp.getUser();
-            }
+//            if(tokenTemp.isExpired()){
+//                return null;
+//            }else {
+//                return tokenTemp.getUser();
+//            }
+            return tokenTemp.getUser();
         }else {
             return null;
         }
