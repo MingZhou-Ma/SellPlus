@@ -103,15 +103,21 @@ public class SellerController {
     @RequestMapping(value = "/api/sell/getMyCustomer", method = RequestMethod.POST)
     public ResJson getMyCustomer(@RequestParam("token") String token,
                                  @RequestParam(value = "start", defaultValue = "0") Integer start,
-                                 @RequestParam(value = "num", defaultValue = "9999") Integer num
-                                 //@RequestParam(value = "date", required = false) Date date,
-                                 //@RequestParam(value = "origin", required = false) String origin
+                                 @RequestParam(value = "num", defaultValue = "9999") Integer num,
+                                 @RequestParam(value = "accessRecord", required = false) String accessRecord
+
     ) {
         try {
             Seller seller;
             if ((seller = (Seller) tokenService.getUserByToken(token)) != null) {
-                return ResJson.successJson("get my customer success",
-                        customService.getAllBySeller(seller, new PageRequest(start,num)));
+                if (accessRecord == null) {
+                    return ResJson.successJson("get my customer success",
+                            customService.getAllBySellerOrderByCreateTimeDesc(seller, new PageRequest(start,num)));
+                } else {
+                    return ResJson.successJson("get my customer success",
+                            customService.getAllBySellerAndAccessRecordOrderByCreateTimeDesc(seller, accessRecord, new PageRequest(start,num)));
+                }
+
                 //customService.getAllBySellerAndOriginOrderByCreateTimeDesc(seller, origin, new PageRequest(start, num)));
             } else {
                 return ResJson.errorAccessToken();

@@ -24,6 +24,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -115,7 +116,8 @@ public class CustomerController {
                         customer.setSeller(sellerSerivce.getDefaultSeller());
                         /*customer.setType(1);  // 用户类型：1代表潜在客户   2代表老客户
                         customer.setOrigin(""); // 用户来源：默认什么鬼
-                        customer.setCreateTime(new Date());*/
+                        */
+                        customer.setCreateTime(new Date());
                         customService.save(customer);
                     }
                     token = new AccessToken();

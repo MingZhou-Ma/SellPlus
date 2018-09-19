@@ -59,6 +59,14 @@ public class CustomService {
         return repository.getAllBySeller(seller, pageable);
     }
 
+    public Page<Customer> getAllBySellerOrderByCreateTimeDesc(Seller seller, Pageable pageable) {
+        return repository.getAllBySellerOrderByCreateTimeDesc(seller, pageable);
+    }
+
+    public Page<Customer> getAllBySellerAndAccessRecordOrderByCreateTimeDesc(Seller seller, String accessRecord, Pageable pageable) {
+        return repository.getAllBySellerAndAccessRecordOrderByCreateTimeDesc(seller, accessRecord, pageable);
+    }
+
     public Page<Customer> findAll(Pageable pageable){
         return repository.findAll(pageable);
     }

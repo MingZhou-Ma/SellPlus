@@ -64,6 +64,8 @@ public class Customer implements User, Serializable {
     @Column(columnDefinition = "VARCHAR(20) COMMENT '销售渠道'")
     private String sellerChannel; // 格式：属于哪个销售的uuid+ ":" + 销售渠道名称  （例如：uuid:大众饭店）
 
+    @Column(columnDefinition = "VARCHAR(20) COMMENT '用户访问记录'")
+    private String accessRecord;
 
 //    @Column(columnDefinition = "VARCHAR(20) COMMENT '实名'")
 //    private String name;
@@ -74,8 +76,8 @@ public class Customer implements User, Serializable {
 //    @Column(columnDefinition = "VARCHAR(20) COMMENT '用户来源'")
 //    private String origin;
 //
-//    @Column(columnDefinition = "TIMESTAMP COMMENT '用户第一次使用小程序的时间，相当于注册时间吧，客户列表按时间排序要用到'")
-//    private Date createTime;
+    @Column(columnDefinition = "TIMESTAMP COMMENT '用户第一次使用小程序的时间，相当于注册时间吧，客户列表按时间排序要用到'")
+    private Date createTime;
 
     public Customer() {
     }
@@ -158,6 +160,22 @@ public class Customer implements User, Serializable {
 
     public void setSellerChannel(String sellerChannel) {
         this.sellerChannel = sellerChannel;
+    }
+
+    public String getAccessRecord() {
+        return accessRecord;
+    }
+
+    public void setAccessRecord(String accessRecord) {
+        this.accessRecord = accessRecord;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     @Override

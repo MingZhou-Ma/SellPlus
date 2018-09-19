@@ -39,4 +39,5 @@ public class StaticConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/static/**").addResourceLocations("file:"+ STATIC_PATH);
         super.addResourceHandlers(registry);
     }
+
 }
