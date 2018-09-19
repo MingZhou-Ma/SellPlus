@@ -17,7 +17,9 @@ import tech.greatinfo.sellplus.service.ArticleService;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.MerchantService;
 import tech.greatinfo.sellplus.service.ProductService;
+import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.DateUtil;
+import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
@@ -42,6 +44,9 @@ public class DefaultController {
 
     @Autowired
     ArticleService articleService;
+
+    @Autowired
+    TokenService tokenService;
 
     @RequestMapping(value = "/api/default/setMerchant",method = RequestMethod.GET)
     public ResJson setDefaultSet(){
@@ -217,5 +222,23 @@ public class DefaultController {
     @RequestMapping(value = "/ping")
     public String ping(){
         return "pong";
+    }
+
+    // get test token
+    @RequestMapping(value = "/getTestToken")
+    public String getTestToken(){
+        Customer customer = customService.getOne(1L);
+        Merchant merchant = merchantService.getMainMerchant();
+
+        AccessToken cusToken = new AccessToken(true);
+        cusToken.setUuid("testtoken");
+        cusToken.setUser(customer);
+        tokenService.saveToken(cusToken);
+
+        AccessToken merToken = new AccessToken(true);
+        merToken.setUser(merchant);
+        merToken.setUuid("mertoken");
+        tokenService.saveToken(merToken);
+        return "customer token : testtoken, merchant token : mertoken";
     }
 }

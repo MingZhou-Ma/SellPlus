@@ -71,7 +71,7 @@ public class SellerController {
             if (seller == null) {
                 return ResJson.failJson(7001, "account or password error", null);
             } else {
-                AccessToken accessToken = new AccessToken();
+                AccessToken accessToken = new AccessToken(true);
                 accessToken.setUser(seller);
                 HashMap<String, String> map = new HashMap<>();
                 map.put("accessToken", accessToken.getUuid());

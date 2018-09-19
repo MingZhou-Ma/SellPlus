@@ -50,7 +50,7 @@ public class MerchantController {
             if (merchant == null){
                 return ResJson.failJson(7001, "account or password error",null);
             }else {
-                AccessToken accessToken = new AccessToken();
+                AccessToken accessToken = new AccessToken(true);
                 accessToken.setUser(merchant);
                 tokenService.saveToken(accessToken);
                 HashMap<String, String> map = new HashMap<String, String>() ;

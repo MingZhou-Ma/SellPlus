@@ -2,6 +2,9 @@ package tech.greatinfo.sellplus.utils.obj;
 
 import java.util.UUID;
 
+import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.Merchant;
+import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.domain.intf.User;
 
 /**
@@ -15,16 +18,48 @@ import tech.greatinfo.sellplus.domain.intf.User;
 public class AccessToken {
     //token 有效期 60 分钟
     private static final int MAX_EXPIRED_TIME = 120;
+    private static final int USER_MERCHANT = 1;
+    private static final int USER_CUSTOMER = 2;
+    private static final int USER_SELLER = 3;
     //唯一编码
     private String uuid;
     //用户对象
-    private User user;
+//    private User user;
+
+    private Merchant merchant;
+    private Customer customer;
+    private Seller seller;
+
+    private int userType ;
+
     //时间戳
     private Long createTime;
 
     public AccessToken() {
-        this.uuid= UUID.randomUUID().toString().replaceAll("-","");
-        this.createTime=System.currentTimeMillis();
+
+    }
+
+    /**
+     * 是否初始化 uuid 和创建时间
+     * @param init
+     */
+    public AccessToken(boolean init) {
+        if (init){
+            this.uuid= UUID.randomUUID().toString().replaceAll("-","");
+            this.createTime=System.currentTimeMillis();
+        }
+    }
+
+    public static int getMaxExpiredTime() {
+        return MAX_EXPIRED_TIME;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
     }
 
     public void setUuid(String uuid){
@@ -36,11 +71,28 @@ public class AccessToken {
     }
 
     public User getUser() {
-        return user;
+        switch (userType){
+            case USER_MERCHANT:
+                return this.merchant;
+            case USER_SELLER:
+                return this.seller;
+            case USER_CUSTOMER:
+                return this.customer;
+        }
+        return null;
     }
 
     public void setUser(User user) {
-        this.user = user;
+        if (user instanceof Merchant){
+            this.userType = USER_MERCHANT;
+            this.merchant = (Merchant) user;
+        }else if (user instanceof Seller){
+            this.userType = USER_SELLER;
+            this.seller = (Seller) user;
+        }else if (user instanceof Customer){
+            this.userType = USER_CUSTOMER;
+            this.customer = (Customer) user;
+        }
     }
 
     //判断验证码是否过期，过期了返回true
@@ -53,4 +105,35 @@ public class AccessToken {
         this.createTime = System.currentTimeMillis();
     }
 
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Seller getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
+
+    public int getUserType() {
+        return userType;
+    }
+
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
 }
