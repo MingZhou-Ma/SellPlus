@@ -2,9 +2,7 @@ package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +10,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletResponse;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import tech.greatinfo.sellplus.domain.Customer;
-import tech.greatinfo.sellplus.service.*;
+import tech.greatinfo.sellplus.service.ActivityService;
+import tech.greatinfo.sellplus.service.CustomService;
+import tech.greatinfo.sellplus.service.QRcodeService;
+import tech.greatinfo.sellplus.service.SellerSerivce;
+import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.AESCoder;
 import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.PhoneUtil;
@@ -21,11 +33,6 @@ import tech.greatinfo.sellplus.utils.WeChatUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * 普通用户的 API
@@ -118,7 +125,7 @@ public class CustomerController {
                         customer.setCreateTime(new Date());*/
                         customService.save(customer);
                     }
-                    token = new AccessToken();
+                    token = new AccessToken(true);
                     token.setUser(customer);
                     tokenService.saveToken(token);
 //                    token = tokenService.saveToken(customer);

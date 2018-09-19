@@ -157,6 +157,7 @@ public class CompanyController {
                                  @RequestParam(value = "num", defaultValue = "999") Integer num
     ) {
         try {
+            Merchant merchant;
             if (tokenService.getUserByToken(token) != null && tokenService.getUserByToken(token) instanceof Merchant){
                 return ResJson.successJson("get all customer success",
                         customService.findAll(new PageRequest(start,num)));
