@@ -5,11 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
@@ -24,7 +21,7 @@ import tech.greatinfo.sellplus.utils.obj.AccessToken;
 @Service
 public class TokenService {
     private static HashMap<String, AccessToken> tokenMap = new HashMap<>();
-    private static final int CLEAN_MAP_TIME = 50;   //清理过期accessToken的时间间隔，单位为分钟
+//    private static final int CLEAN_MAP_TIME = 50;   //清理过期accessToken的时间间隔，单位为分钟
     // token 的过期时间在AccessToken类里面设置
 
     @Resource
@@ -33,8 +30,9 @@ public class TokenService {
     private boolean startCleanThreadFlag = false;
 
     public void saveToken(final AccessToken token) {
-        startClearCheckCodeMap();
-        stringRedisTemplate.opsForValue().set(token.getUuid(), JSONObject.toJSONString(token));
+//        startClearCheckCodeMap();
+        // token 过期时间由 redis 维护
+        stringRedisTemplate.opsForValue().set(token.getUuid(), JSONObject.toJSONString(token),AccessToken.MAX_EXPIRED_TIME,TimeUnit.MINUTES);
     }
 
     public boolean isTokenExpired(AccessToken token) {
@@ -42,7 +40,7 @@ public class TokenService {
     }
 
     public AccessToken getToken(String token) {
-        startClearCheckCodeMap();
+//        startClearCheckCodeMap();
         String valueString;
         if ((valueString = stringRedisTemplate.opsForValue().get(token))!=null){
             try {
@@ -78,8 +76,7 @@ public class TokenService {
             if ((tokenString = stringRedisTemplate.opsForValue().get(key)) != null
                     && tokenString.contains(openId)){
                 try {
-                    AccessToken resToken = JSONObject.parseObject(tokenString,AccessToken.class);
-                    return resToken;
+                    return JSONObject.parseObject(tokenString,AccessToken.class);
                 }catch (Exception e){
                     return null;
                 }
@@ -91,33 +88,33 @@ public class TokenService {
     public void removeToken(String token){
         stringRedisTemplate.delete(token);
     }
-
-    public void startClearCheckCodeMap() {
-        if (!startCleanThreadFlag){
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-            executor.scheduleAtFixedRate(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            Set<String> keys = stringRedisTemplate.keys("*");
-                            for (String key:keys){
-                                try {
-                                    AccessToken resToken = JSONObject.parseObject(stringRedisTemplate.opsForValue().get(key),AccessToken.class);
-                                    if (resToken.isExpired()){
-                                        stringRedisTemplate.delete(key);
-                                    }
-                                }catch (Exception e){
-                                    System.out.println("token service can not parse json : "+stringRedisTemplate.opsForValue().get(key)+":"+new Date());
-                                }
-                            }
-                        }
-                    },
-                    CLEAN_MAP_TIME,
-                    CLEAN_MAP_TIME,
-                    TimeUnit.MINUTES);
-            startCleanThreadFlag = true;
-        }
-    }
+//
+//    public void startClearCheckCodeMap() {
+//        if (!startCleanThreadFlag){
+//            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+//            executor.scheduleAtFixedRate(
+//                    new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Set<String> keys = stringRedisTemplate.keys("*");
+//                            for (String key:keys){
+//                                try {
+//                                    AccessToken resToken = JSONObject.parseObject(stringRedisTemplate.opsForValue().get(key),AccessToken.class);
+//                                    if (resToken.isExpired()){
+//                                        stringRedisTemplate.delete(key);
+//                                    }
+//                                }catch (Exception e){
+//                                    System.out.println("token service can not parse json : "+stringRedisTemplate.opsForValue().get(key)+":"+new Date());
+//                                }
+//                            }
+//                        }
+//                    },
+//                    CLEAN_MAP_TIME,
+//                    CLEAN_MAP_TIME,
+//                    TimeUnit.MINUTES);
+//            startCleanThreadFlag = true;
+//        }
+//    }
 
 }
 
