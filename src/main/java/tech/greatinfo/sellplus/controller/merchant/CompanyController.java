@@ -72,7 +72,7 @@ public class CompanyController {
      *      coupon2         老司机用来发给新顾客的卷的卷 id
      *      diaryReadNum    用户分享阅读数量领卷下限
      *      diaryCoupon     心得分享的奖励优惠卷
-     *
+     *      diaryIntervals  心得分享获得优惠券间隔时间
      *      token
      *
      * TODO 这里juan1 和 juan2 要和优惠卷主键关联，或者提交保存的时候加多一步验证
@@ -91,6 +91,7 @@ public class CompanyController {
                                @RequestParam(value = "coupon2",required = false) String coupon2,
                                @RequestParam(value = "diaryReadNum",required = false) String diaryReadNum,
                                @RequestParam(value = "diaryCoupon",required = false) String diaryCoupon,
+                               @RequestParam(value = "diaryIntervals", required = false) String diaryIntervals,
                                @RequestParam(value = "token") String token){
 
         try {
@@ -134,6 +135,10 @@ public class CompanyController {
                 // TODO 卷的权限判断（是否存在，是否是数量无限制的优惠卷）
                 if (diaryCoupon != null){
                     list.add(new Company("diaryCoupon",diaryCoupon));
+                }
+
+                if (null != diaryIntervals) {
+                    list.add(new Company("diaryIntervals", diaryIntervals));
                 }
 
                 companyService.saveMainInfo(list);
