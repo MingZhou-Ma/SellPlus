@@ -1,7 +1,6 @@
 package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.domain.SellerCode;
@@ -21,7 +19,6 @@ import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
-import tech.greatinfo.sellplus.utils.WeChatUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
@@ -67,11 +64,11 @@ public class CusSellerController {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
             String selleAccount = (String) ParamUtils.getFromJson(jsonObject,"account", String.class);
             String key =    (String) ParamUtils.getFromJson(jsonObject, "key", String.class);
-            String name =   (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
+            /*String name =   (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
             String phone =  (String) ParamUtils.getFromJson(jsonObject, "phone", String.class);
             String wechat = (String) ParamUtils.getFromJson(jsonObject, "wechat", String.class);
             String intro =  (String) ParamUtils.getFromJson(jsonObject, "intro", String.class);
-            String pic =    (String) ParamUtils.getFromJson(jsonObject, "avatar", String.class);
+            String pic =    (String) ParamUtils.getFromJson(jsonObject, "avatar", String.class);*/
 
             // 该帐号是公司帐号，默认销售
             // 公司简介
@@ -82,11 +79,11 @@ public class CusSellerController {
                         && (seller.getOpenId() == null || seller.getOpenId().equals(""))){
                     // 保存 seller 信息
                     seller.setOpenId(customer.getOpenid());
-                    seller.setName(name);
+                    /*seller.setName(name);
                     seller.setPhone(phone);
                     seller.setWechat(wechat);
                     seller.setIntro(intro);
-                    seller.setPic(WeChatUtils.getBigAvatarURL(pic));
+                    seller.setPic(WeChatUtils.getBigAvatarURL(pic));*/
                     sellerSerivce.save(seller);
 
                     // 插入默认销售渠道
