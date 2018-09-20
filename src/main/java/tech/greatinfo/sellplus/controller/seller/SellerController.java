@@ -118,7 +118,6 @@ public class SellerController {
                             customService.getAllBySellerAndAccessRecordOrderByCreateTimeDesc(seller, accessRecord, new PageRequest(start,num)));
                 }
 
-                //customService.getAllBySellerAndOriginOrderByCreateTimeDesc(seller, origin, new PageRequest(start, num)));
             } else {
                 return ResJson.errorAccessToken();
             }

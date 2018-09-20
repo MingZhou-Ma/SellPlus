@@ -150,6 +150,9 @@ public class CusSellerController {
 
             String channel = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "channel", "null", String.class);
 
+            //初次访问记录
+            String accessRecord = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "accessRecord", "null", String.class);
+
             if (uid.equals("null")){
                 return ResJson.successJson("uid is null");
             }
@@ -169,6 +172,9 @@ public class CusSellerController {
                             //记录销售渠道
                             customer.setSellerChannel(uid + (null==channel?"":":"+channel));
 
+                            //记录初次访问记录
+                            customer.setAccessRecord(accessRecord);
+
                             customService.save(customer);
                         }else {
                             preCustomer.setSeller(sellerSerivce.getDefaultSeller());
@@ -176,10 +182,16 @@ public class CusSellerController {
                             //记录销售渠道
                             preCustomer.setSellerChannel(uid + (null==channel?"":":"+channel));
 
+                            //记录初次访问记录
+                            preCustomer.setAccessRecord(accessRecord);
+
                             customer.setSeller(sellerSerivce.getDefaultSeller());
 
                             //记录销售渠道
                             customer.setSellerChannel(uid + (null==channel?"":":"+channel));
+
+                            //记录初次访问记录
+                            customer.setAccessRecord(accessRecord);
 
                             customService.save(preCustomer);
                             customService.save(customer);
@@ -189,6 +201,9 @@ public class CusSellerController {
 
                         //记录销售渠道
                         customer.setSellerChannel(uid + (null==channel?"":":"+channel));
+
+                        //记录初次访问记录
+                        customer.setAccessRecord(accessRecord);
 
                         customService.save(customer);
                     }

@@ -1,6 +1,13 @@
 package tech.greatinfo.sellplus.controller.merchant;
 
-import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import tech.greatinfo.sellplus.domain.Seller;
+import tech.greatinfo.sellplus.service.SellerSerivce;
+import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
  *
@@ -13,5 +20,60 @@ public class SellController {
     // TODO 设置默认的销售,当前默认id为1的用户为默认销售
 
     // TODO 查看所有的销售列表
+
+    private static final Logger logger = LoggerFactory.getLogger(SellController.class);
+
+    @Autowired
+    TokenService tokenService;
+
+    @Autowired
+    SellerSerivce sellerSerivce;
+
+
+    /**
+     * 添加销售
+     * @param token
+     * @param seller
+     * @return
+     */
+    @RequestMapping(value = "/api/mer/addSeller")
+    public ResJson addSeller(@RequestParam(name = "token") String token, @ModelAttribute Seller seller) {
+        try {
+            if (tokenService.getUserByToken(token) != null){
+                sellerSerivce.save(seller);
+                return ResJson.successJson("add seller success", seller);
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (Exception e){
+            logger.error("/api/mer/addProduct -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 查看销售列表     * @param token
+     * @param start
+     * @param num
+     * @return
+     */
+    @RequestMapping(value = "/api/mer/listSeller",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public ResJson findProduct(@RequestParam(name = "token") String token,
+                               @RequestParam(name = "start",defaultValue = "0") Integer start,
+                               @RequestParam(name = "num",defaultValue = "10") Integer num){
+        try {
+            if (tokenService.getUserByToken(token) != null){
+                return ResJson.successJson("find seller success",
+                        sellerSerivce.findAllByPages(start,num));
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (Exception e){
+            logger.error("/api/mer/listSeller -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
 
 }
