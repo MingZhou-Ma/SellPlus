@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.service.*;
-import tech.greatinfo.sellplus.utils.AESCoder;
 import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.PhoneUtil;
 import tech.greatinfo.sellplus.utils.WeChatUtils;
@@ -197,7 +196,7 @@ public class CustomerController {
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/api/cus/getPhone")
+    /*@RequestMapping(value = "/api/cus/getPhone")
     public ResJson getCustomerPhone(@RequestBody JSONObject jsonObject) {
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
@@ -218,7 +217,7 @@ public class CustomerController {
             return ResJson.serverErrorJson(e.getMessage());
         }
 
-    }
+    }*/
 
 
     /**
@@ -240,7 +239,7 @@ public class CustomerController {
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null) {
                 // 手机号码的验证
-                if (!PhoneUtil.checkCellphone(phone)) {
+                if (!PhoneUtil.isPhone(phone)) {
                     return ResJson.failJson(1111, "error phone", null);
                 }
                 customer.setPhone(phone);
