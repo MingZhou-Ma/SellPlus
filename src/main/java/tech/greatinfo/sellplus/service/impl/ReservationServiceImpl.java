@@ -39,7 +39,7 @@ public class ReservationServiceImpl implements ReservationService {
             if (null == customer) {
                 return ResJson.errorAccessToken();
             }
-            if (PhoneUtil.checkCellphone(phone)) {
+            if (!PhoneUtil.checkCellphone(phone)) {
                 return ResJson.failJson(4001, "error phone", null);
             }
 
