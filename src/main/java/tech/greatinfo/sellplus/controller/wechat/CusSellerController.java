@@ -43,6 +43,42 @@ public class CusSellerController {
 
     @Autowired
     CouponsObjService objService;
+
+    /**
+     * 销售登录
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/cus/sellerLogin",method = RequestMethod.POST)
+    public ResJson sellerLogin(@RequestBody JSONObject jsonObject){
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            String account = (String) ParamUtils.getFromJson(jsonObject,"account", String.class);
+            String sellerKey = (String) ParamUtils.getFromJson(jsonObject, "sellerKey", String.class);
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+            Seller seller = sellerSerivce.findByAccountAndSellerKey(account, sellerKey);
+            if (null == seller) {
+                return ResJson.failJson(-1,"not seller",null);
+            }
+            // 设置openId
+            seller.setOpenId(customer.getOpenid());
+            sellerSerivce.save(seller);
+            return ResJson.successJson("seller login success", seller);
+
+
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/sellerLogin");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/sellerLogin");
+        }catch (Exception e){
+            logger.error("/api/cus/sellerLogin -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
     /**
      * 绑定成为 Seller
      * POST
