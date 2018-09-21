@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.repository.CustomRepository;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.List;
 
 /**
  * Created by Ericwyn on 18-7-23.
@@ -69,6 +69,10 @@ public class CustomService {
 
     public Page<Customer> findAll(Pageable pageable){
         return repository.findAll(pageable);
+    }
+
+    public List<Customer> findBySeller(Long sellerId){
+        return repository.getAllBySellerId(sellerId);
     }
 
 //    public Page<Customer> getAllBySellerAndOriginOrderByCreateTimeDesc(Seller seller, String origin, Pageable pageable) {

@@ -90,7 +90,7 @@ public class ProductController {
                     return ResJson.failJson(7003,"无法更新, 权限错误",null);
                 }
                 productService.update(oldEntity, product);
-                return ResJson.successJson("success update product");
+                return ResJson.successJson("update product success");
             }else {
                 return ResJson.errorAccessToken();
             }

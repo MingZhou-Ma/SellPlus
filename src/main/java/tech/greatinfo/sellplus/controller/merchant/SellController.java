@@ -52,6 +52,23 @@ public class SellController {
         }
     }
 
+//    @RequestMapping(value = "/api/mer/delSeller",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+//    public ResJson findProduct(@RequestParam(name = "token") String token,
+//                               @RequestParam(name = "sellerId") Long sellerId){
+//        try {
+//            if (tokenService.getUserByToken(token) != null){
+//                sellerSerivce.deleteSeller(sellerId);
+//                return ResJson.successJson("success delete seller");
+//            }else {
+//                return ResJson.errorAccessToken();
+//            }
+//        }catch (Exception e){
+//            logger.error("/api/mer/delSeller -> ",e.getMessage());
+//            e.printStackTrace();
+//            return ResJson.serverErrorJson(e.getMessage());
+//        }
+//    }
+
     /**
      * 查看销售列表     * @param token
      * @param start

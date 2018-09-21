@@ -17,6 +17,9 @@ public class SellerSerivce {
 
     private Seller defaultSeller;
 
+    @Autowired
+    CustomService customService;
+
     public Seller findByAccountAndSellerKey(String account, String key) {
         return sellerRepository.findByAccountAndSellerKey(account, key);
     }
@@ -24,6 +27,15 @@ public class SellerSerivce {
     public Seller save(Seller seller) {
         return sellerRepository.save(seller);
     }
+
+//    public void deleteSeller(Long sellerId) {
+//        List<Customer> customers = customService.findBySeller(sellerId);
+//        for (Customer customer:customers){
+//            //customService.deleteActivity(activity.getId());
+//            customService.
+//        }
+//        sellerRepository.delete(sellerId);
+//    }
 
     public Page<Seller> findAllByPages(int start, int num) {
         return sellerRepository.findAll(new PageRequest(start, num));

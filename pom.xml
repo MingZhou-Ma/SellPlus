@@ -149,6 +149,13 @@
             <!--<systemPath>${project.basedir}/lib/bcprov-ext-jdk15on-152.jar</systemPath>-->
         <!--</dependency>-->
 
+        <!--添加外部依赖-->
+        <dependency>
+            <groupId>com.wanguo</groupId>
+            <artifactId>bcprov</artifactId>
+            <version>0.0.1</version>
+       </dependency>
+
 
 
     </dependencies>
@@ -195,6 +202,21 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <!--<resources>
+            <resource>
+                <directory>lib</directory>
+                <targetPath>BOOT-INF/lib/</targetPath>
+                <includes>
+                    <include>**/*.jar</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>BOOT-INF/classes/</targetPath>
+            </resource>
+        </resources>-->
+
     </build>
 
     <repositories>
