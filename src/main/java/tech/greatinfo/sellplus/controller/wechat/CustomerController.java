@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.service.*;
-import tech.greatinfo.sellplus.utils.AESCoder;
-import tech.greatinfo.sellplus.utils.ParamUtils;
-import tech.greatinfo.sellplus.utils.PhoneUtil;
-import tech.greatinfo.sellplus.utils.WeChatUtils;
+import tech.greatinfo.sellplus.utils.*;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
@@ -28,6 +25,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
+
 /**
  * 普通用户的 API
  * <p>
@@ -194,6 +192,7 @@ public class CustomerController {
 
     /**
      * 获取用户手机号码
+     *
      * @param jsonObject
      * @return
      */
@@ -204,11 +203,27 @@ public class CustomerController {
             String encryptedData = (String) ParamUtils.getFromJson(jsonObject, "encryptedData", String.class);
             String iv = (String) ParamUtils.getFromJson(jsonObject, "iv", String.class);
 
+
             Customer customer = (Customer) tokenService.getUserByToken(token);
             if (null == customer) {
                 return ResJson.errorAccessToken();
             }
-            return ResJson.successJson("getPhone Success", AESCoder.wxDecrypt(encryptedData, customer.getSessionKey(), iv));
+            String decrypt = AesCbcUtil.decrypt(encryptedData, customer.getSessionKey(), iv, "UTF-8");
+            //String s = AESCoder.wxDecrypt(encryptedData, customer.getSessionKey(), iv);
+//            System.out.println("加密前：" + encryptedData);
+//            String s1 = AESUtils.AESDecode(encryptedData);
+//
+//            AlgorithmParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
+//            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+//            SecretKeySpec keySpec = new SecretKeySpec(customer.getSessionKey().getBytes(), "AES");
+//            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
+//            //解析解密后的字符串  
+//            String s = new String(cipher.doFinal(s1.getBytes()), "UTF-8");
+//
+//
+//            //String s2 = AESUtils.AESDecode(iv);
+//            System.out.println("加密后：" + s1);
+            return ResJson.successJson("getPhone Success", decrypt);
         } catch (JsonParseException jse) {
             logger.info(jse.getMessage() + " -> /api/cus/getPhone");
             return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/getPhone");
