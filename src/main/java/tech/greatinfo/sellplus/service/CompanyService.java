@@ -2,13 +2,12 @@ package tech.greatinfo.sellplus.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 import tech.greatinfo.sellplus.domain.Company;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.repository.CompanyRepository;
 import tech.greatinfo.sellplus.repository.CouponsRepository;
+
+import java.util.List;
 
 /**
  *
@@ -56,7 +55,7 @@ public class CompanyService {
      * @return
      */
     public Coupon getDiaryCoupon(){
-        Company company = companyRepository.findByK("diaryReadNum");
+        Company company = companyRepository.findByK("diaryCoupon");
         if (company == null){
             return null;
         }else {

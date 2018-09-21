@@ -40,4 +40,6 @@ public class StaticConfig extends WebMvcConfigurerAdapter {
         super.addResourceHandlers(registry);
     }
 
+
+
 }

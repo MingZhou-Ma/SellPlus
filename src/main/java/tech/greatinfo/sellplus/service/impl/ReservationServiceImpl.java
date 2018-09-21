@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Reservation;
 import tech.greatinfo.sellplus.repository.ReservationRepository;
 import tech.greatinfo.sellplus.service.ReservationService;
@@ -32,12 +33,12 @@ public class ReservationServiceImpl implements ReservationService {
             String num = (String) ParamUtils.getFromJson(jsonObject, "num", String.class);
             String name = (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
             String phone = (String) ParamUtils.getFromJson(jsonObject, "phone", String.class);
-            String remark = (String) ParamUtils.getFromJson(jsonObject, "remark", String.class);
+            String remark = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "remark", "",String.class);
 
-//            Customer customer = (Customer) tokenService.getUserByToken(token);
-//            if (null == customer) {
-//                return ResJson.errorAccessToken();
-//            }
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
             if (!PhoneUtil.isPhone(phone)) {
                 return ResJson.failJson(4001, "error phone", null);
             }
@@ -47,7 +48,7 @@ public class ReservationServiceImpl implements ReservationService {
             reservation.setName(name);
             reservation.setPhone(phone);
             reservation.setRemark(remark);
-            //reservation.setCustomer(customer);
+            reservation.setCustomer(customer);
             reservationRepository.save(reservation);
 
             //发送短信

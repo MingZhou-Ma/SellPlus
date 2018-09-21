@@ -8,21 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tech.greatinfo.sellplus.domain.Company;
+import tech.greatinfo.sellplus.domain.Merchant;
+import tech.greatinfo.sellplus.domain.coupons.Coupon;
+import tech.greatinfo.sellplus.service.*;
+import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import tech.greatinfo.sellplus.domain.Company;
-import tech.greatinfo.sellplus.domain.Merchant;
-import tech.greatinfo.sellplus.service.ActivityService;
-import tech.greatinfo.sellplus.service.CompanyService;
-import tech.greatinfo.sellplus.service.CouponsObjService;
-import tech.greatinfo.sellplus.service.CouponsService;
-import tech.greatinfo.sellplus.service.CustomService;
-import tech.greatinfo.sellplus.service.MerchantService;
-import tech.greatinfo.sellplus.service.ProductService;
-import tech.greatinfo.sellplus.service.TokenService;
-import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
  *
@@ -89,9 +82,9 @@ public class CompanyController {
                                @RequestParam(value = "promotion",required = false) String promotion,
                                @RequestParam(value = "coupon1",required = false) String coupon1,
                                @RequestParam(value = "coupon2",required = false) String coupon2,
-                               @RequestParam(value = "diaryReadNum",required = false) String diaryReadNum,
+                               @RequestParam(value = "diaryReadNum",required = false) Integer diaryReadNum,
                                @RequestParam(value = "diaryCoupon",required = false) String diaryCoupon,
-                               @RequestParam(value = "diaryIntervals", required = false) String diaryIntervals,
+                               @RequestParam(value = "diaryIntervals", required = false) Integer diaryIntervals,
                                @RequestParam(value = "token") String token){
 
         try {
@@ -130,15 +123,20 @@ public class CompanyController {
                     list.add(new Company("coupon1",coupon2));
                 }
                 if (diaryReadNum != null){
-                    list.add(new Company("diaryReadNum",diaryReadNum));
+                    list.add(new Company("diaryReadNum", String.valueOf(diaryReadNum)));
                 }
-                // TODO 卷的权限判断（是否存在，是否是数量无限制的优惠卷）
+                //  卷的权限判断（是否存在，是否是数量无限制的优惠卷）
                 if (diaryCoupon != null){
-                    list.add(new Company("diaryCoupon",diaryCoupon));
+                    Coupon coupon = couModelService.findOne(Long.valueOf(diaryCoupon));
+                    if (null != coupon) {
+                        if (!coupon.getFinite()) {
+                            list.add(new Company("diaryCoupon",diaryCoupon));
+                        }
+                    }
                 }
 
                 if (null != diaryIntervals) {
-                    list.add(new Company("diaryIntervals", diaryIntervals));
+                    list.add(new Company("diaryIntervals", String.valueOf(diaryIntervals)));
                 }
 
                 companyService.saveMainInfo(list);
