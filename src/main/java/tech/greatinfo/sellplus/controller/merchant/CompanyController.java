@@ -68,7 +68,7 @@ public class CompanyController {
      *      diaryIntervals  心得分享获得优惠券间隔时间
      *      token
      *
-     * TODO 这里juan1 和 juan2 要和优惠卷主键关联，或者提交保存的时候加多一步验证
+     *  这里juan1 和 juan2 要和优惠卷主键关联，或者提交保存的时候加多一步验证
      *
      */
     @RequestMapping(value = "/api/mer/setMainInfo",method = RequestMethod.POST)
@@ -79,7 +79,7 @@ public class CompanyController {
                                @RequestParam(value = "notify2",required = false) String notify2,
                                @RequestParam(value = "notify3",required = false) String notify3,
                                @RequestParam(value = "curtain",required = false) String curtain,
-                               @RequestParam(value = "promotion",required = false) String promotion,
+                               @RequestParam(value = "promotion",required = false) Integer promotion,
                                @RequestParam(value = "coupon1",required = false) String coupon1,
                                @RequestParam(value = "coupon2",required = false) String coupon2,
                                @RequestParam(value = "diaryReadNum",required = false) Integer diaryReadNum,
@@ -112,15 +112,25 @@ public class CompanyController {
                 if (curtain != null){
                     list.add(new Company("curtain",curtain));
                 }
-                // TODO 卷的权限判断（是否存在，是否是数量无限制的优惠卷）
+                // 卷的权限判断（是否存在，是否是数量无限制的优惠卷）
                 if (promotion != null){
-                    list.add(new Company("promotion",promotion));
+                    list.add(new Company("promotion", String.valueOf(promotion)));
                 }
                 if (coupon1 != null){
-                    list.add(new Company("coupon1",coupon1));
+                    Coupon coupon = couModelService.findOne(Long.valueOf(coupon1));
+                    if (null != coupon) {
+                        if (!coupon.getFinite()) {
+                            list.add(new Company("coupon1",coupon1));
+                        }
+                    }
                 }
                 if (coupon2 != null){
-                    list.add(new Company("coupon1",coupon2));
+                    Coupon coupon = couModelService.findOne(Long.valueOf(coupon2));
+                    if (null != coupon) {
+                        if (!coupon.getFinite()) {
+                            list.add(new Company("coupon2",coupon2));
+                        }
+                    }
                 }
                 if (diaryReadNum != null){
                     list.add(new Company("diaryReadNum", String.valueOf(diaryReadNum)));
