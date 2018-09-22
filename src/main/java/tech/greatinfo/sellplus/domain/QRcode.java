@@ -1,11 +1,6 @@
 package tech.greatinfo.sellplus.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by Ericwyn on 18-7-31.
@@ -19,13 +14,17 @@ public class QRcode {
     private Long id;
 
     @Column
-    private String scence;
+    private String scene;
 
     @Column
     private String page;
 
     @Column
     private String path;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_id",columnDefinition = "BIGINT COMMENT '二维码生成者'")
+    private Customer customer;
 
     public QRcode() {
     }
@@ -38,12 +37,12 @@ public class QRcode {
         this.id = id;
     }
 
-    public String getScence() {
-        return scence;
+    public String getScene() {
+        return scene;
     }
 
-    public void setScence(String scence) {
-        this.scence = scence;
+    public void setScene(String scene) {
+        this.scene = scene;
     }
 
     public String getPage() {
@@ -60,5 +59,13 @@ public class QRcode {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

@@ -75,30 +75,29 @@ public class CusDiaryController {
     public ResJson generalDiary(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
-            String diaryId = (String) ParamUtils.getFromJson(jsonObject,"did",String.class);
+            //String diaryId = (String) ParamUtils.getFromJson(jsonObject,"did",String.class);
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
                 Diary diary = new Diary();
-                //diary.setDiaryId(diaryId);
+                QRcode qRcode = qRcodeRepository.findFirstByCustomerOrderBySceneDesc(customer);
+                diary.setDiaryId(qRcode.getScene());
                 diary.setCustomer(customer);
                 diary.setGeneral(false);
                 diary.setReadHistory("");
                 diary.setGeneralTime(null);
                 diaryService.save(diary);
 
-                // 修改二维码外键
-                QRcode qRcode = qRcodeRepository.findByScence(diaryId);
-                qRcode.setScence(String.valueOf(diary.getDiaryId()));
-                qRcodeRepository.save(qRcode);
 
                 return ResJson.successJson("save diary success");
             }else {
                 return ResJson.errorAccessToken();
             }
         }catch (JsonParseException jse){
+            // TODO 删除二维码
             logger.info(jse.getMessage()+" -> /api/freq/beFreq");
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/beFreq");
         }catch (Exception e){
+            // TODO 删除二维码
             logger.error("/api/freq/beFreq -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -123,7 +122,7 @@ public class CusDiaryController {
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
                 Diary diary ;
-                if ((diary = diaryService.findOne(Long.valueOf(diaryId))) == null){
+                if ((diary = diaryService.findOne(diaryId)) == null){
                     return ResJson.failJson(-1, "diary id error", null);
                 }
                 String read = diary.getReadHistory();
@@ -158,7 +157,7 @@ public class CusDiaryController {
                                 }
                                 // 达到兑换标准
                                 if (flag){
-                                    diaryService.generalCoupon(Long.valueOf(diaryId));
+                                    diaryService.generalCoupon(diaryId);
                                 }
                             }
                         }).start();

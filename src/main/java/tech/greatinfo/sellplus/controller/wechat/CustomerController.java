@@ -344,7 +344,7 @@ public class CustomerController {
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null) {
                 String accessToken = WeChatUtils.getAccessToken();
                 if (accessToken != null) {
-                    String path = qrService.getQRCode(accessToken, scene, page);
+                    String path = qrService.getQRCode(customer, accessToken, scene, page);
                     if (path != null) {
                         if (path.contains("errcode")) {
                             return ResJson.failJson(5000, "get QR code fail, error : " + path, null);

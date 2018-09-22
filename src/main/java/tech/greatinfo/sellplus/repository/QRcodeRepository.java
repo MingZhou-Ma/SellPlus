@@ -3,6 +3,7 @@ package tech.greatinfo.sellplus.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.QRcode;
 
 
@@ -11,7 +12,9 @@ import tech.greatinfo.sellplus.domain.QRcode;
  */
 public interface QRcodeRepository extends JpaRepository<QRcode, Long>,
         JpaSpecificationExecutor<QRcode> {
-    QRcode findByScenceAndPage(String scene, String page);
+    QRcode findBySceneAndPage(String scene, String page);
 
-    QRcode findByScence(String scence);
+    QRcode findFirstByCustomerOrderBySceneDesc(Customer customer);
+
+
 }

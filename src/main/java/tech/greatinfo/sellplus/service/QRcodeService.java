@@ -4,6 +4,7 @@ import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.greatinfo.sellplus.config.StaticConfig;
+import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.QRcode;
 import tech.greatinfo.sellplus.repository.QRcodeRepository;
 import tech.greatinfo.sellplus.utils.WeChatUtils;
@@ -33,8 +34,8 @@ public class QRcodeService {
         return repository.findOne(id);
     }
 
-    public QRcode findByScenceAndPage(String scene, String page){
-        return repository.findByScenceAndPage(scene,page);
+    public QRcode findBySceneAndPage(String scene, String page){
+        return repository.findBySceneAndPage(scene,page);
     }
 
     /**
@@ -45,11 +46,11 @@ public class QRcodeService {
      * @return
      * @throws IOException
      */
-    public String getQRCode(String token, String scene, String page) throws IOException {
-        /*QRcode code = repository.findByScenceAndPage(scene, page);
+    public String getQRCode(Customer customer, String token, String scene, String page) throws IOException {
+        QRcode code = repository.findBySceneAndPage(scene, page);
         if (code != null){
             return code.getPath();
-        }*/
+        }
         if (scene == null || page == null){
             scene = "";
             page = "";
@@ -88,9 +89,10 @@ public class QRcodeService {
                 return resultStr;
             }
             QRcode qRcode = new QRcode();
-            qRcode.setScence(scene);
+            qRcode.setScene(scene);
             qRcode.setPage(page);
             qRcode.setPath(QRcodePath+"/"+saveFile.getName());
+            qRcode.setCustomer(customer);
             repository.save(qRcode);
             return qRcode.getPath();
         }else {

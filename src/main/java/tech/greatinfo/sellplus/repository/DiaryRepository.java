@@ -10,7 +10,7 @@ import tech.greatinfo.sellplus.domain.Diary;
  */
 public interface DiaryRepository extends JpaRepository<Diary, Long>,
         JpaSpecificationExecutor<Diary> {
-    Diary findByDiaryId(Long diaryId);
+    Diary findByDiaryId(String diaryId);
 
     Diary findFirstByCustomerAndGeneralTrueOrderByGeneralTimeDesc(Customer customer);
 }
