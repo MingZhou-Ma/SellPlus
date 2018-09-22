@@ -1,24 +1,15 @@
 package tech.greatinfo.sellplus.service;
 
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.domain.QRcode;
 import tech.greatinfo.sellplus.repository.QRcodeRepository;
 import tech.greatinfo.sellplus.utils.WeChatUtils;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by Ericwyn on 18-7-31.
@@ -56,9 +47,9 @@ public class QRcodeService {
      */
     public String getQRCode(String token, String scene, String page) throws IOException {
         QRcode code = repository.findByScenceAndPage(scene, page);
-        if (code != null){
-            return code.getPath();
-        }
+//        if (code != null){
+//            return code.getPath();
+//        }
         if (scene == null || page == null){
             scene = "";
             page = "";
