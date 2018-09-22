@@ -142,33 +142,19 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>com.wanguo</groupId>-->
-            <!--<artifactId>bcprov-ext-jdk15on-152</artifactId>-->
-            <!--<version>0.0.1</version>-->
-            <!--<scope>system</scope>-->
-            <!--<systemPath>${project.basedir}/lib/bcprov-ext-jdk15on-152.jar</systemPath>-->
+            <!--<groupId>org.bouncycastle</groupId>-->
+            <!--<artifactId>bcprov-ext-jdk16</artifactId>-->
+            <!--<version>1.46</version>-->
+            <!--<type>jar</type>-->
+            <!--<scope>compile</scope>-->
         <!--</dependency>-->
-
-        <!--添加外部依赖-->
-        <!--<dependency>-->
-            <!--<groupId>com.wanguo</groupId>-->
-            <!--<artifactId>bcprov</artifactId>-->
-            <!--<version>0.0.1</version>-->
-       <!--</dependency>-->
-
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-ext-jdk15on -->
         <dependency>
-
             <groupId>org.bouncycastle</groupId>
-
-            <artifactId>bcprov-ext-jdk16</artifactId>
-
-            <version>1.46</version>
-
-            <type>jar</type>
-
-            <scope>compile</scope>
-
+            <artifactId>bcprov-ext-jdk15on</artifactId>
+            <version>1.59</version>
         </dependency>
+
 
 
 
@@ -216,20 +202,6 @@
                 </executions>
             </plugin>
         </plugins>
-
-        <!--<resources>
-            <resource>
-                <directory>lib</directory>
-                <targetPath>BOOT-INF/lib/</targetPath>
-                <includes>
-                    <include>**/*.jar</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <targetPath>BOOT-INF/classes/</targetPath>
-            </resource>
-        </resources>-->
 
     </build>
 

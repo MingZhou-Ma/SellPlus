@@ -66,8 +66,14 @@ public class CusSellerController {
             // 设置openId
             seller.setOpenId(customer.getOpenid());
             sellerSerivce.save(seller);
-            return ResJson.successJson("seller login success", seller);
 
+            // 成为 Seller
+            customer.setbSell(true);
+            customer.setSeller(seller);
+            customer.setUid(customer.getUid());
+            customService.save(customer);
+
+            return ResJson.successJson("seller login success", seller);
 
         }catch (JsonParseException jse){
             logger.info(jse.getMessage()+" -> /api/cus/sellerLogin");

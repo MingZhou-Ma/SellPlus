@@ -196,7 +196,7 @@ public class CustomerController {
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/api/cus/getPhone")
+    @RequestMapping(value = "/api/cus/getPhone", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson getCustomerPhone(@RequestBody JSONObject jsonObject) {
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
@@ -208,26 +208,50 @@ public class CustomerController {
             if (null == customer) {
                 return ResJson.errorAccessToken();
             }
-            String decrypt = AesCbcUtil.decrypt(encryptedData, customer.getSessionKey(), iv, "UTF-8");
-            //String s = AESCoder.wxDecrypt(encryptedData, customer.getSessionKey(), iv);
-//            System.out.println("加密前：" + encryptedData);
-//            String s1 = AESUtils.AESDecode(encryptedData);
-//
-//            AlgorithmParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
-//            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-//            SecretKeySpec keySpec = new SecretKeySpec(customer.getSessionKey().getBytes(), "AES");
-//            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
-//            //解析解密后的字符串  
-//            String s = new String(cipher.doFinal(s1.getBytes()), "UTF-8");
-//
-//
-//            //String s2 = AESUtils.AESDecode(iv);
-//            System.out.println("加密后：" + s1);
+
+            System.out.println(encryptedData);
+            System.out.println(iv);
+            System.out.println(customer.getSessionKey());
+
+            //String wxDecrypt = AES.wxDecrypt(encryptedData, customer.getSessionKey(), iv);
+            //String decrypt = AesCbcUtil.decrypt(encryptedData, customer.getSessionKey(), iv, "UTF-8");
+
+            String decrypt = AES.wxDecrypt(encryptedData, customer.getSessionKey(), iv);
+
+            System.out.println(decrypt);
+
+           /* System.out.println(token);
+            System.out.println(encryptedData);
+            System.out.println(iv);*/
+            //String decrypt = AesCbcUtil.decrypt(encryptedData, customer.getSessionKey(), iv, "UTF-8");
+            //String data = AesCbcUtil.parseByte2HexStr(encryptedData.getBytes());
+            //String key = AesCbcUtil.parseByte2HexStr(customer.getSessionKey().getBytes());
+            //String iv1 = AesCbcUtil.parseByte2HexStr(iv.getBytes());
+
+            /*String decrypt = AES.wxDecrypt("CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZM\n" +
+                    "                QmRzooG2xrDcvSnxIMXFufNstNGTyaGS\n" +
+                    "                9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+\n" +
+                    "                3hVbJSRgv+4lGOETKUQz6OYStslQ142d\n" +
+                    "                NCuabNPGBzlooOmB231qMM85d2/fV6Ch\n" +
+                    "                evvXvQP8Hkue1poOFtnEtpyxVLW1zAo6\n" +
+                    "                /1Xx1COxFvrc2d7UL/lmHInNlxuacJXw\n" +
+                    "                u0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn\n" +
+                    "                /Hz7saL8xz+W//FRAUid1OksQaQx4CMs\n" +
+                    "                8LOddcQhULW4ucetDf96JcR3g0gfRK4P\n" +
+                    "                C7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB\n" +
+                    "                6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns\n" +
+                    "                /8wR2SiRS7MNACwTyrGvt9ts8p12PKFd\n" +
+                    "                lqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYV\n" +
+                    "                oKlaRv85IfVunYzO0IKXsyl7JCUjCpoG\n" +
+                    "                20f0a04COwfneQAGGwd5oa+T8yO5hzuy\n" +
+                    "                Db/XcxxmK01EpqOyuxINew==", "tiihtNczf5v6AKRyjwEUhQ==", "r7BXXKkLb8qrSNn05n0qiA==");*/
+
+
             return ResJson.successJson("getPhone Success", decrypt);
-        } catch (JsonParseException jse) {
+        } /*catch (JsonParseException jse) {
             logger.info(jse.getMessage() + " -> /api/cus/getPhone");
             return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/getPhone");
-        } catch (Exception e) {
+        } */catch (Exception e) {
             logger.error("/api/cus/getPhone -> ", e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
