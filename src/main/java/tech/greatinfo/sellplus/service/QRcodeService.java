@@ -46,10 +46,10 @@ public class QRcodeService {
      * @throws IOException
      */
     public String getQRCode(String token, String scene, String page) throws IOException {
-        QRcode code = repository.findByScenceAndPage(scene, page);
-//        if (code != null){
-//            return code.getPath();
-//        }
+        /*QRcode code = repository.findByScenceAndPage(scene, page);
+        if (code != null){
+            return code.getPath();
+        }*/
         if (scene == null || page == null){
             scene = "";
             page = "";

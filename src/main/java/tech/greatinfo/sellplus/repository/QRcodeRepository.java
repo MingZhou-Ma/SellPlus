@@ -12,4 +12,6 @@ import tech.greatinfo.sellplus.domain.QRcode;
 public interface QRcodeRepository extends JpaRepository<QRcode, Long>,
         JpaSpecificationExecutor<QRcode> {
     QRcode findByScenceAndPage(String scene, String page);
+
+    QRcode findByScence(String scence);
 }

@@ -36,7 +36,7 @@ public class DiaryService {
         return repository.save(diary);
     }
 
-    public Diary findOne(String diaryId) {
+    public Diary findOne(Long diaryId) {
         return repository.findByDiaryId(diaryId);
     }
 
@@ -47,7 +47,7 @@ public class DiaryService {
     // 加注解代表事务
     @Transactional
     @Modifying
-    public synchronized void generalCoupon(String diaryId) {
+    public synchronized void generalCoupon(Long diaryId) {
         Diary diary = repository.findByDiaryId(diaryId);
         if (!diary.isGeneral() && diary.getReadHistory().split(",").length >= companyService.getDiaryReadNum()) {
             Coupon coupon = companyService.getDiaryCoupon();

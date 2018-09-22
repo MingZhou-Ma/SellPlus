@@ -75,7 +75,7 @@ public class CusDiaryController {
     public ResJson generalDiary(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
-            //String diaryId = (String) ParamUtils.getFromJson(jsonObject,"did",String.class);
+            String diaryId = (String) ParamUtils.getFromJson(jsonObject,"did",String.class);
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
                 Diary diary = new Diary();
@@ -87,8 +87,8 @@ public class CusDiaryController {
                 diaryService.save(diary);
 
                 // 修改二维码外键
-                QRcode qRcode = new QRcode();
-                qRcode.setScence(diary.getDiaryId());
+                QRcode qRcode = qRcodeRepository.findByScence(diaryId);
+                qRcode.setScence(String.valueOf(diary.getDiaryId()));
                 qRcodeRepository.save(qRcode);
 
                 return ResJson.successJson("save diary success");
@@ -123,7 +123,7 @@ public class CusDiaryController {
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
                 Diary diary ;
-                if ((diary = diaryService.findOne(diaryId)) == null){
+                if ((diary = diaryService.findOne(Long.valueOf(diaryId))) == null){
                     return ResJson.failJson(-1, "diary id error", null);
                 }
                 String read = diary.getReadHistory();
@@ -158,7 +158,7 @@ public class CusDiaryController {
                                 }
                                 // 达到兑换标准
                                 if (flag){
-                                    diaryService.generalCoupon(diaryId);
+                                    diaryService.generalCoupon(Long.valueOf(diaryId));
                                 }
                             }
                         }).start();

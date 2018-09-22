@@ -1,13 +1,6 @@
 package tech.greatinfo.sellplus.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -19,10 +12,12 @@ import java.util.Date;
 @Entity
 @Table(name = "diary")
 public class Diary {
+
     @Id
+    @GeneratedValue
     @PrimaryKeyJoinColumn
-    @Column(length = 32,columnDefinition = "VARCHAR(32) COMMENT '主键 key'")
-    private String diaryId;
+    //@Column(length = 32,columnDefinition = "VARCHAR(32) COMMENT '主键 key'")
+    private Long diaryId;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id",columnDefinition = "BIGINT COMMENT '发表人'")
@@ -42,11 +37,11 @@ public class Diary {
     public Diary() {
     }
 
-    public String getDiaryId() {
+    public Long getDiaryId() {
         return diaryId;
     }
 
-    public void setDiaryId(String diaryId) {
+    public void setDiaryId(Long diaryId) {
         this.diaryId = diaryId;
     }
 
