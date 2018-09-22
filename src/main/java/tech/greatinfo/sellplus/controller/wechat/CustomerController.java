@@ -100,7 +100,14 @@ public class CustomerController {
                     if ((token = tokenService.getTokenByCustomOpenId(obj.getString("openid"))) != null) {
                         //如果已经能够在 token map 里面找到就证明之前已经登录过了, 所以也一定存入到数据库了
                         token.refresh();
+
+//                        customer = customService.getByOpenId(obj.getString("openid"));
+//                        customer.setSessionKey(obj.getString("session_key"));
+
                         ((Customer) token.getUser()).setSessionKey(obj.getString("session_key"));
+                        customService.save((Customer) token.getUser());
+                        System.out.println(111);
+
                         HashMap<String, String> map = new HashMap<String, String>();
                         map.put("accessToken", token.getUuid());
                         map.put("uid", ((Customer) token.getUser()).getUid());
@@ -109,8 +116,10 @@ public class CustomerController {
 
                     // 如果没有旧的已经登录了的 token 的话
                     if ((customer = customService.getByOpenId(obj.getString("openid"))) != null) {
+                        System.out.println(222);
                         customer.setSessionKey(obj.getString("session_key"));
                     } else {
+                        System.out.println(333);
                         customer = new Customer();
                         customer.setOpenid(obj.getString("openid"));
                         customer.setSessionKey(obj.getString("session_key"));
