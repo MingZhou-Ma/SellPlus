@@ -33,6 +33,10 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "customer_id",columnDefinition = "BIGINT COMMENT '预约人'")
     private Customer customer;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id",columnDefinition = "BIGINT COMMENT '商品外键'")
+    private Product product;
+
     public Reservation() {
     }
 
@@ -82,5 +86,13 @@ public class Reservation implements Serializable {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

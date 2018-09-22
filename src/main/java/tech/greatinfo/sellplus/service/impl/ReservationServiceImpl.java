@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Reservation;
 import tech.greatinfo.sellplus.repository.ReservationRepository;
+import tech.greatinfo.sellplus.service.ProductService;
 import tech.greatinfo.sellplus.service.ReservationService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.PhoneUtil;
+import tech.greatinfo.sellplus.utils.SendSmsUtil;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
@@ -26,10 +28,14 @@ public class ReservationServiceImpl implements ReservationService {
     @Autowired
     ReservationRepository reservationRepository;
 
+    @Autowired
+    ProductService productService;
+
     @Override
     public ResJson reservation(JSONObject jsonObject) {
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            //String productId = (String) ParamUtils.getFromJson(jsonObject, "productId", String.class);
             String num = (String) ParamUtils.getFromJson(jsonObject, "num", String.class);
             String name = (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
             String phone = (String) ParamUtils.getFromJson(jsonObject, "phone", String.class);
@@ -39,19 +45,29 @@ public class ReservationServiceImpl implements ReservationService {
             if (null == customer) {
                 return ResJson.errorAccessToken();
             }
+//            Product product = productService.findOne(Long.valueOf(productId));
+//            if (null == product) {
+//                return ResJson.failJson(4001, "not product", null);
+//            }
             if (!PhoneUtil.isPhone(phone)) {
                 return ResJson.failJson(4001, "error phone", null);
             }
 
+            // 保存预约信息
             Reservation reservation = new Reservation();
             reservation.setNum(num);
             reservation.setName(name);
             reservation.setPhone(phone);
             reservation.setRemark(remark);
             reservation.setCustomer(customer);
+            //reservation.setProduct(product);
             reservationRepository.save(reservation);
 
             //发送短信
+            //if (!SendSmsUtil.sendSms(phone, name, product.getName())) {
+            if (!SendSmsUtil.sendSms(phone, name, "测试商品")) {
+                return ResJson.failJson(4000, "send sms fail", null);
+            }
 
             return ResJson.successJson("reservation success");
 
