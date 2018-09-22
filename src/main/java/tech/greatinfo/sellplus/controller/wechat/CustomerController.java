@@ -102,10 +102,9 @@ public class CustomerController {
                         token.refresh();
                         ((Customer) token.getUser()).setSessionKey(obj.getString("session_key"));
 
-                        //token = new AccessToken(true);
+                        // 更新sessionKey，不然授权手机号无法解密
                         token.setUser(token.getUser());
                         tokenService.saveToken(token);
-
 
                         HashMap<String, String> map = new HashMap<String, String>();
                         map.put("accessToken", token.getUuid());
@@ -197,7 +196,7 @@ public class CustomerController {
     }
 
     /**
-     * 获取用户手机号码
+     * 授权用户手机号码
      *
      * @param jsonObject
      * @return
@@ -209,7 +208,6 @@ public class CustomerController {
             String encryptedData = (String) ParamUtils.getFromJson(jsonObject, "encryptedData", String.class);
             String iv = (String) ParamUtils.getFromJson(jsonObject, "iv", String.class);
 
-
             Customer customer = (Customer) tokenService.getUserByToken(token);
             if (null == customer) {
                 return ResJson.errorAccessToken();
@@ -219,45 +217,20 @@ public class CustomerController {
             System.out.println(iv);
             System.out.println(customer.getSessionKey());
 
-            //String wxDecrypt = AES.wxDecrypt(encryptedData, customer.getSessionKey(), iv);
-            //String decrypt = AesCbcUtil.decrypt(encryptedData, customer.getSessionKey(), iv, "UTF-8");
-
             String decrypt = AES.wxDecrypt(encryptedData, customer.getSessionKey(), iv);
-
             System.out.println(decrypt);
 
-           /* System.out.println(token);
-            System.out.println(encryptedData);
-            System.out.println(iv);*/
-            //String decrypt = AesCbcUtil.decrypt(encryptedData, customer.getSessionKey(), iv, "UTF-8");
-            //String data = AesCbcUtil.parseByte2HexStr(encryptedData.getBytes());
-            //String key = AesCbcUtil.parseByte2HexStr(customer.getSessionKey().getBytes());
-            //String iv1 = AesCbcUtil.parseByte2HexStr(iv.getBytes());
-
-            /*String decrypt = AES.wxDecrypt("CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZM\n" +
-                    "                QmRzooG2xrDcvSnxIMXFufNstNGTyaGS\n" +
-                    "                9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+\n" +
-                    "                3hVbJSRgv+4lGOETKUQz6OYStslQ142d\n" +
-                    "                NCuabNPGBzlooOmB231qMM85d2/fV6Ch\n" +
-                    "                evvXvQP8Hkue1poOFtnEtpyxVLW1zAo6\n" +
-                    "                /1Xx1COxFvrc2d7UL/lmHInNlxuacJXw\n" +
-                    "                u0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn\n" +
-                    "                /Hz7saL8xz+W//FRAUid1OksQaQx4CMs\n" +
-                    "                8LOddcQhULW4ucetDf96JcR3g0gfRK4P\n" +
-                    "                C7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB\n" +
-                    "                6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns\n" +
-                    "                /8wR2SiRS7MNACwTyrGvt9ts8p12PKFd\n" +
-                    "                lqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYV\n" +
-                    "                oKlaRv85IfVunYzO0IKXsyl7JCUjCpoG\n" +
-                    "                20f0a04COwfneQAGGwd5oa+T8yO5hzuy\n" +
-                    "                Db/XcxxmK01EpqOyuxINew==", "tiihtNczf5v6AKRyjwEUhQ==", "r7BXXKkLb8qrSNn05n0qiA==");*/
-
+            JSONObject decryptJsonObject = JSON.parseObject(decrypt);
+            String phoneNumber = decryptJsonObject.get("phoneNumber").toString();
+            System.out.println(phoneNumber);
+            customer.setPhone(phoneNumber);
+            customService.save(customer);
 
             return ResJson.successJson("getPhone Success", decrypt);
-        } /*catch (JsonParseException jse) {
+        } catch (JsonParseException jse) {
             logger.info(jse.getMessage() + " -> /api/cus/getPhone");
             return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/getPhone");
-        } */catch (Exception e) {
+        } catch (Exception e) {
             logger.error("/api/cus/getPhone -> ", e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());

@@ -8,20 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
-import tech.greatinfo.sellplus.service.CouponsHistoryService;
-import tech.greatinfo.sellplus.service.CouponsObjService;
-import tech.greatinfo.sellplus.service.CustomService;
-import tech.greatinfo.sellplus.service.ReadHistoryService;
-import tech.greatinfo.sellplus.service.SellerSerivce;
-import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.service.*;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
+
+import java.util.HashMap;
 
 /**
  * Seller 后台相关接口
@@ -73,8 +67,9 @@ public class SellerController {
             } else {
                 AccessToken accessToken = new AccessToken(true);
                 accessToken.setUser(seller);
-                HashMap<String, String> map = new HashMap<>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("accessToken", accessToken.getUuid());
+                map.put("seller", seller);
                 return ResJson.successJson("login Success", map);
             }
         } catch (Exception e) {

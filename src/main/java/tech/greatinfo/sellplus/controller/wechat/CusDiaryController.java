@@ -1,7 +1,6 @@
 package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
-
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Diary;
+import tech.greatinfo.sellplus.domain.QRcode;
+import tech.greatinfo.sellplus.repository.QRcodeRepository;
 import tech.greatinfo.sellplus.service.CompanyService;
 import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.DiaryService;
@@ -21,6 +19,8 @@ import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
+
+import java.util.Date;
 
 /**
  *
@@ -59,6 +59,9 @@ public class CusDiaryController {
     @Autowired
     CouponsObjService couponsObjService;
 
+    @Autowired
+    QRcodeRepository qRcodeRepository;
+
     /**
      * 记录前端生成的 diary-id 和 用户 A，然后台记录，用户 A 发布了一篇标记为 diary-id 的日志
      * /api/cus/genDiary
@@ -72,16 +75,22 @@ public class CusDiaryController {
     public ResJson generalDiary(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
-            String diaryId = (String) ParamUtils.getFromJson(jsonObject,"did",String.class);
+            //String diaryId = (String) ParamUtils.getFromJson(jsonObject,"did",String.class);
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
                 Diary diary = new Diary();
-                diary.setDiaryId(diaryId);
+                //diary.setDiaryId(diaryId);
                 diary.setCustomer(customer);
                 diary.setGeneral(false);
                 diary.setReadHistory("");
                 diary.setGeneralTime(null);
                 diaryService.save(diary);
+
+                // 修改二维码外键
+                QRcode qRcode = new QRcode();
+                qRcode.setScence(diary.getDiaryId());
+                qRcodeRepository.save(qRcode);
+
                 return ResJson.successJson("save diary success");
             }else {
                 return ResJson.errorAccessToken();
