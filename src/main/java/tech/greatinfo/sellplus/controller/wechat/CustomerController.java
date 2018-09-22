@@ -102,8 +102,8 @@ public class CustomerController {
                         token.refresh();
                         ((Customer) token.getUser()).setSessionKey(obj.getString("session_key"));
 
-                        token = new AccessToken(true);
-                        token.setUser((Customer) token.getUser());
+                        //token = new AccessToken(true);
+                        token.setUser(token.getUser());
                         tokenService.saveToken(token);
 
 
