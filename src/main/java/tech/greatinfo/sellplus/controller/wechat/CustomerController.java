@@ -253,6 +253,8 @@ public class CustomerController {
                 return ResJson.errorAccessToken();
             }
 
+            System.out.println(customer.toString());
+
             if (StringUtils.isEmpty(customer.getPhone())) {
                 return ResJson.successJson("not auth", false);
             } else {

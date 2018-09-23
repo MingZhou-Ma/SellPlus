@@ -159,6 +159,24 @@ public class Customer implements User, Serializable {
     }
 
     @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", openid='" + openid + '\'' +
+                ", sessionKey='" + sessionKey + '\'' +
+                ", uid='" + uid + '\'' +
+                ", phone='" + phone + '\'' +
+                ", phoneOrigin='" + phoneOrigin + '\'' +
+                ", seller=" + seller +
+                ", bSell=" + bSell +
+                ", frequenter=" + frequenter +
+                ", sellerChannel='" + sellerChannel + '\'' +
+                ", accessRecord='" + accessRecord + '\'' +
+                ", createTime=" + createTime +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return obj instanceof Customer
                 && ((Customer) obj).getOpenid().equals(this.openid);
