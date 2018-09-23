@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -235,7 +236,37 @@ public class CustomerController {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
+    }
 
+    /**
+     * 判断客户是否授权手机号
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/cus/isAuthPhone", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    public ResJson isAuthPhone(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+
+            if (StringUtils.isEmpty(customer.getPhone())) {
+                return ResJson.successJson("not auth", false);
+            } else {
+                return ResJson.successJson("auth", true);
+            }
+
+        } catch (JsonParseException jse) {
+            logger.info(jse.getMessage() + " -> /api/cus/isAuthPhone");
+            return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/isAuthPhone");
+        } catch (Exception e) {
+            logger.error("/api/cus/isAuthPhone", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
     }
 
 
