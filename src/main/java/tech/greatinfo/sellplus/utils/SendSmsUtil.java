@@ -25,7 +25,7 @@ public class SendSmsUtil {
 //		SendSmsUtil.smsMap = smsMap;
 //	}
 
-	public static boolean sendSms(String phone, String name, String productName) {
+	public static boolean sendSms(String sellerPhone, String phone, String name, String productName) {
 		// 设置超时时间-可自行调整
 		System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
 		System.setProperty("sun.net.client.defaultReadTimeout", "10000");
@@ -45,7 +45,7 @@ public class SendSmsUtil {
 			// 使用post提交
 			request.setMethod(MethodType.POST);
 			// 必填:待发送手机号。支持以逗号分隔的形式进行批量调用，批量上限为1000个手机号码,批量调用相对于单条调用及时性稍有延迟,验证码类型的短信推荐使用单条调用的方式
-			request.setPhoneNumbers(phone);
+			request.setPhoneNumbers(sellerPhone);
 			// 必填:短信签名-可在短信控制台中找到
 			request.setSignName("销售Plus");
 			// 必填:短信模板-可在短信控制台中找到
