@@ -227,6 +227,10 @@ public class CustomerController {
             customer.setPhone(phoneNumber);
             customService.save(customer);
 
+            AccessToken accessToken = tokenService.getToken(token);
+            tokenService.saveToken(accessToken);
+
+
             return ResJson.successJson("getPhone Success", decrypt);
         } catch (JsonParseException jse) {
             logger.info(jse.getMessage() + " -> /api/cus/getPhone");

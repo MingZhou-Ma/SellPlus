@@ -66,7 +66,6 @@ public class ReservationServiceImpl implements ReservationService {
 
             //发送短信
             if (!SendSmsUtil.sendSms(customer.getSeller().getPhone(), phone, name, product.getName())) {
-            //if (!SendSmsUtil.sendSms(phone, name, "测试商品")) {
                 return ResJson.failJson(4000, "send sms fail", null);
             }
 
