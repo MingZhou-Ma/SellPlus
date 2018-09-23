@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Diary;
-import tech.greatinfo.sellplus.domain.QRcode;
 import tech.greatinfo.sellplus.repository.QRcodeRepository;
 import tech.greatinfo.sellplus.service.CompanyService;
 import tech.greatinfo.sellplus.service.CouponsObjService;
@@ -79,11 +78,12 @@ public class CusDiaryController {
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
                 Diary diary = new Diary();
-                QRcode qRcode = qRcodeRepository.findFirst1ByCustomerOrderBySceneDesc(customer);
-                if (null == qRcode) {
-                    return ResJson.failJson(4001, "not qrcode", null);
-                }
-                diary.setDiaryId(qRcode.getScene());
+//                QRcode qRcode = qRcodeRepository.findFirst1ByCustomerOrderBySceneDesc(customer);
+//                if (null == qRcode) {
+//                    return ResJson.failJson(4001, "not qrcode", null);
+//                }
+                //diary.setDiaryId(qRcode.getScene());
+                diary.setDiaryId("2333333");
                 diary.setCustomer(customer);
                 diary.setGeneral(false);
                 diary.setReadHistory("");
