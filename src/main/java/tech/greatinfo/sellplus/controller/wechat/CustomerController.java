@@ -228,6 +228,7 @@ public class CustomerController {
             customService.save(customer);
 
             AccessToken accessToken = tokenService.getToken(token);
+            accessToken.setUser(customer);
             tokenService.saveToken(accessToken);
 
 
