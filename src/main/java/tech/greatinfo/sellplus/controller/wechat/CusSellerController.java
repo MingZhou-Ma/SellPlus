@@ -22,8 +22,6 @@ import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
-import java.util.HashMap;
-
 /**
  * 微信端 销售人员 相关接口
  *
@@ -75,11 +73,11 @@ public class CusSellerController {
             customer.setUid(customer.getUid());
             customService.save(customer);
 
-            HashMap<String, Object> map = new HashMap<>();
-            map.put("customer", customer);
-            map.put("seller", seller);
+//            HashMap<String, Object> map = new HashMap<>();
+//            map.put("customer", customer);
+//            map.put("seller", seller);
 
-            return ResJson.successJson("seller login success", map);
+            return ResJson.successJson("seller login success", customer);
 
         }catch (JsonParseException jse){
             logger.info(jse.getMessage()+" -> /api/cus/sellerLogin");
