@@ -227,9 +227,9 @@ public class CustomerController {
             customer.setPhone(phoneNumber);
             customService.save(customer);
 
-            AccessToken accessToken = tokenService.getToken(token);
+           /* AccessToken accessToken = tokenService.getToken(token);
             accessToken.setUser(customer);
-            tokenService.saveToken(accessToken);
+            tokenService.saveToken(accessToken);*/
 
 
             return ResJson.successJson("getPhone Success", decrypt);
