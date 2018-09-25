@@ -50,10 +50,10 @@ public class Customer implements User, Serializable {
     @Column(columnDefinition = "BIT COMMENT '是否是老司机'")
     private Boolean frequenter;
 
-    @Column(columnDefinition = "VARCHAR(20) COMMENT '销售渠道'")
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '销售渠道'")
     private String sellerChannel; // 格式：属于哪个销售的uuid+ ":" + 销售渠道名称  （例如：uuid:大众饭店）
 
-    @Column(columnDefinition = "VARCHAR(20) COMMENT '用户第一次访问记录'")
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '用户第一次访问记录'")
     private String accessRecord;
 
     @Column(columnDefinition = "TIMESTAMP COMMENT '用户第一次使用小程序的时间，相当于注册时间吧，客户列表按时间排序要用到'")

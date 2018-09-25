@@ -200,7 +200,7 @@ public class CusSellerController {
                 // 已经绑定了非默认 Seller
                 if (customer.getSeller() != null
                         && !customer.getSeller().equals(sellerSerivce.getDefaultSeller())){
-                    return ResJson.successJson("已经绑定了非默认 Seller");
+                    return ResJson.successJson("已经绑定了非默认 Seller", customer.getSeller());
                 }else {
                     Seller seller;
                     Customer preCustomer;
@@ -215,6 +215,8 @@ public class CusSellerController {
                             customer.setAccessRecord(accessRecord);
 
                             customService.save(customer);
+
+                            return ResJson.successJson("success bind seller", seller);
                         }else {
                             preCustomer.setSeller(sellerSerivce.getDefaultSeller());
 
@@ -234,6 +236,8 @@ public class CusSellerController {
 
                             customService.save(preCustomer);
                             customService.save(customer);
+
+                            return ResJson.successJson("success bind seller", sellerSerivce.getDefaultSeller());
                         }
                     }else {
                         customer.setSeller(sellerSerivce.getDefaultSeller());
@@ -245,9 +249,11 @@ public class CusSellerController {
                         customer.setAccessRecord(accessRecord);
 
                         customService.save(customer);
+
+                        return ResJson.successJson("success bind seller", sellerSerivce.getDefaultSeller());
                     }
                 }
-                return null;
+                //return null;
             }else {
                 return ResJson.errorAccessToken();
             }
