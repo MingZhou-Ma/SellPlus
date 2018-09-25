@@ -7,6 +7,7 @@ import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.QRcode;
 import tech.greatinfo.sellplus.repository.QRcodeRepository;
+import tech.greatinfo.sellplus.utils.EncryptUtils;
 import tech.greatinfo.sellplus.utils.WeChatUtils;
 
 import java.io.*;
@@ -71,7 +72,10 @@ public class QRcodeService {
                 saveDirPath.mkdirs();
             }
             File saveFile = new File(saveDirPath,"" + System.currentTimeMillis());
-            FileOutputStream fileOutputStream = new FileOutputStream(saveFile);
+
+            String fileMd5Name = EncryptUtils.getMD5("just_for_encrypt" + System.currentTimeMillis() + Math.random() * 100) + ".jpg";
+            FileOutputStream fileOutputStream = new FileOutputStream(new File(saveFile, fileMd5Name));
+            //FileOutputStream fileOutputStream = new FileOutputStream(saveFile);
             int readLength = -1;
             byte[] bytesForRead = new byte[1024];
 
