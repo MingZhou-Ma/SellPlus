@@ -67,6 +67,7 @@ public class SellerController {
             } else {
                 AccessToken accessToken = new AccessToken(true);
                 accessToken.setUser(seller);
+                tokenService.saveToken(accessToken);
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("accessToken", accessToken.getUuid());
                 map.put("seller", seller);
