@@ -20,6 +20,7 @@ import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
+import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 /**
@@ -70,12 +71,12 @@ public class CusSellerController {
             // 成为 Seller
             customer.setbSell(true);
             customer.setSeller(seller);
-            customer.setUid(customer.getUid());
+            //customer.setUid(customer.getUid());
             customService.save(customer);
 
-//            AccessToken accessToken = tokenService.getToken(token);
-//            accessToken.setUser(customer);
-//            tokenService.saveToken(accessToken);
+            AccessToken accessToken = tokenService.getToken(token);
+            accessToken.setUser(customer);
+            tokenService.saveToken(accessToken);
 
             return ResJson.successJson("seller login success", customer);
 

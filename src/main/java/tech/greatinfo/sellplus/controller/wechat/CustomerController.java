@@ -104,7 +104,7 @@ public class CustomerController {
                         ((Customer) token.getUser()).setSessionKey(obj.getString("session_key"));
 
                         // 更新sessionKey，不然授权手机号无法解密
-                        token.setUser(token.getUser());
+                        //token.setUser(token.getUser());
                         tokenService.saveToken(token);
 
                         HashMap<String, String> map = new HashMap<String, String>();
@@ -227,9 +227,9 @@ public class CustomerController {
             customer.setPhone(phoneNumber);
             customService.save(customer);
 
-           /* AccessToken accessToken = tokenService.getToken(token);
+            AccessToken accessToken = tokenService.getToken(token);
             accessToken.setUser(customer);
-            tokenService.saveToken(accessToken);*/
+            tokenService.saveToken(accessToken);
 
 
             return ResJson.successJson("getPhone Success", decrypt);
