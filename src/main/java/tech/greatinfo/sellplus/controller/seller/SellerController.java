@@ -1,5 +1,6 @@
 package tech.greatinfo.sellplus.controller.seller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +107,7 @@ public class SellerController {
         try {
             Seller seller;
             if ((seller = (Seller) tokenService.getUserByToken(token)) != null) {
-                if (accessRecord == null) {
+                if (StringUtils.isEmpty(accessRecord)) {
                     return ResJson.successJson("get my customer success",
                             customService.getAllBySellerOrderByCreateTimeDesc(seller, new PageRequest(start,num)));
                 } else {
