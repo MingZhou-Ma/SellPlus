@@ -221,6 +221,10 @@ public class CusSellerController {
 
                             customService.save(customer);
 
+                            AccessToken accessToken = tokenService.getToken(token);
+                            accessToken.setUser(customer);
+                            tokenService.saveToken(accessToken);
+
                             return ResJson.successJson("success bind seller", seller);
                         }else {
                             preCustomer.setSeller(sellerSerivce.getDefaultSeller());
@@ -242,6 +246,14 @@ public class CusSellerController {
                             customService.save(preCustomer);
                             customService.save(customer);
 
+                            AccessToken preAccessToken = tokenService.getTokenByCustomOpenId(preCustomer.getOpenid());
+                            preAccessToken.setUser(preCustomer);
+                            tokenService.saveToken(preAccessToken);
+
+                            AccessToken accessToken = tokenService.getToken(token);
+                            accessToken.setUser(customer);
+                            tokenService.saveToken(accessToken);
+
                             return ResJson.successJson("success bind seller", sellerSerivce.getDefaultSeller());
                         }
                     }else {
@@ -254,6 +266,10 @@ public class CusSellerController {
                         customer.setAccessRecord(accessRecord);
 
                         customService.save(customer);
+
+                        AccessToken accessToken = tokenService.getToken(token);
+                        accessToken.setUser(customer);
+                        tokenService.saveToken(accessToken);
 
                         return ResJson.successJson("success bind seller", sellerSerivce.getDefaultSeller());
                     }
