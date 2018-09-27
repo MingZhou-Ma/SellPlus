@@ -40,6 +40,9 @@ public class Customer implements User, Serializable {
     @Column(columnDefinition = "VARCHAR(20) COMMENT '电话来源'")
     private String phoneOrigin;
 
+    @Column(columnDefinition = "VARCHAR(20) COMMENT '昵称'")
+    private String nickname;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "seller_id", columnDefinition = "BIGINT COMMENT '所属销售的外键'")
     private Seller seller;
@@ -156,6 +159,14 @@ public class Customer implements User, Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     @Override

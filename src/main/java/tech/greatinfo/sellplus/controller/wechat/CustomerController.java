@@ -152,6 +152,40 @@ public class CustomerController {
     }
 
     /**
+     * 保存用户授权
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/cus/setAuthInfo", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    public ResJson setUserInfo(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            String nickname = (String) ParamUtils.getFromJson(jsonObject, "nickname", String.class);
+
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+
+            customer.setNickname(nickname);
+            customService.save(customer);
+
+            AccessToken accessToken = tokenService.getToken(token);
+            accessToken.setUser(customer);
+            tokenService.saveToken(accessToken);
+
+            return ResJson.successJson("set auth info success");
+        } catch (JsonParseException jse) {
+            logger.info(jse.getMessage() + " -> /api/cus/setAuthInfo");
+            return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/setAuthInfo");
+        } catch (Exception e) {
+            logger.error("/api/cus/setAuthInfo", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
      * 该接口用来检查 accessToken 是否已经过期
      * <p>
      * POST
