@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 
@@ -13,14 +14,14 @@ import java.io.IOException;
 public class WeChatUtils {
     public static OkHttpClient client = new OkHttpClient();
 
-    private static final String appid = "wxce729655183dc5cc";
-    private static final String appsecret="dde6e8a32671b894a770d35632663e5e";
+    //private static final String appid = "wxce729655183dc5cc";
+    //private static final String appsecret="dde6e8a32671b894a770d35632663e5e";
 
-    /*@Value("${appid}")
+    @Value("${appid}")
     private static String appid;
 
     @Value("${appsecret}")
-    private static String appsecret;*/
+    private static String appsecret;
 
     public static String getAccessToken() throws IOException {
         Request request = new Request.Builder()
