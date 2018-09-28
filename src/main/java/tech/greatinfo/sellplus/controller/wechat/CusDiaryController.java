@@ -167,7 +167,7 @@ public class CusDiaryController {
 
                     }
                 }
-                return ResJson.successJson("read diary success");
+                return ResJson.successJson("read diary success", diary.getCustomer().getSeller());
             }else {
                 return ResJson.errorAccessToken();
             }
