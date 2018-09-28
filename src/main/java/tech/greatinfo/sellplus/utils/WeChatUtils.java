@@ -1,12 +1,12 @@
 package tech.greatinfo.sellplus.utils;
 
 import com.alibaba.fastjson.JSONObject;
-
-import java.io.IOException;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.io.IOException;
 
 /**
  * Created by Ericwyn on 18-7-31.
@@ -14,8 +14,14 @@ import okhttp3.Response;
 public class WeChatUtils {
     public static OkHttpClient client = new OkHttpClient();
 
-    private static final String appid = "wx0ad95240d57cb5ee";
-    private static final String appsecret="07618c31603772e3836d003d2262c87c";
+    //private static final String appid = "wx0ad95240d57cb5ee";
+    //private static final String appsecret="07618c31603772e3836d003d2262c87c";
+
+    @Value("${appid}")
+    private static String appid;
+
+    @Value("${appsecret}")
+    private static String appsecret;
 
     public static String getAccessToken() throws IOException {
         Request request = new Request.Builder()
