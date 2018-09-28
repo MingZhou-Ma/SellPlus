@@ -403,7 +403,8 @@ public class CustomerController {
             try {
                 token = jsonObject.getString("token");
                 //title = jsonObject.getString("title");
-                page = jsonObject.getString("page");
+                //page = jsonObject.getString("page");
+                page = "user/pages/main/index";
                 scene = jsonObject.getString("scene");
                 //if (token == null && title == null && page == null && scene == null){
                 if (token == null && page == null && scene == null) {
