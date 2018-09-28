@@ -5,25 +5,43 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 /**
  * Created by Ericwyn on 18-7-31.
  */
+@Component
 public class WeChatUtils {
     public static OkHttpClient client = new OkHttpClient();
 
     //private static final String appid = "wxce729655183dc5cc";
     //private static final String appsecret="dde6e8a32671b894a770d35632663e5e";
 
-    @Value("${appid}")
     private static String appid;
-
-    @Value("${appsecret}")
     private static String appsecret;
 
+    public static String getAppid() {
+        return appid;
+    }
+
+    @Value("${appid}")
+    public void setAppid(String appid) {
+        WeChatUtils.appid = appid;
+    }
+
+    public static String getAppsecret() {
+        return appsecret;
+    }
+
+    @Value("${appsecret}")
+    public void setAppsecret(String appsecret) {
+        WeChatUtils.appsecret = appsecret;
+    }
+
     public static String getAccessToken() throws IOException {
+        //System.out.println(appid);
         Request request = new Request.Builder()
                 .get()
                 .url("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+appid+"&secret="+appsecret)
