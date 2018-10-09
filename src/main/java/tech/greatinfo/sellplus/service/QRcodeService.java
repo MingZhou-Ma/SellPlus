@@ -38,6 +38,10 @@ public class QRcodeService {
         return repository.findBySceneAndPage(scene,page);
     }
 
+    public QRcode findBySceneAndPageAndType(String scene, String page, String type) {
+        return  repository.findBySceneAndPageAndType(scene, page, type);
+    }
+
     /**
      * 向腾讯api 获取 qr code
      * @param token
@@ -46,8 +50,9 @@ public class QRcodeService {
      * @return
      * @throws IOException
      */
-    public String getQRCode(Customer customer, String token, String scene, String page) throws IOException {
-        QRcode code = repository.findBySceneAndPage(scene, page);
+    public String getQRCode(Customer customer, String token, String scene, String page, String type) throws IOException {
+        //QRcode code = repository.findBySceneAndPage(scene, page);
+        QRcode code = repository.findBySceneAndPageAndType(scene, page, type);
         if (code != null){
             return code.getPath();
         }
@@ -92,6 +97,7 @@ public class QRcodeService {
             qRcode.setScene(scene);
             qRcode.setPage(page);
             qRcode.setPath(QRcodePath+"/"+saveFile.getName());
+            qRcode.setType(type);
             qRcode.setCustomer(customer);
             repository.save(qRcode);
             return qRcode.getPath();

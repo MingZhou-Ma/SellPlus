@@ -22,6 +22,9 @@ public class QRcode {
     @Column
     private String path;
 
+    @Column
+    private String type;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id",columnDefinition = "BIGINT COMMENT '二维码生成者'")
     private Customer customer;
@@ -67,5 +70,13 @@ public class QRcode {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

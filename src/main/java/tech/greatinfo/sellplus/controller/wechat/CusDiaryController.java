@@ -75,11 +75,13 @@ public class CusDiaryController {
     public ResJson generalDiary(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            String type = (String) ParamUtils.getFromJson(jsonObject, "type", String.class);
             //String diaryId = (String) ParamUtils.getFromJson(jsonObject,"did",String.class);
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
                 Diary diary = new Diary();
-                QRcode qRcode = qRcodeRepository.findFirst1ByCustomerOrderBySceneDesc(customer);
+                //QRcode qRcode = qRcodeRepository.findFirst1ByCustomerOrderBySceneDesc(customer);
+                QRcode qRcode = qRcodeRepository.findFirst1ByCustomerAndTypeOrderBySceneDesc(customer, type);
                 if (null == qRcode) {
                     return ResJson.failJson(4001, "not qrcode", null);
                 }

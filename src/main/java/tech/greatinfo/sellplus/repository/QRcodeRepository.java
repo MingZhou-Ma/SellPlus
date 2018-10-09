@@ -14,7 +14,10 @@ public interface QRcodeRepository extends JpaRepository<QRcode, Long>,
         JpaSpecificationExecutor<QRcode> {
     QRcode findBySceneAndPage(String scene, String page);
 
+    QRcode findBySceneAndPageAndType(String scene, String page, String type);
+
     QRcode findFirst1ByCustomerOrderBySceneDesc(Customer customer);
+    QRcode findFirst1ByCustomerAndTypeOrderBySceneDesc(Customer customer, String type);
     //QRcode findTopByCustomerOrderBySceneDesc(Customer customer);
 
 
