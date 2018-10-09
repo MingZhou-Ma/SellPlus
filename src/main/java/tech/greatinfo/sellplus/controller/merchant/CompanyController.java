@@ -79,9 +79,11 @@ public class CompanyController {
                                @RequestParam(value = "notify2",required = false) String notify2,
                                @RequestParam(value = "notify3",required = false) String notify3,
                                @RequestParam(value = "curtain",required = false) String curtain,
-                               @RequestParam(value = "promotion",required = false) Integer promotion,
-                               @RequestParam(value = "coupon1",required = false) String coupon1,
-                               @RequestParam(value = "coupon2",required = false) String coupon2,
+                               //@RequestParam(value = "promotion",required = false) Integer promotion,
+                               //@RequestParam(value = "coupon1",required = false) String coupon1,
+                               //@RequestParam(value = "coupon2",required = false) String coupon2,
+                               @RequestParam(value = "freqCouponId", required = false) Long freqCouponId,
+                               @RequestParam(value = "freqBonus", required = false) Integer freqBonus,
                                @RequestParam(value = "diaryReadNum",required = false) Integer diaryReadNum,
                                @RequestParam(value = "diaryCoupon",required = false) String diaryCoupon,
                                @RequestParam(value = "diaryIntervals", required = false) Integer diaryIntervals,
@@ -112,7 +114,7 @@ public class CompanyController {
                 if (curtain != null){
                     list.add(new Company("curtain",curtain));
                 }
-                // 卷的权限判断（是否存在，是否是数量无限制的优惠卷）
+                /*// 卷的权限判断（是否存在，是否是数量无限制的优惠卷）
                 if (promotion != null){
                     list.add(new Company("promotion", String.valueOf(promotion)));
                 }
@@ -131,7 +133,17 @@ public class CompanyController {
                             list.add(new Company("coupon2",coupon2));
                         }
                     }
+                }*/
+                if (null != freqCouponId) {
+                    Coupon coupon = couModelService.findOne(freqCouponId);
+                    if (null != coupon) {
+                        list.add(new Company("freqCouponId", String.valueOf(freqCouponId)));
+                    }
                 }
+                if (null != freqBonus) {
+                    list.add(new Company("freqBonus", String.valueOf(freqBonus)));
+                }
+
                 if (diaryReadNum != null){
                     list.add(new Company("diaryReadNum", String.valueOf(diaryReadNum)));
                 }

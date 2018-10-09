@@ -1,17 +1,9 @@
 package tech.greatinfo.sellplus.domain;
 
-import java.util.Date;
+import tech.greatinfo.sellplus.domain.coupons.Coupon;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by Ericwyn on 18-7-23.
@@ -27,6 +19,10 @@ public class Activity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id",columnDefinition = "BIGINT COMMENT '商品外键'")
     private Product product;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "coupon_id", columnDefinition = "BIGINT COMMENT '卷模板外键'")
+    private Coupon coupon;
 
     @Column(columnDefinition = "VARCHAR(100) COMMENT '活动标题'")
     private String headline;
@@ -126,6 +122,14 @@ public class Activity {
 
     public void setGroup(Boolean group) {
         isGroup = group;
+    }
+
+    public Coupon getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
     }
 
     public Integer getStatus(){

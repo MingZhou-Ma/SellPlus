@@ -4,22 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
-
+import org.springframework.web.bind.annotation.*;
 import tech.greatinfo.sellplus.config.converter.StringToDateConverter;
 import tech.greatinfo.sellplus.domain.Activity;
-import tech.greatinfo.sellplus.service.ActivityService;
-import tech.greatinfo.sellplus.service.MerchantService;
-import tech.greatinfo.sellplus.service.ProductService;
-import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.domain.coupons.Coupon;
+import tech.greatinfo.sellplus.service.*;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
+
+import java.util.Date;
 
 /**
  *
@@ -43,6 +35,9 @@ public class ActivityController {
 
     @Autowired
     ActivityService activityService;
+
+    @Autowired
+    CouponsService couponsService;
 
     @InitBinder
     public void intDate(WebDataBinder dataBinder){
@@ -72,23 +67,32 @@ public class ActivityController {
                                @RequestParam(name = "helpNum") Integer helpNum,
                                @RequestParam(name = "groupPrice") Double groupPirce,
                                @RequestParam(name = "startDate") Date startDate,
-                               @RequestParam(name = "endDate") Date endDate){
+                               @RequestParam(name = "endDate") Date endDate,
+                               @RequestParam(name = "couponsId") Long couponsId){
         try {
             if (tokenService.getUserByToken(token) != null){
-                Activity activity = new Activity();
-                activity.setGroup(isGroup == 1);
-                activity.setProduct(productService.findOne(pid));
-                activity.setHeadline(headline);
-                activity.setHelpNum(helpNum);
-                activity.setGroupPrice(groupPirce);
+                Coupon coupon = couponsService.findOne(couponsId);
+                if (null != coupon) {
+                    Activity activity = new Activity();
+                    activity.setGroup(isGroup == 1);
+                    activity.setProduct(productService.findOne(pid));
+                    activity.setHeadline(headline);
+                    activity.setHelpNum(helpNum);
+                    activity.setGroupPrice(groupPirce);
+                    activity.setCoupon(coupon);
 
-                // TODO 日期存到数据库会有时间差，存入比起这里的会 + 13 小时
+                    // TODO 日期存到数据库会有时间差，存入比起这里的会 + 13 小时
 //                startDate = new Date(startDate.getTime()-(1000 * 60 * 60 * 13));
 //                endDate = new Date(endDate.getTime()-(1000 * 60 * 60 * 13));
-                activity.setStartDate(startDate);
-                activity.setEndDate(endDate);
-                activityService.save(activity);
-                return ResJson.successJson("add activity success",activity);
+                    activity.setStartDate(startDate);
+                    activity.setEndDate(endDate);
+                    activityService.save(activity);
+                    return ResJson.successJson("add activity success",activity);
+                } else {
+                    return ResJson.failJson(4000, "not coupon", null);
+                }
+
+
             }else {
                 return ResJson.errorAccessToken();
             }
