@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
-import tech.greatinfo.sellplus.domain.SellerCode;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.CustomService;
@@ -91,7 +90,7 @@ public class CusSellerController {
     }
 
     /**
-     * 绑定成为 Seller
+     * 绑定成为 Seller，这个接口其实就是销售登录，暂时没用到。
      * POST
      *      token
      *      account 销售人帐号
@@ -134,10 +133,10 @@ public class CusSellerController {
                     sellerSerivce.save(seller);
 
                     // 插入默认销售渠道
-                    SellerCode sellerCode = new SellerCode();
+                    /*SellerCode sellerCode = new SellerCode();
                     sellerCode.setName("默认渠道");
                     sellerCode.setPath("");
-                    sellerCode.setCustomer(customer);
+                    sellerCode.setCustomer(customer);*/
 
                     // 成为 Seller
                     customer.setbSell(true);
@@ -192,7 +191,7 @@ public class CusSellerController {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
             String uid = (String) ParamUtils.getFromJsonWithDefault(jsonObject,"uid", "null", String.class);
 
-            String channel = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "channel", "null", String.class);
+            String sellerCode = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "sellerCode", "null", String.class);
 
             //初次访问记录
             String accessRecord = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "accessRecord", "null", String.class);
@@ -214,7 +213,7 @@ public class CusSellerController {
                             customer.setSeller(seller);
 
                             //记录销售渠道
-                            customer.setSellerChannel(uid + (null==channel?"":":"+channel));
+                            customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
 
                             //记录初次访问记录
                             customer.setAccessRecord(accessRecord);
@@ -230,7 +229,7 @@ public class CusSellerController {
                             preCustomer.setSeller(sellerSerivce.getDefaultSeller());
 
                             //记录销售渠道
-                            preCustomer.setSellerChannel(uid + (null==channel?"":":"+channel));
+                            preCustomer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
 
                             //记录初次访问记录
                             preCustomer.setAccessRecord(accessRecord);
@@ -238,7 +237,7 @@ public class CusSellerController {
                             customer.setSeller(sellerSerivce.getDefaultSeller());
 
                             //记录销售渠道
-                            customer.setSellerChannel(uid + (null==channel?"":":"+channel));
+                            customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
 
                             //记录初次访问记录
                             customer.setAccessRecord(accessRecord);
@@ -260,7 +259,7 @@ public class CusSellerController {
                         customer.setSeller(sellerSerivce.getDefaultSeller());
 
                         //记录销售渠道
-                        customer.setSellerChannel(uid + (null==channel?"":":"+channel));
+                        customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
 
                         //记录初次访问记录
                         customer.setAccessRecord(accessRecord);

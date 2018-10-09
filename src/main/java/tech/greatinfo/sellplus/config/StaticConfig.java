@@ -16,6 +16,7 @@ import javax.servlet.MultipartConfigElement;
 public class StaticConfig extends WebMvcConfigurerAdapter {
     public static final String STATIC_PATH ="static/";
     public static final String SAVE_QRCODE_PATH = STATIC_PATH+"QRcode";
+    public static final String SAVE_SELLER_CODE_PATH = STATIC_PATH+"sellerCode";
     public static final String SAVE_UPLOAD_PIC_PATH = STATIC_PATH+"upload";
 
 

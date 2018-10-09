@@ -1,10 +1,7 @@
 package tech.greatinfo.sellplus.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import tech.greatinfo.sellplus.domain.Activity;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.SellerCode;
 
@@ -18,5 +15,9 @@ public interface SellerCodeRepository extends JpaRepository<SellerCode, Long>,
         JpaSpecificationExecutor<SellerCode> {
 
     List<SellerCode> findAllByCustomer(Customer customer);
+
+    SellerCode findBySceneAndPage(String scene, String page);
+
+    SellerCode findByScene(String scene);
 
 }
