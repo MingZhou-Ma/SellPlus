@@ -1,7 +1,6 @@
 package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,22 +8,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-
 import tech.greatinfo.sellplus.domain.Company;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
-import tech.greatinfo.sellplus.service.CompanyService;
-import tech.greatinfo.sellplus.service.CouponsObjService;
-import tech.greatinfo.sellplus.service.CouponsService;
-import tech.greatinfo.sellplus.service.CustomService;
-import tech.greatinfo.sellplus.service.FreqService;
-import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.service.*;
 import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
+import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -93,6 +88,94 @@ public class FrequenterConrtoller {
     @Autowired
     FreqService freqService;
 
+
+    /**
+     * 申请成为老司机
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/freq/beFreq", method = RequestMethod.POST)
+    public ResJson beFreq(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+
+            customer.setFrequenter(true);
+            customer.setFreqBonus(0);
+            customService.save(customer);
+
+            AccessToken accessToken = tokenService.getToken(token);
+            accessToken.setUser(customer);
+            tokenService.saveToken(accessToken);
+
+            return ResJson.successJson("be freq success");
+
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/beFreq");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/beFreq");
+        }catch (Exception e){
+            logger.error("/api/freq/beFreq -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询3条领券者列表
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/freq/coupon/list/3", method = RequestMethod.POST)
+    public ResJson FreqCouponList3(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+
+            List<CouponsObj> list = objService.findFirst3ByOrigin(customer);
+            return ResJson.successJson("find coupon list success", list);
+
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/coupon/list/3");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/coupon/list/3");
+        }catch (Exception e){
+            logger.error("/api/freq/coupon/list/3 -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 查询全部领券者列表
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/freq/coupon/list/all", method = RequestMethod.POST)
+    public ResJson FreqCouponListAll(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+            List<CouponsObj> list = objService.findAllByOrigin(customer);
+            return ResJson.successJson("find coupon list success", list);
+
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/coupon/list/all");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/coupon/list/all");
+        }catch (Exception e){
+            logger.error("/api/freq/coupon/list/all -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
     /**
      * 老司机通过 Seller 的顾客链接来注册成为老司机
      * 该链接是给前端的一个特殊页面调用的，特殊页面固定地址，Seller 分享的时候就是分享这个特殊页面
@@ -105,28 +188,28 @@ public class FrequenterConrtoller {
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/api/freq/beFreq",method = RequestMethod.POST)
-    public ResJson beFreq(@RequestBody JSONObject jsonObject){
-        try {
-            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
-            Long cusId = (Long) ParamUtils.getFromJson(jsonObject,"cusid",Long.class);
-            Customer customer;
-            if ((customer = (Customer) tokenService.getUserByToken(token)) != null && customer.getId().equals(cusId)){
-                customer.setFrequenter(true);
-                customService.save(customer);
-                return ResJson.successJson("be freq success");
-            }else {
-                return ResJson.errorAccessToken();
-            }
-        }catch (JsonParseException jse){
-            logger.info(jse.getMessage()+" -> /api/freq/beFreq");
-            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/beFreq");
-        }catch (Exception e){
-            logger.error("/api/freq/beFreq -> ",e.getMessage());
-            e.printStackTrace();
-            return ResJson.serverErrorJson(e.getMessage());
-        }
-    }
+//    @RequestMapping(value = "/api/freq/beFreq",method = RequestMethod.POST)
+//    public ResJson beFreq(@RequestBody JSONObject jsonObject){
+//        try {
+//            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+//            Long cusId = (Long) ParamUtils.getFromJson(jsonObject,"cusid",Long.class);
+//            Customer customer;
+//            if ((customer = (Customer) tokenService.getUserByToken(token)) != null && customer.getId().equals(cusId)){
+//                customer.setFrequenter(true);
+//                customService.save(customer);
+//                return ResJson.successJson("be freq success");
+//            }else {
+//                return ResJson.errorAccessToken();
+//            }
+//        }catch (JsonParseException jse){
+//            logger.info(jse.getMessage()+" -> /api/freq/beFreq");
+//            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/beFreq");
+//        }catch (Exception e){
+//            logger.error("/api/freq/beFreq -> ",e.getMessage());
+//            e.printStackTrace();
+//            return ResJson.serverErrorJson(e.getMessage());
+//        }
+//    }
 
     /**
      * 发卷无需使用接口，老司机那边生成一个链接就好了

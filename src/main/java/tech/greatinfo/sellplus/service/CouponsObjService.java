@@ -5,18 +5,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.domain.coupons.CouponsHistory;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.repository.CouponsHistoryRepository;
 import tech.greatinfo.sellplus.repository.CouponsObjRepository;
+
+import javax.transaction.Transactional;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Ericwyn on 18-9-6.
@@ -68,6 +66,15 @@ public class CouponsObjService {
     public Page<CouponsObj> getAllByOwnAndUsed(Customer own,int start,int num){
         return objRepository.getAllByOwnAndExpiredTrue(own,new PageRequest(start,num));
     }
+
+    public List<CouponsObj> findFirst3ByOrigin(Customer origin) {
+        return objRepository.findFirst3ByOrigin(origin);
+    }
+
+    public List<CouponsObj> findAllByOrigin(Customer origin) {
+        return objRepository.findAllByOrigin(origin);
+    }
+
 
     public CouponsObj findByCode(String code){
         return objRepository.findByCode(code);

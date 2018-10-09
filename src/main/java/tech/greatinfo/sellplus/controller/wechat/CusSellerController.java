@@ -344,6 +344,9 @@ public class CusSellerController {
                 if (coupon == null){
                     return ResJson.failJson(-1,"优惠卷代码错误",null);
                 }else {
+                    if (coupon.getExpired()) {
+                        return ResJson.failJson(4000,"已经核销过", null);
+                    }
                     // 核销优惠卷, 如果微信已经注册成为 seller 的话，那么绑定的 seller 就是他的上级 seller
                     objService.writeOffCoupons(coupon,customer.getSeller());
                     return  ResJson.successJson("write off coupon success");
