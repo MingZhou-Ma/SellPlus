@@ -404,6 +404,7 @@ public class CustomerController {
             String page;
             String scene;
             String type;    // 1、海报二维码  2、销售二维码  3、销售渠道码
+            String sellerChannel;
             try {
                 token = jsonObject.getString("token");
                 //title = jsonObject.getString("title");
@@ -411,6 +412,7 @@ public class CustomerController {
                 //page = "user/pages/main/index";
                 scene = jsonObject.getString("scene");
                 type = jsonObject.getString("type");
+                sellerChannel = jsonObject.getString("sellerChannel");
                 //if (token == null && title == null && page == null && scene == null){
                 if (token == null && page == null && scene == null && type == null) {
                     return ResJson.errorRequestParam();
@@ -422,7 +424,7 @@ public class CustomerController {
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null) {
                 String accessToken = WeChatUtils.getAccessToken();
                 if (accessToken != null) {
-                    String path = qrService.getQRCode(customer, accessToken, scene, page, type);
+                    String path = qrService.getQRCode(customer, accessToken, scene, page, type, sellerChannel);
                     if (path != null) {
                         if (path.contains("errcode")) {
                             return ResJson.failJson(5000, "get QR code fail, error : " + path, null);

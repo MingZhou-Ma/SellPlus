@@ -37,6 +37,33 @@ public class SellerCodeController {
         this.qRcodeRepository = qRcodeRepository;
     }
 
+    @RequestMapping(value = "/api/sellerCode/checkSellerCode", method = RequestMethod.POST)
+    public ResJson checkSellerCode(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            String scene = (String) ParamUtils.getFromJson(jsonObject, "scene", String.class);
+            String type = (String) ParamUtils.getFromJson(jsonObject, "type", String.class);
+
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+
+            QRcode qRcode = qRcodeRepository.findBySceneAndType(scene, type);
+            if (null != qRcode) {
+                return ResJson.failJson(4000, "has qrcode", null);
+            }
+            return ResJson.successJson("success");
+        } catch (JsonParseException jse) {
+            logger.info(jse.getMessage() + " -> api/cus/listActivity");
+            return ResJson.errorRequestParam(jse.getMessage() + " -> api/cus/listActivity");
+        } catch (Exception e) {
+            logger.error("api/cus/listActivity -> ", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
     /*@RequestMapping(value = "/api/sellerCode/addSellerCode", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson addSellerCode(@RequestBody JSONObject jsonObject) {
         try {

@@ -23,5 +23,7 @@ public interface QRcodeRepository extends JpaRepository<QRcode, Long>,
     //QRcode findTopByCustomerOrderBySceneDesc(Customer customer);
 
     List<QRcode> findAllByCustomerAndType(Customer customer, String type);
+
+    QRcode findBySceneAndType(String scene, String type);
 }
 

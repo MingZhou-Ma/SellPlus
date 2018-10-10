@@ -50,7 +50,7 @@ public class QRcodeService {
      * @return
      * @throws IOException
      */
-    public String getQRCode(Customer customer, String token, String scene, String page, String type) throws IOException {
+    public String getQRCode(Customer customer, String token, String scene, String page, String type, String sellerChannel) throws IOException {
         //QRcode code = repository.findBySceneAndPage(scene, page);
         QRcode code = repository.findBySceneAndPageAndType(scene, page, type);
         if (code != null){
@@ -98,6 +98,7 @@ public class QRcodeService {
             qRcode.setPage(page);
             qRcode.setPath(QRcodePath+"/"+saveFile.getName());
             qRcode.setType(type);
+            qRcode.setSellerChannel(sellerChannel);
             qRcode.setCustomer(customer);
             repository.save(qRcode);
             return qRcode.getPath();
