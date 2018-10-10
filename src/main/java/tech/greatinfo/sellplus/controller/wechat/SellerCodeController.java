@@ -1,6 +1,7 @@
 package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class SellerCodeController {
     public ResJson checkSellerCode(@RequestBody JSONObject jsonObject) {
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
-            String scene = (String) ParamUtils.getFromJson(jsonObject, "scene", String.class);
+            String sellerChannelName = (String) ParamUtils.getFromJson(jsonObject, "sellerChannelName", String.class);
             String type = (String) ParamUtils.getFromJson(jsonObject, "type", String.class);
 
             Customer customer = (Customer) tokenService.getUserByToken(token);
@@ -49,16 +50,26 @@ public class SellerCodeController {
                 return ResJson.errorAccessToken();
             }
 
-            QRcode qRcode = qRcodeRepository.findBySceneAndType(scene, type);
-            if (null != qRcode) {
-                return ResJson.failJson(4000, "has qrcode", null);
+            //QRcode qRcode = qRcodeRepository.findBySceneAndType(scene, type);
+            //QRcode qRcode = qRcodeRepository.findByTypeAndSellerChannelLike(type, sellerChannel);
+            List<QRcode> allByType = qRcodeRepository.findAllByType(type);
+            for (QRcode qRcode:allByType) {
+                String sellerChannel = qRcode.getSellerChannel();
+                if (StringUtils.isNoneBlank(sellerChannel)) {
+                    String[] split = sellerChannel.split("|");
+                    String scn = split[0];
+                    if (sellerChannelName.equals(scn)) {
+                        return ResJson.failJson(4000, "has qrcode", null);
+                    }
+                }
             }
+
             return ResJson.successJson("success");
         } catch (JsonParseException jse) {
-            logger.info(jse.getMessage() + " -> api/cus/listActivity");
-            return ResJson.errorRequestParam(jse.getMessage() + " -> api/cus/listActivity");
+            logger.info(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
+            return ResJson.errorRequestParam(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
         } catch (Exception e) {
-            logger.error("api/cus/listActivity -> ", e.getMessage());
+            logger.error("/api/sellerCode/checkSellerCode -> ", e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
