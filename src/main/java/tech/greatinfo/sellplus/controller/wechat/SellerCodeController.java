@@ -18,6 +18,8 @@ import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 销售用户的销售码
@@ -50,20 +52,28 @@ public class SellerCodeController {
                 return ResJson.errorAccessToken();
             }
 
+            String regEx = "[ _`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]|\n|\r|\t";
+            Pattern p = Pattern.compile(regEx);
+            Matcher m = p.matcher(sellerChannelName);
+            if (m.find()) {
+                return ResJson.failJson(4000, "不能含有特殊字符", null);
+            }
+
             //QRcode qRcode = qRcodeRepository.findBySceneAndType(scene, type);
             //QRcode qRcode = qRcodeRepository.findByTypeAndSellerChannelLike(type, sellerChannel);
             List<QRcode> allByType = qRcodeRepository.findAllByType(type);
-            for (QRcode qRcode:allByType) {
-                String sellerChannel = qRcode.getSellerChannel();
-                if (StringUtils.isNoneBlank(sellerChannel)) {
-                    String[] split = sellerChannel.split("|");
-                    String scn = split[0];
-                    if (sellerChannelName.equals(scn)) {
-                        return ResJson.failJson(4000, "has qrcode", null);
+            if (null != allByType && !allByType.isEmpty()) {
+                for (QRcode qRcode:allByType) {
+                    String sellerChannel = qRcode.getSellerChannel();
+                    if (StringUtils.isNoneBlank(sellerChannel)) {
+                        String[] split = sellerChannel.split("\\|");
+                        String scn = split[0];
+                        if (sellerChannelName.equals(scn)) {
+                            return ResJson.failJson(4000, "渠道码已存在", null);
+                        }
                     }
                 }
             }
-
             return ResJson.successJson("success");
         } catch (JsonParseException jse) {
             logger.info(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
@@ -74,6 +84,29 @@ public class SellerCodeController {
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
+
+//    @RequestMapping(value = "/api/sellerCode/scanSellerCode", method = RequestMethod.POST)
+//    public ResJson scanSellerCode(@RequestBody JSONObject jsonObject) {
+//        try {
+//            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+//            String scene = (String) ParamUtils.getFromJson(jsonObject, "scene", String.class);
+//
+//            Customer customer = (Customer) tokenService.getUserByToken(token);
+//            if (null == customer) {
+//                return ResJson.errorAccessToken();
+//            }
+//
+//
+//            return ResJson.successJson("success");
+//        } catch (JsonParseException jse) {
+//            logger.info(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
+//            return ResJson.errorRequestParam(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
+//        } catch (Exception e) {
+//            logger.error("/api/sellerCode/checkSellerCode -> ", e.getMessage());
+//            e.printStackTrace();
+//            return ResJson.serverErrorJson(e.getMessage());
+//        }
+//    }
 
     /*@RequestMapping(value = "/api/sellerCode/addSellerCode", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson addSellerCode(@RequestBody JSONObject jsonObject) {
