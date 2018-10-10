@@ -18,6 +18,7 @@ import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -171,6 +172,48 @@ public class FrequenterConrtoller {
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/coupon/list/all");
         }catch (Exception e){
             logger.error("/api/freq/coupon/list/all -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 客户领取老司机发放的券
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/freq/coupon/receive", method = RequestMethod.POST)
+    public ResJson receiveFreqCoupon(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Long freqId = (Long) ParamUtils.getFromJson(jsonObject,"freqId", String.class); // 老司机id
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+            Customer freq = customService.getOne(freqId);
+            if (null == freq) {
+                return ResJson.failJson(4000, "老司机不存在", null);
+            }
+            Coupon coupon = companyService.getFreqCoupon();
+            if (null == coupon) {
+                return ResJson.failJson(4000, "尚未设置老司机发放的优惠卷", null);
+            }
+            CouponsObj couponsObj = new CouponsObj();
+            couponsObj.setCoupon(coupon);
+            couponsObj.setCode(objService.getRandomCouponCode());
+            couponsObj.setOrigin(freq);
+            couponsObj.setOwn(customer);
+            couponsObj.setNote("老司机发放的优惠卷");
+            couponsObj.setGeneralTime(new Date());
+            objService.save(couponsObj);
+
+            return ResJson.successJson("领取成功");
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/coupon/receive");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/coupon/receive");
+        }catch (Exception e){
+            logger.error("/api/freq/coupon/receive -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

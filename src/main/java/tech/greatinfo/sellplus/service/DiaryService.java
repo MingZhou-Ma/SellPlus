@@ -60,6 +60,7 @@ public class DiaryService {
                 couponsObj.setOwn(diary.getCustomer());
                 couponsObj.setNote("心得分享奖励优惠卷");
                 couponsObj.setGeneralTime(new Date());
+                couponsObj.setExpired(false);
                 objService.save(couponsObj);
                 diary.setGeneral(true);
                 diary.setGeneralTime(new Date()); // 设置获取优惠券的时间

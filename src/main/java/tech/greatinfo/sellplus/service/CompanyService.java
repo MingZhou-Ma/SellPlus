@@ -84,5 +84,18 @@ public class CompanyService {
         }
     }
 
+    public Coupon getFreqCoupon(){
+        Company company = companyRepository.findByK("freqCouponId");
+        if (null == company){
+            return null;
+        }
+        try {
+            Long couponId = Long.parseLong(company.getV());
+            return couponsRepository.findOne(couponId);
+        }catch (Exception e){
+            return null;
+        }
+    }
+
     // TODO 完成各种公司设置的 get 方法，就像上面两个方法一样
 }
