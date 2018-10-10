@@ -17,6 +17,7 @@ import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,6 +41,11 @@ public class SellerCodeController {
         this.qRcodeRepository = qRcodeRepository;
     }
 
+    /**
+     * 校验渠道码
+     * @param jsonObject
+     * @return
+     */
     @RequestMapping(value = "/api/sellerCode/checkSellerCode", method = RequestMethod.POST)
     public ResJson checkSellerCode(@RequestBody JSONObject jsonObject) {
         try {
@@ -85,28 +91,42 @@ public class SellerCodeController {
         }
     }
 
-//    @RequestMapping(value = "/api/sellerCode/scanSellerCode", method = RequestMethod.POST)
-//    public ResJson scanSellerCode(@RequestBody JSONObject jsonObject) {
-//        try {
-//            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
-//            String scene = (String) ParamUtils.getFromJson(jsonObject, "scene", String.class);
-//
-//            Customer customer = (Customer) tokenService.getUserByToken(token);
-//            if (null == customer) {
-//                return ResJson.errorAccessToken();
-//            }
-//
-//
-//            return ResJson.successJson("success");
-//        } catch (JsonParseException jse) {
-//            logger.info(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
-//            return ResJson.errorRequestParam(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
-//        } catch (Exception e) {
-//            logger.error("/api/sellerCode/checkSellerCode -> ", e.getMessage());
-//            e.printStackTrace();
-//            return ResJson.serverErrorJson(e.getMessage());
-//        }
-//    }
+    /**
+     * 扫描销售码，渠道码接口
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/sellerCode/scanSellerCode", method = RequestMethod.POST)
+    public ResJson scanSellerCode(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            String scene = (String) ParamUtils.getFromJson(jsonObject, "scene", String.class);
+
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+
+            QRcode qRcode = qRcodeRepository.findByScene(scene);
+            if (null == qRcode) {
+                return ResJson.failJson(4000, "二维码不存在", null);
+            }
+            HashMap<String, String > map = new HashMap<>();
+            map.put("uid", qRcode.getCustomer().getUid());
+            if (StringUtils.isNotBlank(qRcode.getSellerChannel())) {
+                map.put("sellerCode", qRcode.getSellerChannel().split("\\|")[0]);
+            }
+
+            return ResJson.successJson("success", map);
+        } catch (JsonParseException jse) {
+            logger.info(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
+            return ResJson.errorRequestParam(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
+        } catch (Exception e) {
+            logger.error("/api/sellerCode/checkSellerCode -> ", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
 
     /*@RequestMapping(value = "/api/sellerCode/addSellerCode", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson addSellerCode(@RequestBody JSONObject jsonObject) {
