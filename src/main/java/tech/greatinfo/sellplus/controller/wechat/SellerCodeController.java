@@ -115,6 +115,8 @@ public class SellerCodeController {
             map.put("uid", qRcode.getCustomer().getUid());
             if (StringUtils.isNotBlank(qRcode.getSellerChannel())) {
                 map.put("sellerCode", qRcode.getSellerChannel().split("\\|")[0]);
+            } else {
+                map.put("sellerCode", "");
             }
 
             return ResJson.successJson("success", map);
