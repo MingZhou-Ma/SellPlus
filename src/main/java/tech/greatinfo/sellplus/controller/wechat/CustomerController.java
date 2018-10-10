@@ -86,8 +86,6 @@ public class CustomerController {
         String code = jsonParam.getString("code");
         String errMsg = jsonParam.getString("errMsg");
         System.out.println("code:" + code + " errMsg:" + errMsg);
-        String appid="wxa305d3fc1a539d2d";
-        String appsecret = "8471f4549db06f5fa10bb2bdd295edc0";
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + appsecret + "&grant_type=authorization_code&js_code=" + code;
         Request request = new Request.Builder()
                 .url(url)
