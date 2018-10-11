@@ -239,6 +239,7 @@ public class FrequenterConrtoller {
             couponsObj.setOwn(customer);
             couponsObj.setNote("老司机发放的优惠卷");
             couponsObj.setGeneralTime(new Date());
+            couponsObj.setExpired(false);
             objService.save(couponsObj);
 
             return ResJson.successJson("领取成功");
