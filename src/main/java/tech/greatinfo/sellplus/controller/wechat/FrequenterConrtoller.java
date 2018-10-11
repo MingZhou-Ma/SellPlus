@@ -294,6 +294,32 @@ public class FrequenterConrtoller {
     }
 
     /**
+     * 查询老司机提现记录
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/freq/withdraw/list", method = RequestMethod.POST)
+    public ResJson freqWithdrawList(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+
+            List<FreqWithdraw> list = freqWithdrawRepository.findAll();
+            return ResJson.successJson("查询提现记录成功", list);
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/withdraw/list");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/withdraw/list");
+        }catch (Exception e){
+            logger.error("/api/freq/withdraw/list -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
      * 老司机通过 Seller 的顾客链接来注册成为老司机
      * 该链接是给前端的一个特殊页面调用的，特殊页面固定地址，Seller 分享的时候就是分享这个特殊页面
      * 特殊页面里面调用 ajax ，向接口发送数据，完成绑定
