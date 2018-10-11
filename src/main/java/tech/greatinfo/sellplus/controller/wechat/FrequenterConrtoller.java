@@ -232,6 +232,12 @@ public class FrequenterConrtoller {
             if (null == coupon) {
                 return ResJson.failJson(4000, "尚未设置老司机发放的优惠卷", null);
             }
+            // 判断是否重复领券
+            CouponsObj obj = objService.findByOriginAndOwn(freq, customer);
+            if (null != obj) {
+                return ResJson.failJson(4000, "已经领过该老司机券", null);
+            }
+
             CouponsObj couponsObj = new CouponsObj();
             couponsObj.setCoupon(coupon);
             couponsObj.setCode(objService.getRandomCouponCode());

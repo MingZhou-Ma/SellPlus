@@ -80,6 +80,10 @@ public class CouponsObjService {
         return objRepository.findByCode(code);
     }
 
+    public CouponsObj findByOriginAndOwn(Customer origin, Customer own) {
+        return objRepository.findByOriginAndOwn(origin, own);
+    }
+
     @Transactional
     @Modifying
     public void writeOffCoupons(CouponsObj coupon, Seller seller){
