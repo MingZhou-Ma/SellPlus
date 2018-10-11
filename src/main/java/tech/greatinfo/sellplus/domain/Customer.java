@@ -53,8 +53,8 @@ public class Customer implements User, Serializable {
     @Column(columnDefinition = "BIT COMMENT '是否是老司机'")
     private Boolean frequenter;
 
-    @Column(columnDefinition = "INT COMMENT '老司机的奖金总数'")
-    private Integer freqBonus;
+    @Column(columnDefinition = "DOUBLE COMMENT '老司机的奖金总数'")
+    private Double freqBonus;
 
     @Column(columnDefinition = "VARCHAR(255) COMMENT '销售渠道'")
     private String sellerChannel; // 格式：属于哪个销售的uuid+ ":" + 销售渠道名称  （例如：uuid:大众饭店）
@@ -140,11 +140,11 @@ public class Customer implements User, Serializable {
         this.frequenter = frequenter;
     }
 
-    public Integer getFreqBonus() {
+    public Double getFreqBonus() {
         return freqBonus;
     }
 
-    public void setFreqBonus(Integer freqBonus) {
+    public void setFreqBonus(Double freqBonus) {
         this.freqBonus = freqBonus;
     }
 

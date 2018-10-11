@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Company;
 import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.FreqWithdraw;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
+import tech.greatinfo.sellplus.repository.FreqWithdrawRepository;
 import tech.greatinfo.sellplus.service.*;
 import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
@@ -89,6 +91,8 @@ public class FrequenterConrtoller {
     @Autowired
     FreqService freqService;
 
+    @Autowired
+    FreqWithdrawRepository freqWithdrawRepository;
 
     /**
      * 申请成为老司机
@@ -105,7 +109,7 @@ public class FrequenterConrtoller {
             }
 
             customer.setFrequenter(true);
-            customer.setFreqBonus(0);
+            customer.setFreqBonus(0d);
             customService.save(customer);
 
             AccessToken accessToken = tokenService.getToken(token);
@@ -119,6 +123,35 @@ public class FrequenterConrtoller {
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/beFreq");
         }catch (Exception e){
             logger.error("/api/freq/beFreq -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 判断是否为老司机
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/freq/isFreq", method = RequestMethod.POST)
+    public ResJson isFreq(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+
+            if (customer.getFrequenter()) {
+                return ResJson.successJson("已经是老司机");
+            }
+            return ResJson.failJson(4000, "不是老司机", null);
+
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/isFreq");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/isFreq");
+        }catch (Exception e){
+            logger.error("/api/freq/isFreq -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -214,6 +247,47 @@ public class FrequenterConrtoller {
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/coupon/receive");
         }catch (Exception e){
             logger.error("/api/freq/coupon/receive -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 申请提现
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/freq/withdraw", method = RequestMethod.POST)
+    public ResJson freqWithdraw(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            String aLiPay = (String) ParamUtils.getFromJson(jsonObject,"aLiPay", String.class);
+            String actualName = (String) ParamUtils.getFromJson(jsonObject,"actualName", String.class);
+            Double withdrawalAmount = (Double) ParamUtils.getFromJson(jsonObject,"withdrawalAmount", Double.class);
+
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+            if (customer.getFreqBonus() < withdrawalAmount) {
+                return ResJson.failJson(4000, "奖金不足",null);
+            }
+
+            FreqWithdraw freqWithdraw = new FreqWithdraw();
+            freqWithdraw.setaLiPay(aLiPay);
+            freqWithdraw.setActualName(actualName);
+            freqWithdraw.setWithdrawalAmount(withdrawalAmount);
+            freqWithdraw.setWithdrawalTime(new Date());
+            freqWithdraw.setSuccessTran(false);
+            freqWithdraw.setCustomer(customer);
+            freqWithdrawRepository.save(freqWithdraw);
+
+            return ResJson.successJson("申请提现成功");
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/withdraw");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/withdraw");
+        }catch (Exception e){
+            logger.error("/api/freq/withdraw -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
