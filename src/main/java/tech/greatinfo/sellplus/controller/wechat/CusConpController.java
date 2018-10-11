@@ -58,7 +58,7 @@ public class CusConpController {
             Customer customer;
             if ((customer = (Customer) tokenService.getUserByToken(token)) != null) {
                 //Page<CouponsObj> res ;
-                if (type == 0) {
+                if (type == 1) {
                     return ResJson.successJson("get un used coupons success", objService.getAllByOwnAndUnUsed(customer, start, num));
                 }
                 return ResJson.successJson("get used coupons success", objService.getAllByOwnAndUsed(customer, start, num));
