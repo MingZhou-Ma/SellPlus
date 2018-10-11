@@ -219,7 +219,7 @@ public class FrequenterConrtoller {
     public ResJson receiveFreqCoupon(@RequestBody JSONObject jsonObject) {
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
-            Long freqId = (Long) ParamUtils.getFromJson(jsonObject,"freqId", String.class); // 老司机id
+            Long freqId = (Long) ParamUtils.getFromJson(jsonObject,"freqId", Long.class); // 老司机id
             Customer customer = (Customer) tokenService.getUserByToken(token);
             if (null == customer) {
                 return ResJson.errorAccessToken();
