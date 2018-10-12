@@ -38,8 +38,8 @@ public class Help {
     @Transient
     private Integer helpCount;
 
-    @Transient
-    private Boolean isAcceptCoupon;
+    @Column(name = "general", columnDefinition = "BIT COMMENT '是否已经兑换优惠卷'")
+    private boolean general;
 
     public Help() {
     }
@@ -92,11 +92,11 @@ public class Help {
         this.helpCount = helpCount;
     }
 
-    public Boolean getAcceptCoupon() {
-        return isAcceptCoupon;
+    public boolean isGeneral() {
+        return general;
     }
 
-    public void setAcceptCoupon(Boolean acceptCoupon) {
-        isAcceptCoupon = acceptCoupon;
+    public void setGeneral(boolean general) {
+        this.general = general;
     }
 }

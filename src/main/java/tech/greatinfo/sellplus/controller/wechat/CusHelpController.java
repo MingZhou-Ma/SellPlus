@@ -88,7 +88,7 @@ public class CusHelpController {
                 help = new Help();
                 help.setActivity(activity);
                 help.setCustomer(customer);
-                help.setAcceptCoupon(false);
+                help.setGeneral(false);
                 helpService.save(help);
                 return ResJson.successJson("add help activity success",help);
             }else {
@@ -254,7 +254,7 @@ public class CusHelpController {
             if (null == help) {
                 return ResJson.failJson(4000, "助力活动不存在", null);
             }
-            if (help.getAcceptCoupon()) {
+            if (help.isGeneral()) {
                 return ResJson.failJson(4000, "已经领取过该券", null);
             }
             if (historyService.findAllByHelp(help).size() < activity.getHelpNum()) {
@@ -273,7 +273,7 @@ public class CusHelpController {
             objService.save(couponsObj);
 
             // 将该助力活动设置为已经领取过券
-            help.setAcceptCoupon(true);
+            help.setGeneral(true);
             helpService.save(help);
 
             return ResJson.successJson("领取成功");
