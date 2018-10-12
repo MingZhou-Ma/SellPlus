@@ -289,6 +289,12 @@ public class FrequenterConrtoller {
             freqWithdraw.setCustomer(customer);
             freqWithdrawRepository.save(freqWithdraw);
 
+            customer.setFreqBonus(customer.getFreqBonus() - withdrawalAmount);
+            customService.save(customer);
+            AccessToken accessToken = tokenService.getToken(token);
+            accessToken.setUser(customer);
+            tokenService.saveToken(accessToken);
+
             return ResJson.successJson("申请提现成功");
         }catch (JsonParseException jse){
             logger.info(jse.getMessage()+" -> /api/freq/withdraw");
