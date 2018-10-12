@@ -1,7 +1,6 @@
 package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,24 +8,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 import tech.greatinfo.sellplus.domain.Activity;
 import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.domain.help.Help;
 import tech.greatinfo.sellplus.domain.help.HelpHistory;
-import tech.greatinfo.sellplus.service.ActivityService;
-import tech.greatinfo.sellplus.service.GroupService;
-import tech.greatinfo.sellplus.service.HelpHistoryService;
-import tech.greatinfo.sellplus.service.HelpService;
-import tech.greatinfo.sellplus.service.JoinGroupService;
-import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.service.*;
 import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -55,6 +50,9 @@ public class CusHelpController {
 
     @Autowired
     HelpHistoryService historyService;
+
+    @Autowired
+    CouponsObjService objService;
 
     /**
      *
@@ -221,6 +219,56 @@ public class CusHelpController {
             }else {
                 return ResJson.errorAccessToken();
             }
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/cus/getHelpDetail");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/getHelpDetail");
+        }catch (Exception e){
+            logger.error("/api/cus/getHelpDetail -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 助力活动发券
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/cus/obtainHelpCoupon", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    public ResJson obtainHelpCoupon(@RequestBody JSONObject jsonObject){
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Long activityId = (Long) ParamUtils.getFromJson(jsonObject,"activityId", Long.class);
+
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+            Activity activity = activityService.findOne(activityId);
+            if (null == activity) {
+                return ResJson.failJson(4000, "活动不存在", null);
+            }
+
+            Help help = helpService.findByCustomerAndActivity(customer, activity);
+            if (null == help) {
+                return ResJson.failJson(4000, "助力活动不存在", null);
+            }
+            if (historyService.findAllByHelp(help).size() < activity.getHelpNum()) {
+                return ResJson.failJson(4000, "未达到助力人数", null);
+            }
+
+            //发放助力活动券
+            CouponsObj couponsObj = new CouponsObj();
+            couponsObj.setCoupon(activity.getCoupon());
+            couponsObj.setCode(objService.getRandomCouponCode());
+            //couponsObj.setOrigin(freq);
+            couponsObj.setOwn(customer);
+            couponsObj.setNote("助力活动发放的优惠卷");
+            couponsObj.setGeneralTime(new Date());
+            couponsObj.setExpired(false);
+            objService.save(couponsObj);
+
+            return ResJson.successJson("领取成功");
         }catch (JsonParseException jse){
             logger.info(jse.getMessage()+" -> /api/cus/getHelpDetail");
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/getHelpDetail");
