@@ -1,17 +1,9 @@
 package tech.greatinfo.sellplus.domain.help;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import tech.greatinfo.sellplus.domain.Activity;
 import tech.greatinfo.sellplus.domain.Customer;
+
+import javax.persistence.*;
 
 /**
  *
@@ -45,6 +37,9 @@ public class Help {
 
     @Transient
     private Integer helpCount;
+
+    @Transient
+    private Boolean isAcceptCoupon;
 
     public Help() {
     }
@@ -95,5 +90,13 @@ public class Help {
 
     public void setHelpCount(Integer helpCount) {
         this.helpCount = helpCount;
+    }
+
+    public Boolean getAcceptCoupon() {
+        return isAcceptCoupon;
+    }
+
+    public void setAcceptCoupon(Boolean acceptCoupon) {
+        isAcceptCoupon = acceptCoupon;
     }
 }
