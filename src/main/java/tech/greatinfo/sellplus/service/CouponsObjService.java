@@ -11,6 +11,7 @@ import tech.greatinfo.sellplus.domain.coupons.CouponsHistory;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.repository.CouponsHistoryRepository;
 import tech.greatinfo.sellplus.repository.CouponsObjRepository;
+import tech.greatinfo.sellplus.utils.obj.AccessToken;
 
 import javax.transaction.Transactional;
 import java.util.Date;
@@ -26,6 +27,15 @@ public class CouponsObjService {
 
     @Autowired
     CouponsHistoryRepository historyRepository;
+
+    @Autowired
+    CompanyService companyService;
+
+    @Autowired
+    CustomService customService;
+
+    @Autowired
+    TokenService tokenService;
 
     public CouponsObj save(CouponsObj obj){
         return objRepository.save(obj);
@@ -94,6 +104,17 @@ public class CouponsObjService {
         history.setDate(new Date());
         history.setSeller(seller);
         historyRepository.save(history);
+
+        // 核销的券为老司机券，有奖金加成
+        if (coupon.getCoupon() == companyService.getFreqCoupon()) {
+            Customer origin = coupon.getOrigin();
+            origin.setFreqBonus(origin.getFreqBonus() + companyService.getFreqBonus());
+            customService.save(origin);
+
+            AccessToken accessToken = tokenService.getTokenByCustomOpenId(origin.getOpenid());
+            accessToken.setUser(origin);
+            tokenService.saveToken(accessToken);
+        }
     }
 
 

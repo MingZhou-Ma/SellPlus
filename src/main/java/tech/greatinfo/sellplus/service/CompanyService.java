@@ -97,5 +97,17 @@ public class CompanyService {
         }
     }
 
+    public double getFreqBonus(){
+        Company company = companyRepository.findByK("freqBonus");
+        if (null == company){
+            return -1;
+        }
+        try {
+            return Double.parseDouble(company.getV());
+        }catch (Exception e){
+            return -1;
+        }
+    }
+
     // TODO 完成各种公司设置的 get 方法，就像上面两个方法一样
 }
