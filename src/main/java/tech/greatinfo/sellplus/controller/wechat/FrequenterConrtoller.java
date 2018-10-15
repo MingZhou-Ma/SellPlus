@@ -228,6 +228,9 @@ public class FrequenterConrtoller {
             if (null == freq) {
                 return ResJson.failJson(4000, "老司机不存在", null);
             }
+            if (customer.equals(freq)) {
+                return ResJson.failJson(4000, "不能领取自己发的老司机券", null);
+            }
             Coupon coupon = companyService.getFreqCoupon();
             if (null == coupon) {
                 return ResJson.failJson(4000, "尚未设置老司机发放的优惠卷", null);
