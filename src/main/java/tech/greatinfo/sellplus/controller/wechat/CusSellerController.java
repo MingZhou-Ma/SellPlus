@@ -214,7 +214,7 @@ public class CusSellerController {
 
                             //记录销售渠道
                             //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                            customer.setSellerChannel("null".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
 
                             //记录初次访问记录
                             //customer.setAccessRecord(accessRecord);
@@ -231,7 +231,7 @@ public class CusSellerController {
 
                             //记录销售渠道
                             //preCustomer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                            preCustomer.setSellerChannel("null".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            preCustomer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
 
                             //记录初次访问记录
                             //preCustomer.setAccessRecord(accessRecord);
@@ -240,7 +240,7 @@ public class CusSellerController {
 
                             //记录销售渠道
                             //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                            customer.setSellerChannel("null".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
 
                             //记录初次访问记录
                             //customer.setAccessRecord(accessRecord);
@@ -263,7 +263,7 @@ public class CusSellerController {
 
                         //记录销售渠道
                         //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                        customer.setSellerChannel("null".equals(sellerCode)?"":uid + "|" + sellerCode);
+                        customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
 
                         //记录初次访问记录
                         //customer.setAccessRecord(accessRecord);
