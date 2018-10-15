@@ -194,7 +194,7 @@ public class CusSellerController {
             String sellerCode = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "sellerCode", "null", String.class);
 
             //初次访问记录
-            String accessRecord = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "accessRecord", "null", String.class);
+            //String accessRecord = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "accessRecord", "null", String.class);
 
             if (uid.equals("null")){
                 return ResJson.successJson("uid is null");
@@ -216,7 +216,7 @@ public class CusSellerController {
                             customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
 
                             //记录初次访问记录
-                            customer.setAccessRecord(accessRecord);
+                            //customer.setAccessRecord(accessRecord);
 
                             customService.save(customer);
 
@@ -232,7 +232,7 @@ public class CusSellerController {
                             preCustomer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
 
                             //记录初次访问记录
-                            preCustomer.setAccessRecord(accessRecord);
+                            //preCustomer.setAccessRecord(accessRecord);
 
                             customer.setSeller(sellerSerivce.getDefaultSeller());
 
@@ -240,7 +240,7 @@ public class CusSellerController {
                             customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
 
                             //记录初次访问记录
-                            customer.setAccessRecord(accessRecord);
+                            //customer.setAccessRecord(accessRecord);
 
                             customService.save(preCustomer);
                             customService.save(customer);
@@ -262,7 +262,7 @@ public class CusSellerController {
                         customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
 
                         //记录初次访问记录
-                        customer.setAccessRecord(accessRecord);
+                        //customer.setAccessRecord(accessRecord);
 
                         customService.save(customer);
 
