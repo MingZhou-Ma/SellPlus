@@ -213,7 +213,8 @@ public class CusSellerController {
                             customer.setSeller(seller);
 
                             //记录销售渠道
-                            customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
+                            //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
+                            customer.setSellerChannel("null".equals(sellerCode)?"":uid + "|" + sellerCode);
 
                             //记录初次访问记录
                             //customer.setAccessRecord(accessRecord);
@@ -229,7 +230,8 @@ public class CusSellerController {
                             preCustomer.setSeller(sellerSerivce.getDefaultSeller());
 
                             //记录销售渠道
-                            preCustomer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
+                            //preCustomer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
+                            preCustomer.setSellerChannel("null".equals(sellerCode)?"":uid + "|" + sellerCode);
 
                             //记录初次访问记录
                             //preCustomer.setAccessRecord(accessRecord);
@@ -237,7 +239,8 @@ public class CusSellerController {
                             customer.setSeller(sellerSerivce.getDefaultSeller());
 
                             //记录销售渠道
-                            customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
+                            //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
+                            customer.setSellerChannel("null".equals(sellerCode)?"":uid + "|" + sellerCode);
 
                             //记录初次访问记录
                             //customer.setAccessRecord(accessRecord);
@@ -259,7 +262,8 @@ public class CusSellerController {
                         customer.setSeller(sellerSerivce.getDefaultSeller());
 
                         //记录销售渠道
-                        customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
+                        //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
+                        customer.setSellerChannel("null".equals(sellerCode)?"":uid + "|" + sellerCode);
 
                         //记录初次访问记录
                         //customer.setAccessRecord(accessRecord);
