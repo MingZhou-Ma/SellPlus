@@ -1,6 +1,7 @@
 package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,8 +192,8 @@ public class CusSellerController {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
             String uid = (String) ParamUtils.getFromJsonWithDefault(jsonObject,"uid", "null", String.class);
 
-            String sellerCode = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "sellerCode", "null", String.class);
-
+            String sellerCode = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "sellerCode", "", String.class);
+            //String sellerCode = (String) ParamUtils.getFromJson(jsonObject, "sellerCode", String.class);
             //初次访问记录
             //String accessRecord = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "accessRecord", "null", String.class);
 
@@ -214,7 +215,9 @@ public class CusSellerController {
 
                             //记录销售渠道
                             //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                            customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            if (StringUtils.isBlank(customer.getSellerChannel())) {
+                                customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            }
 
                             //记录初次访问记录
                             //customer.setAccessRecord(accessRecord);
@@ -231,7 +234,10 @@ public class CusSellerController {
 
                             //记录销售渠道
                             //preCustomer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                            preCustomer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            if (StringUtils.isBlank(customer.getSellerChannel())) {
+                                preCustomer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            }
+
 
                             //记录初次访问记录
                             //preCustomer.setAccessRecord(accessRecord);
@@ -240,7 +246,9 @@ public class CusSellerController {
 
                             //记录销售渠道
                             //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                            customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            if (StringUtils.isBlank(customer.getSellerChannel())) {
+                                customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            }
 
                             //记录初次访问记录
                             //customer.setAccessRecord(accessRecord);
@@ -263,7 +271,9 @@ public class CusSellerController {
 
                         //记录销售渠道
                         //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                        customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                        if (StringUtils.isBlank(customer.getSellerChannel())) {
+                            customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                        }
 
                         //记录初次访问记录
                         //customer.setAccessRecord(accessRecord);
