@@ -323,7 +323,7 @@ public class FrequenterConrtoller {
                 return ResJson.errorAccessToken();
             }
 
-            List<FreqWithdraw> list = freqWithdrawRepository.findAll();
+            List<FreqWithdraw> list = freqWithdrawRepository.findAllByCustomer(customer);
             return ResJson.successJson("查询提现记录成功", list);
         }catch (JsonParseException jse){
             logger.info(jse.getMessage()+" -> /api/freq/withdraw/list");
