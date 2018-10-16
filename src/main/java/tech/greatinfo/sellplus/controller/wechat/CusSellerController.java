@@ -212,7 +212,7 @@ public class CusSellerController {
                     if ((preCustomer = customService.getByUid(uid)) != null){
                         if ((seller = preCustomer.getSeller()) != null){
                             //记录销售渠道
-                            if (StringUtils.isBlank(customer.getSellerChannel())) {
+                            if (StringUtils.isEmpty(customer.getSellerChannel())) {
                                 customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
                             } else {
                                 // 判断是否绑定了默认销售的某个渠道，是的话要进行替换
@@ -230,7 +230,7 @@ public class CusSellerController {
                             return ResJson.successJson("success bind seller", seller);
                         }else {
                             //记录销售渠道
-                            if (StringUtils.isBlank(preCustomer.getSellerChannel())) {
+                            if (StringUtils.isEmpty(preCustomer.getSellerChannel())) {
                                 preCustomer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
                             } else {
                                 // 判断是否绑定了默认销售的某个渠道，是的话要进行替换
@@ -252,7 +252,7 @@ public class CusSellerController {
 //                            }
 
                             //记录销售渠道
-                            if (StringUtils.isBlank(customer.getSellerChannel())) {
+                            if (StringUtils.isEmpty(customer.getSellerChannel())) {
                                 customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
                             } else {
                                 // 判断是否绑定了默认销售的某个渠道，是的话要进行替换
@@ -271,7 +271,7 @@ public class CusSellerController {
                         }
                     }else {
                         //记录销售渠道
-                        if (StringUtils.isBlank(customer.getSellerChannel())) {
+                        if (StringUtils.isEmpty(customer.getSellerChannel())) {
                             customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
                         } else {
                             // 判断是否绑定了默认销售的某个渠道，是的话要进行替换
