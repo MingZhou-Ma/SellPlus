@@ -211,17 +211,16 @@ public class CusSellerController {
                     Customer preCustomer;
                     if ((preCustomer = customService.getByUid(uid)) != null){
                         if ((seller = preCustomer.getSeller()) != null){
-                            customer.setSeller(seller);
-
                             //记录销售渠道
-                            //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
                             if (StringUtils.isBlank(customer.getSellerChannel())) {
                                 customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            } else {
+                                // 判断是否绑定了默认销售的某个渠道，是的话要进行替换
+                                if (customer.getSeller().equals(sellerSerivce.getDefaultSeller())) {
+                                    customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                                }
                             }
-
-                            //记录初次访问记录
-                            //customer.setAccessRecord(accessRecord);
-
+                            customer.setSeller(seller);
                             customService.save(customer);
 
                             AccessToken accessToken = tokenService.getToken(token);
@@ -230,35 +229,39 @@ public class CusSellerController {
 
                             return ResJson.successJson("success bind seller", seller);
                         }else {
-                            preCustomer.setSeller(sellerSerivce.getDefaultSeller());
-
                             //记录销售渠道
-                            //preCustomer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                            if (StringUtils.isBlank(customer.getSellerChannel())) {
+                            if (StringUtils.isBlank(preCustomer.getSellerChannel())) {
                                 preCustomer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            } else {
+                                // 判断是否绑定了默认销售的某个渠道，是的话要进行替换
+                                if (preCustomer.getSeller().equals(sellerSerivce.getDefaultSeller())) {
+                                    preCustomer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                                }
                             }
-
-
-                            //记录初次访问记录
-                            //preCustomer.setAccessRecord(accessRecord);
-
-                            customer.setSeller(sellerSerivce.getDefaultSeller());
-
-                            //记录销售渠道
-                            //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                            if (StringUtils.isBlank(customer.getSellerChannel())) {
-                                customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
-                            }
-
-                            //记录初次访问记录
-                            //customer.setAccessRecord(accessRecord);
-
+                            preCustomer.setSeller(sellerSerivce.getDefaultSeller());
                             customService.save(preCustomer);
-                            customService.save(customer);
 
                             AccessToken preAccessToken = tokenService.getTokenByCustomOpenId(preCustomer.getOpenid());
                             preAccessToken.setUser(preCustomer);
                             tokenService.saveToken(preAccessToken);
+
+                            //记录销售渠道
+                            //preCustomer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
+//                            if (StringUtils.isBlank(customer.getSellerChannel())) {
+//                                preCustomer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+//                            }
+
+                            //记录销售渠道
+                            if (StringUtils.isBlank(customer.getSellerChannel())) {
+                                customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            } else {
+                                // 判断是否绑定了默认销售的某个渠道，是的话要进行替换
+                                if (customer.getSeller().equals(sellerSerivce.getDefaultSeller())) {
+                                    customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                                }
+                            }
+                            customer.setSeller(sellerSerivce.getDefaultSeller());
+                            customService.save(customer);
 
                             AccessToken accessToken = tokenService.getToken(token);
                             accessToken.setUser(customer);
@@ -267,17 +270,23 @@ public class CusSellerController {
                             return ResJson.successJson("success bind seller", sellerSerivce.getDefaultSeller());
                         }
                     }else {
+                        //记录销售渠道
+                        if (StringUtils.isBlank(customer.getSellerChannel())) {
+                            customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                        } else {
+                            // 判断是否绑定了默认销售的某个渠道，是的话要进行替换
+                            if (customer.getSeller().equals(sellerSerivce.getDefaultSeller())) {
+                                customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
+                            }
+                        }
+
                         customer.setSeller(sellerSerivce.getDefaultSeller());
 
                         //记录销售渠道
                         //customer.setSellerChannel(uid + ("null".equals(sellerCode)?"":":"+sellerCode));
-                        if (StringUtils.isBlank(customer.getSellerChannel())) {
+                        /*if (StringUtils.isBlank(customer.getSellerChannel())) {
                             customer.setSellerChannel("".equals(sellerCode)?"":uid + "|" + sellerCode);
-                        }
-
-                        //记录初次访问记录
-                        //customer.setAccessRecord(accessRecord);
-
+                        }*/
                         customService.save(customer);
 
                         AccessToken accessToken = tokenService.getToken(token);
