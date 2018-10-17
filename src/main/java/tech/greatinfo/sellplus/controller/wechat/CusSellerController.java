@@ -413,4 +413,30 @@ public class CusSellerController {
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
+
+    @RequestMapping(value = "/api/cus/syncContact", method = RequestMethod.POST)
+    public ResJson syncContact(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Long customerId = (Long) ParamUtils.getFromJson(jsonObject,"customerId", Long.class);
+
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+
+            Customer sellerCustomer = customService.getOne(customerId);
+            if (sellerCustomer.getbSync()) {
+                return ResJson.failJson(4000, "已经同步到到通讯录", null);
+            }
+            sellerCustomer.setbSync(true);
+            customService.save(sellerCustomer);
+
+            return ResJson.successJson("同步成功");
+        } catch (Exception e) {
+            logger.error("/api/cus/writeOffCoupons -> ", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
 }

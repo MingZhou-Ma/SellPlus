@@ -65,6 +65,9 @@ public class Customer implements User, Serializable {
     @Column(columnDefinition = "TIMESTAMP COMMENT '用户第一次使用小程序的时间，相当于注册时间吧，客户列表按时间排序要用到'")
     private Date createTime;
 
+    @Column(columnDefinition = "BIT COMMENT '是否同步到通讯录'")
+    private Boolean bSync;
+
     public Customer() {
     }
 
@@ -178,6 +181,14 @@ public class Customer implements User, Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public Boolean getbSync() {
+        return bSync;
+    }
+
+    public void setbSync(Boolean bSync) {
+        this.bSync = bSync;
     }
 
     @Override
