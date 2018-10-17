@@ -426,6 +426,9 @@ public class CusSellerController {
             }
 
             Customer sellerCustomer = customService.getOne(customerId);
+            if (null == sellerCustomer) {
+                return ResJson.failJson(4000, "客户不存在", null);
+            }
             if (sellerCustomer.getbSync()) {
                 return ResJson.failJson(4000, "已经同步到通讯录", null);
             }
