@@ -126,6 +126,7 @@ public class CustomerController {
                         customer.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
                         customer.setbSell(false);
                         customer.setFrequenter(false);
+                        customer.setbSync(false);
                         customer.setSeller(sellerSerivce.getDefaultSeller());
                         /*customer.setType(1);  // 用户类型：1代表潜在客户   2代表老客户
                         customer.setOrigin(""); // 用户来源：默认什么鬼

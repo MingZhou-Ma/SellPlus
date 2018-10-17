@@ -427,7 +427,7 @@ public class CusSellerController {
 
             Customer sellerCustomer = customService.getOne(customerId);
             if (sellerCustomer.getbSync()) {
-                return ResJson.failJson(4000, "已经同步到到通讯录", null);
+                return ResJson.failJson(4000, "已经同步到通讯录", null);
             }
             sellerCustomer.setbSync(true);
             customService.save(sellerCustomer);
