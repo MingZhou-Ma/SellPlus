@@ -2,6 +2,7 @@ package tech.greatinfo.sellplus.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 用户预约
@@ -36,6 +37,9 @@ public class Reservation implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id",columnDefinition = "BIGINT COMMENT '商品外键'")
     private Product product;
+
+    @Column(columnDefinition = "TIMESTAMP COMMENT '预约时间'")
+    private Date reservationTime;
 
     public Reservation() {
     }
@@ -94,5 +98,13 @@ public class Reservation implements Serializable {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Date getReservationTime() {
+        return reservationTime;
+    }
+
+    public void setReservationTime(Date reservationTime) {
+        this.reservationTime = reservationTime;
     }
 }

@@ -18,6 +18,8 @@ import tech.greatinfo.sellplus.utils.SendSmsUtil;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
+import java.util.Date;
+
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
@@ -62,6 +64,7 @@ public class ReservationServiceImpl implements ReservationService {
             reservation.setRemark(remark);
             reservation.setCustomer(customer);
             reservation.setProduct(product);
+            reservation.setReservationTime(new Date());
             reservationRepository.save(reservation);
 
             //发送短信
