@@ -317,7 +317,8 @@ public class PublicController {
             }
             HashMap<String, String> map = new HashMap<>();
             map.put("src", src);
-            return ResJson.successJson("upload success", map);
+            return ResJson.failJson(0, "upload success", map);
+            //return ResJson.successJson("upload success", map);
         }catch (Exception e){
             logger.error("/api/pub/qiniu/upload -> ",e.getMessage());
             e.printStackTrace();
