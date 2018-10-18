@@ -311,12 +311,12 @@ public class PublicController {
     @RequestMapping(value = "/api/pub/qiniu/upload", method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public ResJson qiniuUpload(MultipartFile file) {
         try {
-            String url = QiniuUploadUtil.upload(file);
-            if (StringUtils.isEmpty(url)) {
+            String src = QiniuUploadUtil.upload(file);
+            if (StringUtils.isEmpty(src)) {
                 return ResJson.failJson(4000,"上传失败，路径为空",null);
             }
             HashMap<String, String> map = new HashMap<>();
-            map.put("url", url);
+            map.put("src", src);
             return ResJson.successJson("upload success", map);
         }catch (Exception e){
             logger.error("/api/pub/qiniu/upload -> ",e.getMessage());
