@@ -308,11 +308,10 @@ public class PublicController {
         }
     }
 
-    // 后台七牛云图片上传
-    @RequestMapping(value = "/api/pub/qiniu/upload",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-    public ResJson qiniuUploadBase64(@RequestParam("img") String base64) {
+    @RequestMapping(value = "/api/pub/qiniu/upload", method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public ResJson qiniuUpload(MultipartFile file) {
         try {
-            String url = QiniuUploadUtil.uploadPic(base64);
+            String url = QiniuUploadUtil.upload(file);
             if (StringUtils.isEmpty(url)) {
                 return ResJson.failJson(4000,"上传失败，路径为空",null);
             }
@@ -321,6 +320,24 @@ public class PublicController {
             return ResJson.successJson("upload success", map);
         }catch (Exception e){
             logger.error("/api/pub/qiniu/upload -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    // 后台七牛云图片上传
+    @RequestMapping(value = "/api/pub/qiniu/uploadBase64",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public ResJson qiniuUploadBase64(@RequestParam("img") String base64) {
+        try {
+            String url = QiniuUploadUtil.uploadBase64(base64);
+            if (StringUtils.isEmpty(url)) {
+                return ResJson.failJson(4000,"上传失败，路径为空",null);
+            }
+            HashMap<String, String> map = new HashMap<>();
+            map.put("url", url);
+            return ResJson.successJson("upload success", map);
+        }catch (Exception e){
+            logger.error("/api/pub/qiniu/uploadBase64 -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
