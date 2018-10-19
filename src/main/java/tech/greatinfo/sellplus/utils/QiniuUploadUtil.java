@@ -54,7 +54,7 @@ public class QiniuUploadUtil {
         String upToken = auth.uploadToken(bucket);
         try {
             //默认不指定key的情况下，以文件内容的hash值作为文件名
-            String key = UUID.randomUUID().toString() + ".jpeg";
+            String key = UUID.randomUUID().toString() + ".jpg";
             Response response = uploadManager.put(base64.getBytes(), key, upToken);
 
             //解析上传成功的结果
