@@ -44,34 +44,10 @@ public class QiniuUploadUtil {
         QiniuUploadUtil.qinuiDomain = qinuiDomain;
     }
 
-    public static String uploadBase64(String base64) {
-        //构造一个带指定Zone对象的配置类
-        Configuration cfg = new Configuration(Zone.zone2());
-        //...其他参数参考类注释
-        UploadManager uploadManager = new UploadManager(cfg);
-        //...生成上传凭证，然后准备上传
+    // 上传凭证
+    public static String getUpToken() {
         Auth auth = Auth.create(accessKey, secretKey);
-        String upToken = auth.uploadToken(bucket);
-        try {
-            //默认不指定key的情况下，以文件内容的hash值作为文件名
-            String key = UUID.randomUUID().toString();
-            Response response = uploadManager.put(base64.getBytes(), key, upToken);
-
-            //解析上传成功的结果
-            DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-            //System.out.println(putRet.key);
-            //System.out.println(putRet.hash);
-            return qinuiDomain + putRet.key;
-        } catch (QiniuException ex) {
-            Response r = ex.response;
-            System.err.println(r.toString());
-            try {
-                System.err.println(r.bodyString());
-            } catch (QiniuException ex2) {
-                //ignore
-            }
-        }
-        return null;
+        return auth.uploadToken(bucket);
     }
 
     public static String upload(MultipartFile file) {
@@ -79,9 +55,6 @@ public class QiniuUploadUtil {
         Configuration cfg = new Configuration(Zone.zone2());
         //...其他参数参考类注释
         UploadManager uploadManager = new UploadManager(cfg);
-        //...生成上传凭证，然后准备上传
-        Auth auth = Auth.create(accessKey, secretKey);
-        String upToken = auth.uploadToken(bucket);
         try {
             String originalFilename = file.getOriginalFilename();
             String key = null;
@@ -89,7 +62,7 @@ public class QiniuUploadUtil {
                 key = UUID.randomUUID() + originalFilename.substring(originalFilename.lastIndexOf("."));
             }
             //默认不指定key的情况下，以文件内容的hash值作为文件名
-            Response response = uploadManager.put(file.getBytes(), key, upToken);
+            Response response = uploadManager.put(file.getBytes(), key, getUpToken());
 
             //解析上传成功的结果
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
@@ -109,6 +82,5 @@ public class QiniuUploadUtil {
         }
         return null;
     }
-
 
 }

@@ -5,29 +5,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
+import org.springframework.web.bind.annotation.*;
 import tech.greatinfo.sellplus.config.converter.StringToDateConverter;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
-import tech.greatinfo.sellplus.service.CouponsHistoryService;
-import tech.greatinfo.sellplus.service.CouponsObjService;
-import tech.greatinfo.sellplus.service.CouponsService;
-import tech.greatinfo.sellplus.service.SellerSerivce;
-import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.service.*;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
+
+import javax.transaction.Transactional;
 
 /**
  * Created by Ericwyn on 18-9-6.
@@ -87,19 +74,19 @@ public class CouponsController {
             Merchant merchant;
             if ((merchant = (Merchant) tokenService.getUserByToken(token)) != null){
                 modelService.save(coupons);
-                if (coupons.getFinite()){
-                    int num = coupons.getNum();
-                    List<CouponsObj> list = new ArrayList<>(num);
-                    for (int i=0;i<num;i++){
-                        // 新建 num 个尚未发出去的卷
-                        CouponsObj obj = new CouponsObj();
-                        obj.setCode(objService.getRandomCouponCode());
-                        obj.setCoupon(coupons);
-                        obj.setExpired(false);
-                        objService.save(obj);
-                    }
-                    objService.save(list);
-                }
+//                if (coupons.getFinite()){
+//                    int num = coupons.getNum();
+//                    List<CouponsObj> list = new ArrayList<>(num);
+//                    for (int i=0;i<num;i++){
+//                        // 新建 num 个尚未发出去的卷
+//                        CouponsObj obj = new CouponsObj();
+//                        obj.setCode(objService.getRandomCouponCode());
+//                        obj.setCoupon(coupons);
+//                        obj.setExpired(false);
+//                        objService.save(obj);
+//                    }
+//                    objService.save(list);
+//                }
                 return ResJson.successJson("add coupons success", coupons);
             }else {
                 return ResJson.errorAccessToken();
@@ -198,6 +185,36 @@ public class CouponsController {
             }
         }catch (Exception e){
             logger.error("/api/mer/delCouponModel -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 更新券模板
+     * @param token
+     * @param coupon
+     * @return
+     */
+    @RequestMapping(value = "/api/mer/updateCouponModel",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public ResJson updateCouponObj(@RequestParam(name = "token") String token,
+                                  @ModelAttribute Coupon coupon){
+        try {
+            if (tokenService.getUserByToken(token) != null){
+                if (coupon.getId() == null){
+                    return ResJson.failJson(7004,"couponsObj id error",null);
+                }
+                Coupon oldCoupon;
+                if ((oldCoupon = modelService.findOne(coupon.getId())) == null ){
+                    return ResJson.failJson(7003,"无法更新, 权限错误",null);
+                }
+                modelService.updateCoupon(oldCoupon,coupon);
+                return ResJson.successJson("update Coupon success");
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (Exception e){
+            logger.error("/api/mer/updateCouponModel -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

@@ -4,14 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import tech.greatinfo.sellplus.domain.Activity;
+import tech.greatinfo.sellplus.domain.Product;
+import tech.greatinfo.sellplus.repository.ProductRepository;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
-
-import tech.greatinfo.sellplus.domain.Activity;
-import tech.greatinfo.sellplus.domain.Product;
-import tech.greatinfo.sellplus.repository.ProductRepository;
 
 
 /**

@@ -5,13 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.repository.CouponsHistoryRepository;
 import tech.greatinfo.sellplus.repository.CouponsObjRepository;
 import tech.greatinfo.sellplus.repository.CouponsRepository;
+
+import javax.transaction.Transactional;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * Created by Ericwyn on 18-9-6.
@@ -46,5 +47,24 @@ public class CouponsService {
         historyRepository.deleteAllByCouponObj_Coupon(coupon);
         objRepository.deleteAllByCoupon(coupon);
         couponsRepository.delete(coupon);
+    }
+
+    public void updateCoupon(Coupon oldEntity, Coupon newEntity){
+        Field[] fields = newEntity.getClass().getDeclaredFields();
+        for (Field field:fields){
+            try {
+                boolean access = field.isAccessible();
+                if(!access) field.setAccessible(true);
+                Object o = field.get(newEntity);
+                //静态变量不操作,这样的话才不会报错
+                if (o!=null && !Modifier.isStatic(field.getModifiers())){
+                    field.set(oldEntity,o);
+                }
+                if(!access) field.setAccessible(false);
+            }catch (IllegalAccessException e){
+                e.printStackTrace();
+            }
+        }
+        couponsRepository.saveAndFlush(oldEntity);
     }
 }

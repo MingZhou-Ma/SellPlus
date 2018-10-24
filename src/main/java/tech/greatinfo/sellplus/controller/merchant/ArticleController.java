@@ -4,13 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import tech.greatinfo.sellplus.config.converter.StringToDateConverter;
 import tech.greatinfo.sellplus.domain.article.Article;
 import tech.greatinfo.sellplus.service.ArticleService;
@@ -99,6 +93,31 @@ public class ArticleController {
             }
         }catch (Exception e){
             logger.error("/api/mer/addArticle -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    // 修改文章
+    @RequestMapping(value = "/api/mer/updateArticle",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public ResJson updateActivity(@RequestParam(name = "token") String token,
+                                  @ModelAttribute Article article ){
+        try {
+            if (tokenService.getUserByToken(token) != null){
+                if (article.getId() == null){
+                    return ResJson.failJson(7004,"article id error",null);
+                }
+                Article oldArticle;
+                if ((oldArticle = articleService.findOne(article.getId())) == null ){
+                    return ResJson.failJson(7003,"无法更新, 权限错误",null);
+                }
+                articleService.updateArticle(oldArticle,article);
+                return ResJson.successJson("update Article success");
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (Exception e){
+            logger.error("/api/mer/updateActivity -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

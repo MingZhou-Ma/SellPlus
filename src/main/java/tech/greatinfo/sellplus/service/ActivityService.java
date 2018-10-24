@@ -4,19 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import tech.greatinfo.sellplus.domain.Activity;
+import tech.greatinfo.sellplus.domain.group.Group;
+import tech.greatinfo.sellplus.domain.help.Help;
+import tech.greatinfo.sellplus.repository.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
-
-import tech.greatinfo.sellplus.domain.Activity;
-import tech.greatinfo.sellplus.domain.group.Group;
-import tech.greatinfo.sellplus.domain.help.Help;
-import tech.greatinfo.sellplus.repository.ActivityRepository;
-import tech.greatinfo.sellplus.repository.GroupRepository;
-import tech.greatinfo.sellplus.repository.HelpHistoryRepository;
-import tech.greatinfo.sellplus.repository.HelpRepository;
-import tech.greatinfo.sellplus.repository.JoinGroupRepository;
 
 /**
  * Created by Ericwyn on 18-7-27.

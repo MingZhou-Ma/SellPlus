@@ -75,6 +75,14 @@ public class CustomService {
         return repository.getAllBySellerId(sellerId);
     }
 
+    public long count() {
+        return repository.count();
+    }
+
+    public List<Customer> findAllCustomer() {
+        return repository.findAll();
+    }
+
 //    public Page<Customer> getAllBySellerAndOriginOrderByCreateTimeDesc(Seller seller, String origin, Pageable pageable) {
 //        return repository.getAllBySellerAndOriginOrderByCreateTimeDesc(seller, origin, pageable);
 //    }

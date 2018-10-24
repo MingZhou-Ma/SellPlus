@@ -117,7 +117,6 @@ public class CouponsObjService {
         }
     }
 
-
     /**
      * 生成卷 code ，由 大小写，和 0 ~ 9 组成的 6 位数字
      * @return

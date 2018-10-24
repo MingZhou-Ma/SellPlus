@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.repository.SellerRepository;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 /**
  * Created by Ericwyn on 18-8-14.
  */
@@ -22,6 +25,10 @@ public class SellerSerivce {
 
     public Seller findByAccountAndSellerKey(String account, String key) {
         return sellerRepository.findByAccountAndSellerKey(account, key);
+    }
+
+    public Seller findOne(Long id){
+        return sellerRepository.findOne(id);
     }
 
     public Seller save(Seller seller) {
@@ -51,5 +58,24 @@ public class SellerSerivce {
             defaultSeller = sellerRepository.findOne(1L);
         }
         return defaultSeller;
+    }
+
+    public void updateSeller(Seller oldEntity, Seller newEntity){
+        Field[] fields = newEntity.getClass().getDeclaredFields();
+        for (Field field:fields){
+            try {
+                boolean access = field.isAccessible();
+                if(!access) field.setAccessible(true);
+                Object o = field.get(newEntity);
+                //静态变量不操作,这样的话才不会报错
+                if (o!=null && !Modifier.isStatic(field.getModifiers())){
+                    field.set(oldEntity,o);
+                }
+                if(!access) field.setAccessible(false);
+            }catch (IllegalAccessException e){
+                e.printStackTrace();
+            }
+        }
+        sellerRepository.saveAndFlush(oldEntity);
     }
 }

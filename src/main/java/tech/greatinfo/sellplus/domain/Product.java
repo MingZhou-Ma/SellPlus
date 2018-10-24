@@ -1,12 +1,6 @@
 package tech.greatinfo.sellplus.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  *
@@ -38,6 +32,9 @@ public class Product {
 
     @Transient
     private String[] picList;
+
+    @Column(columnDefinition = "VARCHAR(255) COMMENT '标签'")
+    private String label;
 
     public Product() {
     }
@@ -96,5 +93,13 @@ public class Product {
 
     public void setPicList(String[] picList) {
         this.picList = picList;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

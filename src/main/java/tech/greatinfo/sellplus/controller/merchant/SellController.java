@@ -52,6 +52,31 @@ public class SellController {
         }
     }
 
+    // 修改销售
+    @RequestMapping(value = "/api/mer/updateSeller",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
+    public ResJson updateActivity(@RequestParam(name = "token") String token,
+                                  @ModelAttribute Seller seller ){
+        try {
+            if (tokenService.getUserByToken(token) != null){
+                if (seller.getId() == null){
+                    return ResJson.failJson(7004,"seller id error",null);
+                }
+                Seller oldSeller;
+                if ((oldSeller = sellerSerivce.findOne(seller.getId())) == null ){
+                    return ResJson.failJson(7003,"无法更新, 权限错误",null);
+                }
+                sellerSerivce.updateSeller(oldSeller,seller);
+                return ResJson.successJson("update Seller success");
+            }else {
+                return ResJson.errorAccessToken();
+            }
+        }catch (Exception e){
+            logger.error("/api/mer/updateActivity -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
 //    @RequestMapping(value = "/api/mer/delSeller",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
 //    public ResJson findProduct(@RequestParam(name = "token") String token,
 //                               @RequestParam(name = "sellerId") Long sellerId){

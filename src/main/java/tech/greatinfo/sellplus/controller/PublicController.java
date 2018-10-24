@@ -311,14 +311,14 @@ public class PublicController {
     @RequestMapping(value = "/api/pub/qiniu/upload", method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public ResJson qiniuUpload(MultipartFile file) {
         try {
-            String src = QiniuUploadUtil.upload(file);
-            if (StringUtils.isEmpty(src)) {
+            String url = QiniuUploadUtil.upload(file);
+            if (StringUtils.isEmpty(url)) {
                 return ResJson.failJson(4000,"上传失败，路径为空",null);
             }
             HashMap<String, String> map = new HashMap<>();
-            map.put("src", src);
-            return ResJson.failJson(0, "upload success", map);
-            //return ResJson.successJson("upload success", map);
+            map.put("url", url);
+            //return ResJson.failJson(0, "upload success", map);
+            return ResJson.successJson("upload success", map);
         }catch (Exception e){
             logger.error("/api/pub/qiniu/upload -> ",e.getMessage());
             e.printStackTrace();
@@ -326,22 +326,13 @@ public class PublicController {
         }
     }
 
-    // 后台七牛云图片上传
-    @RequestMapping(value = "/api/pub/qiniu/uploadBase64",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-    public ResJson qiniuUploadBase64(@RequestParam("img") String base64) {
-        try {
-            String url = QiniuUploadUtil.uploadBase64(base64);
-            if (StringUtils.isEmpty(url)) {
-                return ResJson.failJson(4000,"上传失败，路径为空",null);
-            }
-            HashMap<String, String> map = new HashMap<>();
-            map.put("url", url);
-            return ResJson.successJson("upload success", map);
-        }catch (Exception e){
-            logger.error("/api/pub/qiniu/uploadBase64 -> ",e.getMessage());
-            e.printStackTrace();
-            return ResJson.serverErrorJson(e.getMessage());
-        }
+    /**
+     * 获取七牛云上传凭证
+     * @return
+     */
+    @RequestMapping(value = "/api/pub/qiniu/getUpToken")
+    public ResJson getUpToken() {
+        return ResJson.successJson("success", QiniuUploadUtil.getUpToken());
     }
 
 }
