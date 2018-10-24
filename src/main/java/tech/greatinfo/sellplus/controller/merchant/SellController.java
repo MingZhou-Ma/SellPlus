@@ -4,10 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
+import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
+
+import java.util.List;
 
 /**
  *
@@ -28,6 +33,9 @@ public class SellController {
 
     @Autowired
     SellerSerivce sellerSerivce;
+
+    @Autowired
+    CustomService customService;
 
 
     /**
@@ -66,6 +74,15 @@ public class SellController {
                     return ResJson.failJson(7003,"无法更新, 权限错误",null);
                 }
                 sellerSerivce.updateSeller(oldSeller,seller);
+
+                List<Customer> customerList = customService.findBySeller(seller.getId());
+                for (Customer customer : customerList) {
+                    customer.setSeller(seller);
+                    // 更新缓存
+                    AccessToken accessToken = tokenService.getTokenByCustomOpenId(customer.getOpenid());
+                    accessToken.setUser(customer);
+                    tokenService.saveToken(accessToken);
+                }
                 return ResJson.successJson("update Seller success");
             }else {
                 return ResJson.errorAccessToken();
