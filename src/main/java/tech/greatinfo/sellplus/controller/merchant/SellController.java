@@ -48,6 +48,9 @@ public class SellController {
     public ResJson addSeller(@RequestParam(name = "token") String token, @ModelAttribute Seller seller) {
         try {
             if (tokenService.getUserByToken(token) != null){
+                if (null != sellerSerivce.findByAccountAndSellerKey(seller.getAccount(), seller.getSellerKey())) {
+                    return ResJson.failJson(4000, "销售已存在", null);
+                }
                 sellerSerivce.save(seller);
                 return ResJson.successJson("add seller success", seller);
             }else {
