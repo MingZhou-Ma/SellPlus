@@ -7,10 +7,11 @@ import tech.greatinfo.sellplus.config.StaticConfig;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.QRcode;
 import tech.greatinfo.sellplus.repository.QRcodeRepository;
+import tech.greatinfo.sellplus.utils.QiniuUploadUtil;
 import tech.greatinfo.sellplus.utils.WeChatUtils;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by Ericwyn on 18-7-31.
@@ -71,32 +72,34 @@ public class QRcodeService {
 
         if (response.isSuccessful() && response.code() == 200){
             InputStream inputStream = response.body().byteStream();
-            File saveDirPath = new File(QRcodePath);
-            if (!saveDirPath.isDirectory()){
-                saveDirPath.mkdirs();
-            }
-            File saveFile = new File(saveDirPath,"" + System.currentTimeMillis() + ".jpg");
-            FileOutputStream fileOutputStream = new FileOutputStream(saveFile);
-            int readLength = -1;
-            byte[] bytesForRead = new byte[1024];
-
-            ByteArrayOutputStream result = new ByteArrayOutputStream();
-            while ((readLength = inputStream.read(bytesForRead)) != -1){
-                fileOutputStream.write(bytesForRead,0,readLength);
-                result.write(bytesForRead,0,readLength);
-            }
-            fileOutputStream.flush();
-            fileOutputStream.close();
-            String resultStr = result.toString(StandardCharsets.UTF_8.name());
-            // 如果发现返回的是错误提示的话
-            if (resultStr.contains("errcode")){
-                saveFile.delete();
-                return resultStr;
-            }
+//            File saveDirPath = new File(QRcodePath);
+//            if (!saveDirPath.isDirectory()){
+//                saveDirPath.mkdirs();
+//            }
+//            File saveFile = new File(saveDirPath,"" + System.currentTimeMillis() + ".jpg");
+//            FileOutputStream fileOutputStream = new FileOutputStream(saveFile);
+//            int readLength = -1;
+//            byte[] bytesForRead = new byte[1024];
+//
+//            ByteArrayOutputStream result = new ByteArrayOutputStream();
+//            while ((readLength = inputStream.read(bytesForRead)) != -1){
+//                fileOutputStream.write(bytesForRead,0,readLength);
+//                result.write(bytesForRead,0,readLength);
+//            }
+//            fileOutputStream.flush();
+//            fileOutputStream.close();
+//            String resultStr = result.toString(StandardCharsets.UTF_8.name());
+//            // 如果发现返回的是错误提示的话
+//            if (resultStr.contains("errcode")){
+//                saveFile.delete();
+//                return resultStr;
+//            }
+            String path = QiniuUploadUtil.upload(inputStream);
             QRcode qRcode = new QRcode();
             qRcode.setScene(scene);
             qRcode.setPage(page);
-            qRcode.setPath(QRcodePath+"/"+saveFile.getName());
+            //qRcode.setPath(QRcodePath+"/"+saveFile.getName());
+            qRcode.setPage(path);
             qRcode.setType(type);
             qRcode.setSellerChannel(sellerChannel);
             qRcode.setCustomer(customer);
