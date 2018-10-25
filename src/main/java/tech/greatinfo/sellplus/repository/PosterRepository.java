@@ -6,9 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import tech.greatinfo.sellplus.domain.Poster;
 
+import java.util.List;
+
 public interface PosterRepository extends JpaRepository<Poster, Long>,
         JpaSpecificationExecutor<Poster> {
 
     Page<Poster> findAllByType(Integer type, Pageable pageable);
+
+    List<Poster> findAllByType(Integer type);
 
 }

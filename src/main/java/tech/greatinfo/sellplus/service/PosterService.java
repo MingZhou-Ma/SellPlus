@@ -17,4 +17,6 @@ public interface PosterService {
     ResJson updatePoster(String token, Poster poster);
 
     ResJson deletePoster(String token, Long posterId);
+
+    ResJson findPosterList(String token, Integer type);
 }

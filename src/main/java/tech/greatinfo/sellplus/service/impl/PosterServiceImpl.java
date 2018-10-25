@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.Poster;
 import tech.greatinfo.sellplus.repository.PosterRepository;
@@ -14,6 +15,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 /**
  * 描述：
@@ -138,6 +140,27 @@ public class PosterServiceImpl implements PosterService {
             }
             posterRepository.delete(posterId);
             return ResJson.successJson("delete poster success", null);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 小程序端根据类型查询海报列表
+     * @param token
+     * @param type
+     * @return
+     */
+    @Override
+    public ResJson findPosterList(String token, Integer type) {
+        try {
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+            List<Poster> list = posterRepository.findAllByType(type);
+            return ResJson.successJson("find poster list success", list);
         } catch (Exception e){
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
