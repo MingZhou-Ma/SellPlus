@@ -66,7 +66,7 @@ public class SellController {
     // 修改销售
     @RequestMapping(value = "/api/mer/updateSeller",method = RequestMethod.POST,produces = "application/json; charset=utf-8")
     public ResJson updateActivity(@RequestParam(name = "token") String token,
-                                  @ModelAttribute Seller seller ){
+                                   Seller seller ){
         try {
             if (tokenService.getUserByToken(token) != null){
                 if (seller.getId() == null){
