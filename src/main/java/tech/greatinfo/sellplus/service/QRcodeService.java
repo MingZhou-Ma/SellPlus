@@ -99,7 +99,7 @@ public class QRcodeService {
             qRcode.setScene(scene);
             qRcode.setPage(page);
             //qRcode.setPath(QRcodePath+"/"+saveFile.getName());
-            qRcode.setPage(path);
+            qRcode.setPath(path);
             qRcode.setType(type);
             qRcode.setSellerChannel(sellerChannel);
             qRcode.setCustomer(customer);
