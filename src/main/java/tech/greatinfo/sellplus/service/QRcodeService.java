@@ -95,6 +95,9 @@ public class QRcodeService {
 //                return resultStr;
 //            }
             String path = QiniuUploadUtil.upload(inputStream);
+            if (null == path) {
+                return null;
+            }
             QRcode qRcode = new QRcode();
             qRcode.setScene(scene);
             qRcode.setPage(page);
