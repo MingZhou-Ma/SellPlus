@@ -1,5 +1,6 @@
 package tech.greatinfo.sellplus.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import tech.greatinfo.sellplus.domain.Poster;
 import tech.greatinfo.sellplus.repository.PosterRepository;
 import tech.greatinfo.sellplus.service.PosterService;
 import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.lang.reflect.Field;
@@ -33,6 +35,7 @@ public class PosterServiceImpl implements PosterService {
 
     /**
      * 添加海报
+     *
      * @param token
      * @param poster
      * @return
@@ -61,7 +64,7 @@ public class PosterServiceImpl implements PosterService {
             }
             posterRepository.save(poster);
             return ResJson.successJson("add poster success", null);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -69,6 +72,7 @@ public class PosterServiceImpl implements PosterService {
 
     /**
      * 根据类型和是否为海报查询海报列表
+     *
      * @param token
      * @param type
      * @param isPoster
@@ -86,25 +90,25 @@ public class PosterServiceImpl implements PosterService {
             //Page<Poster> page = posterRepository.findAllByType(type, new PageRequest(start, num));
             Page<Poster> page = posterRepository.findAllByTypeAndIsPoster(type, isPoster, new PageRequest(start, num));
             return ResJson.successJson("query poster list success", page);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
 
-    public void updatePoster(Poster oldEntity, Poster newEntity){
+    public void updatePoster(Poster oldEntity, Poster newEntity) {
         Field[] fields = newEntity.getClass().getDeclaredFields();
-        for (Field field:fields){
+        for (Field field : fields) {
             try {
                 boolean access = field.isAccessible();
-                if(!access) field.setAccessible(true);
+                if (!access) field.setAccessible(true);
                 Object o = field.get(newEntity);
                 //静态变量不操作,这样的话才不会报错
-                if (o!=null && !Modifier.isStatic(field.getModifiers())){
-                    field.set(oldEntity,o);
+                if (o != null && !Modifier.isStatic(field.getModifiers())) {
+                    field.set(oldEntity, o);
                 }
-                if(!access) field.setAccessible(false);
-            }catch (IllegalAccessException e){
+                if (!access) field.setAccessible(false);
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -114,20 +118,20 @@ public class PosterServiceImpl implements PosterService {
     @Override
     public ResJson updatePoster(String token, Poster poster) {
         try {
-            if (tokenService.getUserByToken(token) != null){
-                if (poster.getId() == null){
-                    return ResJson.failJson(7004,"poster id error",null);
+            if (tokenService.getUserByToken(token) != null) {
+                if (poster.getId() == null) {
+                    return ResJson.failJson(7004, "poster id error", null);
                 }
                 Poster oldPoster;
-                if ((oldPoster = posterRepository.findOne(poster.getId())) == null ){
-                    return ResJson.failJson(7003,"无法更新, 权限错误",null);
+                if ((oldPoster = posterRepository.findOne(poster.getId())) == null) {
+                    return ResJson.failJson(7003, "无法更新, 权限错误", null);
                 }
-                updatePoster(oldPoster,poster);
+                updatePoster(oldPoster, poster);
                 return ResJson.successJson("update Poster success");
-            }else {
+            } else {
                 return ResJson.errorAccessToken();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
@@ -148,29 +152,26 @@ public class PosterServiceImpl implements PosterService {
             }
             posterRepository.delete(posterId);
             return ResJson.successJson("delete poster success", null);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
 
-    /**
-     * 小程序端根据类型查询海报列表
-     * @param token
-     * @param type
-     * @param isPoster
-     * @return
-     */
+
     @Override
-    public ResJson findPosterList(String token, Integer type, Integer isPoster) {
+    public ResJson findPosterList(JSONObject jsonObject) {
         try {
+            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            Integer type = (Integer) ParamUtils.getFromJson(jsonObject, "type", Integer.class);
+            Integer isPoster = (Integer) ParamUtils.getFromJson(jsonObject, "isPoster", Integer.class);
             Customer customer = (Customer) tokenService.getUserByToken(token);
             if (null == customer) {
                 return ResJson.errorAccessToken();
             }
             List<Poster> list = posterRepository.findAllByTypeAndIsPoster(type, isPoster);
             return ResJson.successJson("find poster list success", list);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

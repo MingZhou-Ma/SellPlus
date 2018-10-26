@@ -1,5 +1,6 @@
 package tech.greatinfo.sellplus.service;
 
+import com.alibaba.fastjson.JSONObject;
 import tech.greatinfo.sellplus.domain.Poster;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
@@ -18,5 +19,5 @@ public interface PosterService {
 
     ResJson deletePoster(String token, Long posterId);
 
-    ResJson findPosterList(String token, Integer type, Integer isPoster);
+    ResJson findPosterList(JSONObject jsonObject);
 }
