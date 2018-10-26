@@ -12,11 +12,11 @@ public interface PosterService {
 
     ResJson addPoster(String token, Poster poster);
 
-    ResJson queryPosterList(String token, Integer type, Integer start, Integer num);
+    ResJson queryPosterList(String token, Integer type, Integer isPoster, Integer start, Integer num);
 
     ResJson updatePoster(String token, Poster poster);
 
     ResJson deletePoster(String token, Long posterId);
 
-    ResJson findPosterList(String token, Integer type);
+    ResJson findPosterList(String token, Integer type, Integer isPoster);
 }

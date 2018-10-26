@@ -13,6 +13,8 @@ public interface PosterRepository extends JpaRepository<Poster, Long>,
 
     Page<Poster> findAllByType(Integer type, Pageable pageable);
 
-    List<Poster> findAllByType(Integer type);
+    Page<Poster> findAllByTypeAndIsPoster(Integer type, Integer isPoster, Pageable pageable);
+
+    List<Poster> findAllByTypeAndIsPoster(Integer type, Integer isPoster);
 
 }

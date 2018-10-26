@@ -44,11 +44,17 @@ public class PosterServiceImpl implements PosterService {
             if (null == merchant) {
                 return ResJson.errorAccessToken();
             }
-            if (StringUtils.isEmpty(poster.getCopyWriting())) {
-                return ResJson.failJson(4000, "请输入文案", null);
+            if (null == poster.getIsPoster()) {
+                return ResJson.failJson(4000, "请选择海报或文案", null);
             }
-            if (StringUtils.isEmpty(poster.getPic())) {
-                return ResJson.failJson(4000, "请选择图片", null);
+            if (poster.getIsPoster() == 0) {
+                if (StringUtils.isEmpty(poster.getCopyWriting())) {
+                    return ResJson.failJson(4000, "请输入文案", null);
+                }
+            } else {
+                if (StringUtils.isEmpty(poster.getPic())) {
+                    return ResJson.failJson(4000, "请选择图片", null);
+                }
             }
             if (null == poster.getType()) {
                 return ResJson.failJson(4000, "请输入类型", null);
@@ -62,21 +68,23 @@ public class PosterServiceImpl implements PosterService {
     }
 
     /**
-     * 根据类型查询海报列表
+     * 根据类型和是否为海报查询海报列表
      * @param token
      * @param type
+     * @param isPoster
      * @param start
      * @param num
      * @return
      */
     @Override
-    public ResJson queryPosterList(String token, Integer type, Integer start, Integer num) {
+    public ResJson queryPosterList(String token, Integer type, Integer isPoster, Integer start, Integer num) {
         try {
             Merchant merchant = (Merchant) tokenService.getUserByToken(token);
             if (null == merchant) {
                 return ResJson.errorAccessToken();
             }
-            Page<Poster> page = posterRepository.findAllByType(type, new PageRequest(start, num));
+            //Page<Poster> page = posterRepository.findAllByType(type, new PageRequest(start, num));
+            Page<Poster> page = posterRepository.findAllByTypeAndIsPoster(type, isPoster, new PageRequest(start, num));
             return ResJson.successJson("query poster list success", page);
         } catch (Exception e){
             e.printStackTrace();
@@ -108,7 +116,7 @@ public class PosterServiceImpl implements PosterService {
         try {
             if (tokenService.getUserByToken(token) != null){
                 if (poster.getId() == null){
-                    return ResJson.failJson(7004,"activity id error",null);
+                    return ResJson.failJson(7004,"poster id error",null);
                 }
                 Poster oldPoster;
                 if ((oldPoster = posterRepository.findOne(poster.getId())) == null ){
@@ -150,16 +158,17 @@ public class PosterServiceImpl implements PosterService {
      * 小程序端根据类型查询海报列表
      * @param token
      * @param type
+     * @param isPoster
      * @return
      */
     @Override
-    public ResJson findPosterList(String token, Integer type) {
+    public ResJson findPosterList(String token, Integer type, Integer isPoster) {
         try {
             Customer customer = (Customer) tokenService.getUserByToken(token);
             if (null == customer) {
                 return ResJson.errorAccessToken();
             }
-            List<Poster> list = posterRepository.findAllByType(type);
+            List<Poster> list = posterRepository.findAllByTypeAndIsPoster(type, isPoster);
             return ResJson.successJson("find poster list success", list);
         } catch (Exception e){
             e.printStackTrace();

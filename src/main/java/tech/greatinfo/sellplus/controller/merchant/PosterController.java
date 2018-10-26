@@ -25,12 +25,13 @@ public class PosterController {
         return posterService.addPoster(token, poster);
     }
 
-    @RequestMapping(value = "/api/mei/poster/list", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/api/mer/poster/list", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson querySiteList(@RequestParam(name = "token") String token,
                                  @RequestParam(name = "type") Integer type,
+                                 @RequestParam(name = "isPoster") Integer isPoster,
                                  @RequestParam(name = "start", defaultValue = "0") Integer start,
                                  @RequestParam(name = "num", defaultValue = "10") Integer num) {
-        return posterService.queryPosterList(token, type, start, num);
+        return posterService.queryPosterList(token, type, isPoster, start, num);
     }
 
     // 修改海报

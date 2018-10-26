@@ -22,6 +22,9 @@ public class Poster {
     @Column(columnDefinition = "INT COMMENT '海报类型'")
     private Integer type;
 
+    @Column(columnDefinition = "INT COMMENT '是否是海报, 1 为是'")
+    private Integer isPoster;
+
     public Poster() {
     }
 
@@ -55,5 +58,13 @@ public class Poster {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getIsPoster() {
+        return isPoster;
+    }
+
+    public void setIsPoster(Integer isPoster) {
+        this.isPoster = isPoster;
     }
 }

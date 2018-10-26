@@ -19,8 +19,9 @@ public class CusPosterController {
 
     @RequestMapping(value = "/api/cus/poster/list", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson querySiteList(@RequestParam(name = "token") String token,
-                                 @RequestParam(name = "type") Integer type) {
-        return posterService.findPosterList(token, type);
+                                 @RequestParam(name = "type") Integer type,
+                                 @RequestParam(name = "isPoster") Integer isPoster) {
+        return posterService.findPosterList(token, type, isPoster);
     }
 
 }
