@@ -1,18 +1,14 @@
 package tech.greatinfo.sellplus.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.Site;
 import tech.greatinfo.sellplus.repository.SiteRepository;
 import tech.greatinfo.sellplus.service.SiteService;
 import tech.greatinfo.sellplus.service.TokenService;
-import tech.greatinfo.sellplus.utils.ParamUtils;
-import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.lang.reflect.Field;
@@ -141,17 +137,10 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
-    public ResJson findSiteList(JSONObject jsonObject) {
+    public ResJson findSiteList() {
         try {
-            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
-            Customer customer = (Customer) tokenService.getUserByToken(token);
-            if (null == customer) {
-                return ResJson.errorAccessToken();
-            }
             List<Site> list = siteRepository.findAll();
             return ResJson.successJson("find site list success", list);
-        } catch (JsonParseException jse) {
-            return ResJson.errorRequestParam(jse.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
