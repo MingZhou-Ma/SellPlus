@@ -13,6 +13,7 @@ import tech.greatinfo.sellplus.repository.PosterRepository;
 import tech.greatinfo.sellplus.service.PosterService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
+import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.lang.reflect.Field;
@@ -171,6 +172,8 @@ public class PosterServiceImpl implements PosterService {
             }
             List<Poster> list = posterRepository.findAllByTypeAndIsPoster(type, isPoster);
             return ResJson.successJson("find poster list success", list);
+        } catch (JsonParseException jse) {
+            return ResJson.errorRequestParam(jse.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());

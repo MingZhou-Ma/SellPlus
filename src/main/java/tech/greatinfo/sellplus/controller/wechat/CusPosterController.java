@@ -26,7 +26,7 @@ public class CusPosterController {
 //    }
 
     @RequestMapping(value = "/api/cus/poster/list", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-    public ResJson querySiteList(@RequestBody JSONObject jsonObject) {
+    public ResJson findPosterList(@RequestBody JSONObject jsonObject) {
         return posterService.findPosterList(jsonObject);
     }
 

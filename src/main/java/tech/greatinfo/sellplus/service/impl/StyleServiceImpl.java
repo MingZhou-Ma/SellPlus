@@ -7,9 +7,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
-import tech.greatinfo.sellplus.domain.Site;
-import tech.greatinfo.sellplus.repository.SiteRepository;
-import tech.greatinfo.sellplus.service.SiteService;
+import tech.greatinfo.sellplus.domain.Style;
+import tech.greatinfo.sellplus.repository.StyleRepository;
+import tech.greatinfo.sellplus.service.StyleService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
@@ -17,6 +17,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,29 +26,36 @@ import java.util.List;
  * @author Badguy
  */
 @Service
-public class SiteServiceImpl implements SiteService {
+public class StyleServiceImpl implements StyleService {
 
     @Autowired
-    SiteRepository siteRepository;
+    StyleRepository styleRepository;
 
     @Autowired
     TokenService tokenService;
 
     @Override
-    public ResJson addSite(String token, Site site) {
+    public ResJson addStyle(String token, Style style) {
         try {
             Merchant merchant = (Merchant) tokenService.getUserByToken(token);
             if (null == merchant) {
                 return ResJson.errorAccessToken();
             }
-            if (null == site.getSiteName()) {
-                return ResJson.failJson(4000, "请输入场地名", null);
+            if (null == style.getTitle()) {
+                return ResJson.failJson(4000, "请输入标题", null);
             }
-            if (null == site.getSitePic()) {
+            if (null == style.getPic()) {
                 return ResJson.failJson(4000, "请选择头图", null);
             }
-            siteRepository.save(site);
-            return ResJson.successJson("add site success", null);
+            if (null == style.getDescription()) {
+                return ResJson.failJson(4000, "请选择描述", null);
+            }
+            if (null == style.getType()) {
+                return ResJson.failJson(4000, "请选择类型", null);
+            }
+            style.setTime(new Date());
+            styleRepository.save(style);
+            return ResJson.successJson("add style success", null);
         } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -55,28 +63,28 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
-    public ResJson delSite(String token, Long siteId) {
+    public ResJson delStyle(String token, Long styleId) {
         try {
             Merchant merchant = (Merchant) tokenService.getUserByToken(token);
             if (null == merchant) {
                 return ResJson.errorAccessToken();
             }
-            if (null == siteId) {
-                return ResJson.failJson(4000, "请输入场地id", null);
+            if (null == styleId) {
+                return ResJson.failJson(4000, "请输入风采id", null);
             }
-            Site site = siteRepository.findOne(siteId);
-            if (null == site) {
-                return ResJson.failJson(4000, "场地不存在", null);
+            Style style = styleRepository.findOne(styleId);
+            if (null == style) {
+                return ResJson.failJson(4000, "风采不存在", null);
             }
-            siteRepository.delete(site);
-            return ResJson.successJson("delete site success", null);
+            styleRepository.delete(style);
+            return ResJson.successJson("delete style success", null);
         } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
 
-    public void updateSite(Site oldEntity, Site newEntity) {
+    public void updateStyle(Style oldEntity, Style newEntity) {
         Field[] fields = newEntity.getClass().getDeclaredFields();
         for (Field field : fields) {
             try {
@@ -92,22 +100,22 @@ public class SiteServiceImpl implements SiteService {
                 e.printStackTrace();
             }
         }
-        siteRepository.saveAndFlush(oldEntity);
+        styleRepository.saveAndFlush(oldEntity);
     }
 
     @Override
-    public ResJson updateSite(String token, Site site) {
+    public ResJson updateStyle(String token, Style style) {
         try {
             if (tokenService.getUserByToken(token) != null) {
-                if (site.getId() == null) {
-                    return ResJson.failJson(7004, "site id error", null);
+                if (style.getId() == null) {
+                    return ResJson.failJson(7004, "style id error", null);
                 }
-                Site oldSite;
-                if ((oldSite = siteRepository.findOne(site.getId())) == null) {
+                Style oldStyle;
+                if ((oldStyle = styleRepository.findOne(style.getId())) == null) {
                     return ResJson.failJson(7003, "无法更新, 权限错误", null);
                 }
-                updateSite(oldSite, site);
-                return ResJson.successJson("update Site success");
+                updateStyle(oldStyle, style);
+                return ResJson.successJson("update Style success");
             } else {
                 return ResJson.errorAccessToken();
             }
@@ -117,23 +125,15 @@ public class SiteServiceImpl implements SiteService {
         }
     }
 
-    /**
-     * 场地列表
-     *
-     * @param token
-     * @param start
-     * @param num
-     * @return
-     */
     @Override
-    public ResJson querySiteList(String token, Integer start, Integer num) {
+    public ResJson queryStyleList(String token, Integer start, Integer num) {
         try {
             Merchant merchant = (Merchant) tokenService.getUserByToken(token);
             if (null == merchant) {
                 return ResJson.errorAccessToken();
             }
-            Page<Site> page = siteRepository.findAll(new PageRequest(start, num));
-            return ResJson.successJson("query site list success", page);
+            Page<Style> page = styleRepository.findAll(new PageRequest(start, num));
+            return ResJson.successJson("query style list success", page);
         } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
@@ -141,15 +141,16 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
-    public ResJson findSiteList(JSONObject jsonObject) {
+    public ResJson findStyleList(JSONObject jsonObject) {
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            Integer type = (Integer) ParamUtils.getFromJson(jsonObject, "type", Integer.class);
             Customer customer = (Customer) tokenService.getUserByToken(token);
             if (null == customer) {
                 return ResJson.errorAccessToken();
             }
-            List<Site> list = siteRepository.findAll();
-            return ResJson.successJson("find site list success", list);
+            List<Style> list = styleRepository.findAllByType(type);
+            return ResJson.successJson("find style list success", list);
         } catch (JsonParseException jse) {
             return ResJson.errorRequestParam(jse.getMessage());
         } catch (Exception e) {
@@ -157,4 +158,5 @@ public class SiteServiceImpl implements SiteService {
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
+
 }
