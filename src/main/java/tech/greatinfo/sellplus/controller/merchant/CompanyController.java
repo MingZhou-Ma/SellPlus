@@ -151,9 +151,7 @@ public class CompanyController {
                 if (diaryCoupon != null){
                     Coupon coupon = couModelService.findOne(Long.valueOf(diaryCoupon));
                     if (null != coupon) {
-                        if (!coupon.getFinite()) {
-                            list.add(new Company("diaryCoupon",diaryCoupon));
-                        }
+                        list.add(new Company("diaryCoupon",diaryCoupon));
                     }
                 }
 

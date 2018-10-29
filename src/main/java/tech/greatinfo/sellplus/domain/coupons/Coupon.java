@@ -1,7 +1,6 @@
 package tech.greatinfo.sellplus.domain.coupons;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  *
@@ -21,50 +20,17 @@ public class Coupon {
     @PrimaryKeyJoinColumn
     private Long id;
 
-    // 卷的描述
+    // 卷的标题
     @Column
-    private String content;
-
-    @Column(columnDefinition = "BIT COMMENT '是否是高级别的有限数量优惠卷'")
-    private Boolean finite;
-
-    @Column(columnDefinition = "INT COMMENT '优惠卷数量'")
-    private Integer num;
-
-    @Column(name = "startDate", columnDefinition = "TIMESTAMP COMMENT '开始的有效时间'")
-    private Date startDate;
-
-    @Column(name = "endDate", columnDefinition = "TIMESTAMP COMMENT '过期时间'")
-    private Date endDate;
+    private String title;
 
     @Column(name = "amount", columnDefinition = "VARCHAR(255) COMMENT '金额'")
     private String amount;
 
+    @Column(columnDefinition = "TEXT COMMENT '券描述(长)'")
+    private String description;
+
     public Coupon() {
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Boolean getFinite() {
-        return finite;
-    }
-
-    public void setFinite(Boolean finite) {
-        this.finite = finite;
-    }
-
-    public Integer getNum() {
-        return num;
-    }
-
-    public void setNum(Integer num) {
-        this.num = num;
     }
 
     public Long getId() {
@@ -75,20 +41,12 @@ public class Coupon {
         this.id = id;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public String getTitle() {
+        return title;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getAmount() {
@@ -97,5 +55,13 @@ public class Coupon {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -69,7 +69,8 @@ public class CouponsController {
 //                              @RequestParam(name = "startDate") Date startDate,
 //                              @RequestParam(name = "startDate") Date startDate,
 
-                              @ModelAttribute Coupon coupons){
+                              //@ModelAttribute Coupon coupons
+                                Coupon coupons){
         try {
             Merchant merchant;
             if ((merchant = (Merchant) tokenService.getUserByToken(token)) != null){
