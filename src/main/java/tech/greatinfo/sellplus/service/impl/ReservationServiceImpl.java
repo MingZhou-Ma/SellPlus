@@ -39,10 +39,10 @@ public class ReservationServiceImpl implements ReservationService {
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
             String productId = (String) ParamUtils.getFromJson(jsonObject, "productId", String.class);
-            String num = (String) ParamUtils.getFromJson(jsonObject, "num", String.class);
-            String name = (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
+            //String num = (String) ParamUtils.getFromJson(jsonObject, "num", String.class);
+            //String name = (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
             String phone = (String) ParamUtils.getFromJson(jsonObject, "phone", String.class);
-            String remark = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "remark", "",String.class);
+            //String remark = (String) ParamUtils.getFromJsonWithDefault(jsonObject, "remark", "",String.class);
 
             Customer customer = (Customer) tokenService.getUserByToken(token);
             if (null == customer) {
@@ -58,17 +58,17 @@ public class ReservationServiceImpl implements ReservationService {
 
             // 保存预约信息
             Reservation reservation = new Reservation();
-            reservation.setNum(num);
-            reservation.setName(name);
+            //reservation.setNum(num);
+            //reservation.setName(name);
             reservation.setPhone(phone);
-            reservation.setRemark(remark);
+            //reservation.setRemark(remark);
             reservation.setCustomer(customer);
             reservation.setProduct(product);
             reservation.setReservationTime(new Date());
             reservationRepository.save(reservation);
 
             //发送短信
-            if (!SendSmsUtil.sendSms(customer.getSeller().getPhone(), phone, name, product.getName())) {
+            if (!SendSmsUtil.sendSms(customer.getSeller().getPhone(), phone, product.getName())) {
                 return ResJson.failJson(4000, "send sms fail", null);
             }
 
