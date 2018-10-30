@@ -126,6 +126,7 @@ public class CustomerController {
                         customer.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
                         customer.setbSell(false);
                         customer.setFrequenter(false);
+                        customer.setFreqBonus(0d);
                         customer.setbSync(false);
                         customer.setSeller(sellerSerivce.getDefaultSeller());
                         /*customer.setType(1);  // 用户类型：1代表潜在客户   2代表老客户
@@ -338,7 +339,7 @@ public class CustomerController {
                     return ResJson.failJson(1111, "error phone", null);
                 }
                 customer.setPhone(phone);
-                customer.setPhoneOrigin(phoneOrigin);
+                //customer.setPhoneOrigin(phoneOrigin);
                 customService.save(customer);
                 return ResJson.successJson("set CustomerInfo Success");
             } else {

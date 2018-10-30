@@ -37,9 +37,6 @@ public class Customer implements User, Serializable {
     @Column(columnDefinition = "VARCHAR(20) COMMENT '手机号码'")
     private String phone;
 
-    @Column(columnDefinition = "VARCHAR(20) COMMENT '电话来源'")
-    private String phoneOrigin;
-
     @Column(columnDefinition = "VARCHAR(20) COMMENT '昵称'")
     private String nickname;
 
@@ -109,14 +106,6 @@ public class Customer implements User, Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getPhoneOrigin() {
-        return phoneOrigin;
-    }
-
-    public void setPhoneOrigin(String phoneOrigin) {
-        this.phoneOrigin = phoneOrigin;
     }
 
     public Seller getSeller() {
@@ -199,7 +188,6 @@ public class Customer implements User, Serializable {
                 ", sessionKey='" + sessionKey + '\'' +
                 ", uid='" + uid + '\'' +
                 ", phone='" + phone + '\'' +
-                ", phoneOrigin='" + phoneOrigin + '\'' +
                 ", seller=" + seller +
                 ", bSell=" + bSell +
                 ", frequenter=" + frequenter +
