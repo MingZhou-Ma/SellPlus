@@ -25,6 +25,9 @@ public class Style {
     @Column(columnDefinition = "INT COMMENT '风采类型'")
     private Integer type;
 
+    @Column(columnDefinition = "INT COMMENT '随机数'")
+    private Integer number;
+
 //    @Column(columnDefinition = "TIMESTAMP COMMENT '时间'")
 //    private Date time;
 
@@ -61,5 +64,13 @@ public class Style {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 }

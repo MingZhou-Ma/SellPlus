@@ -52,6 +52,8 @@ public class StyleServiceImpl implements StyleService {
                 return ResJson.failJson(4000, "请选择类型", null);
             }
             //style.setTime(new Date());
+            int random = (int) (Math.random() * 5);
+            style.setNumber(random);
             styleRepository.save(style);
             return ResJson.successJson("add style success", null);
         } catch (Exception e) {
@@ -124,13 +126,14 @@ public class StyleServiceImpl implements StyleService {
     }
 
     @Override
-    public ResJson queryStyleList(String token, Integer start, Integer num) {
+    public ResJson queryStyleList(String token, Integer type, Integer start, Integer num) {
         try {
             Merchant merchant = (Merchant) tokenService.getUserByToken(token);
             if (null == merchant) {
                 return ResJson.errorAccessToken();
             }
-            Page<Style> page = styleRepository.findAll(new PageRequest(start, num));
+            //Page<Style> page = styleRepository.findAll(new PageRequest(start, num));
+            Page<Style> page = styleRepository.findAllByType(type, new PageRequest(start, num));
             return ResJson.successJson("query style list success", page);
         } catch (Exception e) {
             e.printStackTrace();

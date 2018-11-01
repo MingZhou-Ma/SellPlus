@@ -17,7 +17,7 @@ public interface StyleService {
 
     ResJson updateStyle(String token, Style style);
 
-    ResJson queryStyleList(String token, Integer start, Integer num);
+    ResJson queryStyleList(String token, Integer type, Integer start, Integer num);
 
     ResJson findStyleList(JSONObject jsonObject);
 }
