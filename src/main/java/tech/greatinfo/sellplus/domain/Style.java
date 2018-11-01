@@ -1,7 +1,6 @@
 package tech.greatinfo.sellplus.domain;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * 公司风采、学员风采
@@ -14,8 +13,8 @@ public class Style {
     @PrimaryKeyJoinColumn
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(255) COMMENT '标题'")
-    private String title;
+    /*@Column(columnDefinition = "VARCHAR(255) COMMENT '标题'")
+    private String title;*/
 
     @Column(columnDefinition = "VARCHAR(255) COMMENT '图片地址'")
     private String pic;
@@ -26,8 +25,8 @@ public class Style {
     @Column(columnDefinition = "INT COMMENT '风采类型'")
     private Integer type;
 
-    @Column(columnDefinition = "TIMESTAMP COMMENT '时间'")
-    private Date time;
+//    @Column(columnDefinition = "TIMESTAMP COMMENT '时间'")
+//    private Date time;
 
     public Style() {
     }
@@ -38,14 +37,6 @@ public class Style {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getPic() {
@@ -70,13 +61,5 @@ public class Style {
 
     public void setType(Integer type) {
         this.type = type;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
     }
 }

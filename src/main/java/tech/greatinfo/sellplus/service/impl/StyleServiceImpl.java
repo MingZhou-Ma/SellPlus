@@ -16,7 +16,6 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,19 +39,19 @@ public class StyleServiceImpl implements StyleService {
             if (null == merchant) {
                 return ResJson.errorAccessToken();
             }
-            if (null == style.getTitle()) {
-                return ResJson.failJson(4000, "请输入标题", null);
-            }
+//            if (null == style.getTitle()) {
+//                return ResJson.failJson(4000, "请输入标题", null);
+//            }
             if (null == style.getPic()) {
                 return ResJson.failJson(4000, "请选择头图", null);
             }
             if (null == style.getDescription()) {
-                return ResJson.failJson(4000, "请选择描述", null);
+                return ResJson.failJson(4000, "请输入描述", null);
             }
             if (null == style.getType()) {
                 return ResJson.failJson(4000, "请选择类型", null);
             }
-            style.setTime(new Date());
+            //style.setTime(new Date());
             styleRepository.save(style);
             return ResJson.successJson("add style success", null);
         } catch (Exception e) {
