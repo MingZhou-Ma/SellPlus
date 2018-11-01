@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.Style;
 import tech.greatinfo.sellplus.repository.StyleRepository;
@@ -143,12 +142,12 @@ public class StyleServiceImpl implements StyleService {
     @Override
     public ResJson findStyleList(JSONObject jsonObject) {
         try {
-            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            //String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
             Integer type = (Integer) ParamUtils.getFromJson(jsonObject, "type", Integer.class);
-            Customer customer = (Customer) tokenService.getUserByToken(token);
-            if (null == customer) {
-                return ResJson.errorAccessToken();
-            }
+//            Customer customer = (Customer) tokenService.getUserByToken(token);
+//            if (null == customer) {
+//                return ResJson.errorAccessToken();
+//            }
             List<Style> list = styleRepository.findAllByType(type);
             return ResJson.successJson("find style list success", list);
         } catch (JsonParseException jse) {
