@@ -107,7 +107,7 @@ public class CustomerController {
                         ((Customer) token.getUser()).setSessionKey(obj.getString("session_key"));
 
                         // 更新sessionKey，不然授权手机号无法解密
-                        //token.setUser(token.getUser());
+                        token.setUser(token.getUser());
                         tokenService.saveToken(token);
 
                         HashMap<String, String> map = new HashMap<String, String>();
