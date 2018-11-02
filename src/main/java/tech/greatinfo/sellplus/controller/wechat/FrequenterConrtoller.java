@@ -23,6 +23,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -304,6 +305,43 @@ public class FrequenterConrtoller {
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/withdraw");
         }catch (Exception e){
             logger.error("/api/freq/withdraw -> ",e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/api/freq/poster/info", method = RequestMethod.POST)
+    public ResJson getFreqPosterInfo(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+            Coupon coupon = companyService.getFreqCoupon();
+            if (null == coupon) {
+                return ResJson.failJson(4000, "未设置老司机券", null);
+            }
+            double freqBonus = companyService.getFreqBonus();
+            if (freqBonus == -1) {
+                return ResJson.failJson(4000, "未设置奖金", null);
+            }
+            List<CouponsObj> list = objService.findAllByOrigin(customer);
+            Map<String, Object> map = new HashMap<>();
+            map.put("coupons", coupon);
+            map.put("freqBonus", freqBonus);
+            if (null != list && !list.isEmpty()) {
+                map.put("number", list.size());
+            } else {
+                map.put("number", 0);
+            }
+            return ResJson.successJson("/api/freq/poster/info", map);
+
+        }catch (JsonParseException jse){
+            logger.info(jse.getMessage()+" -> /api/freq/poster/info");
+            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/poster/info");
+        }catch (Exception e){
+            logger.error("/api/freq/poster/info -> ",e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
