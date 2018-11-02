@@ -39,7 +39,14 @@ public class StyleLabelServiceImpl implements StyleLabelService {
             if (null == styleLabel.getLabelName()) {
                 return ResJson.failJson(4000, "请输入标签名", null);
             }
-            styleLabelRepository.save(styleLabel);
+            List<StyleLabel> list = styleLabelRepository.findAll();
+            if (null != list && !list.isEmpty()) {
+                StyleLabel label = list.get(0);
+                label.setLabelName(label.getLabelName() + "," + styleLabel.getLabelName());
+                styleLabelRepository.save(label);
+            } else {
+                styleLabelRepository.save(styleLabel);
+            }
             return ResJson.successJson("add styleLabel success", null);
         } catch (Exception e) {
             e.printStackTrace();
