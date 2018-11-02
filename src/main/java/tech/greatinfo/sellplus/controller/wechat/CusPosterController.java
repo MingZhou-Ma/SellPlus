@@ -61,7 +61,7 @@ public class CusPosterController {
                 return ResJson.errorAccessToken();
             }
 
-            QRcode qRcode = qRcodeRepository.findBySceneAndPage(scene, type);
+            QRcode qRcode = qRcodeRepository.findBySceneAndType(scene, type);
             if (null == qRcode) {
                 return ResJson.failJson(4000, "二维码不存在", null);
             }
