@@ -414,6 +414,7 @@ public class CustomerController {
                 //page = "user/pages/main/index";
                 scene = jsonObject.getString("scene");
                 type = jsonObject.getString("type");
+                // TODO 这个是辅助字段，不一定是渠道码
                 sellerChannel = jsonObject.getString("sellerChannel");
                 //if (token == null && title == null && page == null && scene == null){
                 if (token == null && page == null && scene == null && type == null) {
