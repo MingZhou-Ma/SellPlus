@@ -132,8 +132,13 @@ public class StyleServiceImpl implements StyleService {
             if (null == merchant) {
                 return ResJson.errorAccessToken();
             }
+            Page<Style> page;
+            if (null == type) {
+                page = styleRepository.findAll(new PageRequest(start, num));
+            } else {
+                page = styleRepository.findAllByType(type, new PageRequest(start, num));
+            }
             //Page<Style> page = styleRepository.findAll(new PageRequest(start, num));
-            Page<Style> page = styleRepository.findAllByType(type, new PageRequest(start, num));
             return ResJson.successJson("query style list success", page);
         } catch (Exception e) {
             e.printStackTrace();

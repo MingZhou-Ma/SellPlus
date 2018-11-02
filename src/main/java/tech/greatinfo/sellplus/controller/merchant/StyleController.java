@@ -33,7 +33,7 @@ public class StyleController {
 
     @RequestMapping(value = "/api/mer/style/list", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson querySiteList(@RequestParam(name = "token") String token,
-                                 @RequestParam(name = "type") Integer type,
+                                 Integer type,
                                  @RequestParam(name = "start", defaultValue = "0") Integer start,
                                  @RequestParam(name = "num", defaultValue = "10") Integer num) {
         return styleService.queryStyleList(token, type, start, num);
