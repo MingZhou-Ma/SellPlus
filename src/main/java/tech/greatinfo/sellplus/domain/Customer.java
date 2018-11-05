@@ -65,6 +65,9 @@ public class Customer implements User, Serializable {
     @Column(columnDefinition = "BIT COMMENT '是否同步到通讯录'")
     private Boolean bSync;
 
+    @Column(columnDefinition = "INT COMMENT '抽奖次数'")
+    private Integer lotteryNum;
+
     public Customer() {
     }
 
@@ -178,6 +181,14 @@ public class Customer implements User, Serializable {
 
     public void setbSync(Boolean bSync) {
         this.bSync = bSync;
+    }
+
+    public Integer getLotteryNum() {
+        return lotteryNum;
+    }
+
+    public void setLotteryNum(Integer lotteryNum) {
+        this.lotteryNum = lotteryNum;
     }
 
     @Override

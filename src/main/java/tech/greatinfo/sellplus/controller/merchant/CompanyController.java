@@ -87,6 +87,9 @@ public class CompanyController {
                                @RequestParam(value = "diaryReadNum",required = false) Integer diaryReadNum,
                                @RequestParam(value = "diaryCoupon",required = false) String diaryCoupon,
                                @RequestParam(value = "diaryIntervals", required = false) Integer diaryIntervals,
+                               @RequestParam(value = "isOpenLottery", required = false) Boolean isOpenLottery,
+                               @RequestParam(value = "lotteryCopy", required = false) String lotteryCopy,
+                               @RequestParam(value = "lotteryStr", required = false) String lotteryStr,
                                @RequestParam(value = "token") String token){
 
         try {
@@ -157,6 +160,18 @@ public class CompanyController {
 
                 if (null != diaryIntervals) {
                     list.add(new Company("diaryIntervals", String.valueOf(diaryIntervals)));
+                }
+
+                if (null != isOpenLottery) {
+                    list.add(new Company("isOpenLottery", String.valueOf(isOpenLottery)));
+                }
+
+                if (null != lotteryCopy) {
+                    list.add(new Company("lotteryCopy", lotteryCopy));
+                }
+
+                if (null != lotteryStr) {
+                    list.add(new Company("lotteryStr", lotteryStr));
                 }
 
                 companyService.saveMainInfo(list);

@@ -109,5 +109,25 @@ public class CompanyService {
         }
     }
 
-    // TODO 完成各种公司设置的 get 方法，就像上面两个方法一样
+    public Boolean getIsOpenLottery() {
+        Company company = companyRepository.findByK("isOpenLottery");
+        if (null == company) {
+            return false;
+        }
+        try {
+            return Boolean.parseBoolean(company.getV());
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    public String getLotteryStr() {
+        Company company = companyRepository.findByK("lotteryStr");
+        if (null == company) {
+            return null;
+        }
+        return company.getV();
+    }
+
+  // TODO 完成各种公司设置的 get 方法，就像上面两个方法一样
 }

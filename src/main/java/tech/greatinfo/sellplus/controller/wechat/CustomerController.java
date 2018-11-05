@@ -128,6 +128,7 @@ public class CustomerController {
                         customer.setFrequenter(false);
                         customer.setFreqBonus(0d);
                         customer.setbSync(false);
+                        customer.setLotteryNum(3); // 抽奖次数
                         customer.setSeller(sellerSerivce.getDefaultSeller());
                         /*customer.setType(1);  // 用户类型：1代表潜在客户   2代表老客户
                         customer.setOrigin(""); // 用户来源：默认什么鬼
