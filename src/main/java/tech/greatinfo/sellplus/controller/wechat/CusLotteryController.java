@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +48,7 @@ public class CusLotteryController {
     CustomService customService;
 
     @RequestMapping(value = "/api/cus/lottery", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-    public ResJson findStyleList(JSONObject jsonObject) {
+    public ResJson lottery(@RequestBody JSONObject jsonObject) {
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
             Customer customer = (Customer) tokenService.getUserByToken(token);
