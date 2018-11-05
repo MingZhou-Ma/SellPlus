@@ -68,8 +68,13 @@ public class CusLotteryController {
             for (String lotteryItem : lotteryList) {
                 if (StringUtils.isNotEmpty(lotteryItem)) {
                     String[] item = lotteryItem.split("/");
-                    if (StringUtils.isNotEmpty(item[1]) && StringUtils.isNotEmpty(item[2])) {
-                        Lottery lottery = new Lottery(item[0], Long.valueOf(item[1]) ,Double.valueOf(item[2]));
+                    if (StringUtils.isNotEmpty(item[2])) {
+                        Lottery lottery;
+                        if (StringUtils.isNotEmpty(item[1])) {
+                            lottery = new Lottery(item[0], item[1], item[2]);
+                        } else {
+                            lottery = new Lottery(item[0], "", item[2]);
+                        }
                         list.add(lottery);
                     }
                 }
@@ -77,18 +82,20 @@ public class CusLotteryController {
             int index = LotteryUtil.drawGift(list); // 抽到的奖品下标
             Lottery lottery = list.get(index);
             if (null != lottery) {
-                Long couponsId = lottery.getCouponsId();
-                Coupon coupon = couponsService.findOne(couponsId);
-                if (null != coupon) {
-                    // 发券
-                    CouponsObj couponsObj = new CouponsObj();
-                    couponsObj.setCoupon(coupon);
-                    couponsObj.setCode(couponsObjService.getRandomCouponCode());
-                    couponsObj.setOwn(customer);
-                    couponsObj.setNote("抽奖发放的优惠卷");
-                    couponsObj.setGeneralTime(new Date());
-                    couponsObj.setExpired(false);
-                    couponsObjService.save(couponsObj);
+                String couponsId = lottery.getCouponsId();
+                if (StringUtils.isNotEmpty(couponsId)) {
+                    Coupon coupon = couponsService.findOne(Long.valueOf(couponsId));
+                    if (null != coupon) {
+                        // 发券
+                        CouponsObj couponsObj = new CouponsObj();
+                        couponsObj.setCoupon(coupon);
+                        couponsObj.setCode(couponsObjService.getRandomCouponCode());
+                        couponsObj.setOwn(customer);
+                        couponsObj.setNote("抽奖发放的优惠卷");
+                        couponsObj.setGeneralTime(new Date());
+                        couponsObj.setExpired(false);
+                        couponsObjService.save(couponsObj);
+                    }
                 }
             }
             // 抽奖次数减一
@@ -102,7 +109,7 @@ public class CusLotteryController {
                 tokenService.saveToken(accessToken);
             }
 
-            return ResJson.successJson("success", index);
+            return ResJson.successJson("success", lottery);
         } catch (JsonParseException jse) {
             logger.info(jse.getMessage() + " -> /api/cus/lottery");
             return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/lottery");

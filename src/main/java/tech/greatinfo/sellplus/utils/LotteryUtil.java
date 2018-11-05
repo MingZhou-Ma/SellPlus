@@ -19,7 +19,7 @@ public class LotteryUtil {
             List<Double> orgProbList = new ArrayList<>(lotteryList.size());
             for (Lottery lottery : lotteryList) {
                 //按顺序将概率添加到集合中
-                orgProbList.add(lottery.getProb());
+                orgProbList.add(Double.valueOf(lottery.getProb()));
             }
             return draw(orgProbList);
         }
