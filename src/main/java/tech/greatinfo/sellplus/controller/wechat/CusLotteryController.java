@@ -66,7 +66,7 @@ public class CusLotteryController {
             String[] lotteryList = lotteryStr.split(",");
             List<Lottery> list = new ArrayList<>();
             for (String lotteryItem : lotteryList) {
-                if (StringUtils.isNotEmpty(lotteryItem)) {
+                if (StringUtils.isNotEmpty(lotteryItem) && !lotteryItem.equals("//")) {
                     String[] item = lotteryItem.split("/");
                     if (StringUtils.isNotEmpty(item[2])) {
                         Lottery lottery;
