@@ -22,6 +22,7 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -66,7 +67,11 @@ public class CusLotteryController {
             String[] lotteryList = lotteryStr.split(",");
             List<Lottery> list = new ArrayList<>();
             for (String lotteryItem : lotteryList) {
-                if (StringUtils.isNotEmpty(lotteryItem) && !lotteryItem.equals("//")) {
+                if (StringUtils.isNotEmpty(lotteryItem)) {
+                    if (lotteryItem.equals("//")) {
+                        lotteryItem = "//0.0";
+                        System.out.println(lotteryItem);
+                    }
                     String[] item = lotteryItem.split("/");
                     if (StringUtils.isNotEmpty(item[2])) {
                         Lottery lottery;
@@ -80,7 +85,9 @@ public class CusLotteryController {
                 }
             }
             int index = LotteryUtil.drawGift(list); // 抽到的奖品下标
+            System.out.println("下标：" + index);
             Lottery lottery = list.get(index);
+            System.out.println(lottery);
             if (null != lottery) {
                 String couponsId = lottery.getCouponsId();
                 if (StringUtils.isNotEmpty(couponsId)) {
@@ -108,8 +115,10 @@ public class CusLotteryController {
                 accessToken.setUser(customer);
                 tokenService.saveToken(accessToken);
             }
-
-            return ResJson.successJson("success", lottery);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("index", index);
+            map.put("lottery", lottery);
+            return ResJson.successJson("success", map);
         } catch (JsonParseException jse) {
             logger.info(jse.getMessage() + " -> /api/cus/lottery");
             return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/lottery");

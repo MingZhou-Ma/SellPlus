@@ -51,6 +51,11 @@ public class LotteryUtil {
             sortRateList.add(random);
             Collections.sort(sortRateList);
 
+            for (double a: sortRateList
+            ) {
+                System.out.println(a);
+            }
+
             // 返回该随机数在比例集合中的索引
             return sortRateList.indexOf(random);
         }
