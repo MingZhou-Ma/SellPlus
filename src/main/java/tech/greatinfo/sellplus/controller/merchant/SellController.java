@@ -83,8 +83,10 @@ public class SellController {
                     customer.setSeller(seller);
                     // 更新缓存
                     AccessToken accessToken = tokenService.getTokenByCustomOpenId(customer.getOpenid());
-                    accessToken.setUser(customer);
-                    tokenService.saveToken(accessToken);
+                    if (null != accessToken) {
+                        accessToken.setUser(customer);
+                        tokenService.saveToken(accessToken);
+                    }
                 }
                 return ResJson.successJson("update Seller success");
             }else {
