@@ -107,19 +107,26 @@ public class SellerCodeController {
                 return ResJson.errorAccessToken();
             }
 
-            QRcode qRcode = qRcodeRepository.findByScene(scene);
-            if (null == qRcode) {
-                return ResJson.failJson(4000, "二维码不存在", null);
-            }
-            HashMap<String, String > map = new HashMap<>();
-            map.put("uid", qRcode.getCustomer().getUid());
-            if (StringUtils.isNotBlank(qRcode.getSellerChannel())) {
-                map.put("sellerCode", qRcode.getSellerChannel().split("\\|")[0]);
+            //QRcode qRcode = qRcodeRepository.findByScene(scene);
+            List<QRcode> list = qRcodeRepository.findAllByScene(scene);
+            if (null != list && !list.isEmpty()) {
+                QRcode qRcode = list.get(0);
+                if (null == qRcode) {
+                    return ResJson.failJson(4000, "二维码不存在", null);
+                }
+                HashMap<String, String > map = new HashMap<>();
+                map.put("uid", qRcode.getCustomer().getUid());
+                if (StringUtils.isNotBlank(qRcode.getSellerChannel())) {
+                    map.put("sellerCode", qRcode.getSellerChannel().split("\\|")[0]);
+                } else {
+                    map.put("sellerCode", "");
+                }
+                return ResJson.successJson("success", map);
             } else {
-                map.put("sellerCode", "");
+                return ResJson.failJson(4000, "二维码列表不存在", null);
             }
 
-            return ResJson.successJson("success", map);
+
         } catch (JsonParseException jse) {
             logger.info(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
             return ResJson.errorRequestParam(jse.getMessage() + " -> /api/sellerCode/checkSellerCode");
