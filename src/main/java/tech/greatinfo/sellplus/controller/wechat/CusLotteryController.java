@@ -153,23 +153,25 @@ public class CusLotteryController {
             if (null == shareCustomer) {
                 return ResJson.failJson(4000, "not uid", null);
             }
-            if (customer.getLotteryNum() < 8) {
-                customer.setLotteryNum(customer.getLotteryNum() + 1);
-                customService.save(customer);
-                AccessToken accessToken = tokenService.getToken(token);
-                if (null != accessToken) {
-                    accessToken.setUser(customer);
-                    tokenService.saveToken(accessToken);
+            if (!customer.getOpenid().equals(shareCustomer.getOpenid())) {
+                if (customer.getLotteryNum() < 8) {
+                    customer.setLotteryNum(customer.getLotteryNum() + 1);
+                    customService.save(customer);
+                    AccessToken accessToken = tokenService.getToken(token);
+                    if (null != accessToken) {
+                        accessToken.setUser(customer);
+                        tokenService.saveToken(accessToken);
+                    }
                 }
-            }
 
-            if (shareCustomer.getLotteryNum() < 8) {
-                shareCustomer.setLotteryNum(shareCustomer.getLotteryNum() + 1);
-                customService.save(shareCustomer);
-                AccessToken accessToken = tokenService.getTokenByCustomOpenId(shareCustomer.getOpenid());
-                if (null != accessToken) {
-                    accessToken.setUser(shareCustomer);
-                    tokenService.saveToken(accessToken);
+                if (shareCustomer.getLotteryNum() < 8) {
+                    shareCustomer.setLotteryNum(shareCustomer.getLotteryNum() + 1);
+                    customService.save(shareCustomer);
+                    AccessToken accessToken = tokenService.getTokenByCustomOpenId(shareCustomer.getOpenid());
+                    if (null != accessToken) {
+                        accessToken.setUser(shareCustomer);
+                        tokenService.saveToken(accessToken);
+                    }
                 }
             }
             return ResJson.successJson("success", null);
