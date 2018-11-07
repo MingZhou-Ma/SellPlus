@@ -48,6 +48,11 @@ public class CusLotteryController {
     @Autowired
     CustomService customService;
 
+    /**
+     * 抽奖
+     * @param jsonObject
+     * @return
+     */
     @RequestMapping(value = "/api/cus/lottery", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResJson lottery(@RequestBody JSONObject jsonObject) {
         try {
@@ -124,6 +129,55 @@ public class CusLotteryController {
             return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/lottery");
         } catch (Exception e) {
             logger.error("/api/cus/lottery", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    /**
+     * 抽奖分享
+     *
+     * @param jsonObject
+     * @return
+     */
+    @RequestMapping(value = "/api/cus/lottery/share", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    public ResJson shareLottery(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            String uid = (String) ParamUtils.getFromJson(jsonObject, "uid", String.class);
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+            Customer shareCustomer = customService.getByUid(uid);
+            if (null == shareCustomer) {
+                return ResJson.failJson(4000, "not uid", null);
+            }
+            if (customer.getLotteryNum() < 8) {
+                customer.setLotteryNum(customer.getLotteryNum() + 1);
+                customService.save(customer);
+                AccessToken accessToken = tokenService.getToken(token);
+                if (null != accessToken) {
+                    accessToken.setUser(customer);
+                    tokenService.saveToken(accessToken);
+                }
+            }
+
+            if (shareCustomer.getLotteryNum() < 8) {
+                shareCustomer.setLotteryNum(shareCustomer.getLotteryNum() + 1);
+                customService.save(shareCustomer);
+                AccessToken accessToken = tokenService.getTokenByCustomOpenId(shareCustomer.getOpenid());
+                if (null != accessToken) {
+                    accessToken.setUser(shareCustomer);
+                    tokenService.saveToken(accessToken);
+                }
+            }
+            return ResJson.successJson("success", null);
+        } catch (JsonParseException jse) {
+            logger.info(jse.getMessage() + " -> /api/cus/lottery/share");
+            return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/lottery/share");
+        } catch (Exception e) {
+            logger.error("/api/cus/lottery/share", e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
