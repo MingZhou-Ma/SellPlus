@@ -20,7 +20,6 @@ import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -163,16 +162,16 @@ public class CusHelpController {
     public ResJson getHelpList(@RequestBody JSONObject jsonObject){
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token",String.class);
-            Long state = (Long) ParamUtils.getFromJson(jsonObject, "status", Long.class);
+            //Long state = (Long) ParamUtils.getFromJson(jsonObject, "status", Long.class);
             Customer customer = null;
             if ((customer = (Customer) tokenService.getUserByToken(token))!=null){
                 List<Help> helpList = helpService.findAllByCustomer(customer);
-                Iterator<Help> iterator = helpList.iterator();
-                if (iterator.hasNext()){
-                    if (iterator.next().getActivity().getStatus() != state.intValue()){
-                        iterator.remove();
-                    }
-                }
+//                Iterator<Help> iterator = helpList.iterator();
+//                if (iterator.hasNext()){
+//                    if (iterator.next().getActivity().getStatus() != state.intValue()){
+//                        iterator.remove();
+//                    }
+//                }
                 return ResJson.successJson("get help list activity success",helpList);
             }else {
                 return ResJson.errorAccessToken();
