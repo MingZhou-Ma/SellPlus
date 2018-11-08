@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.TokenService;
@@ -70,6 +71,32 @@ public class CusConpController {
             return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/listCoupons");
         } catch (Exception e) {
             logger.error("/api/cus/listCoupons -> ", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/api/cus/getMyCouponsById", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+    public ResJson getMyCouponsById(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            Long couponsObjId = (Long) ParamUtils.getFromJson(jsonObject, "couponsObjId", Long.class);
+
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+
+            CouponsObj obj = objService.findByOwnAndId(customer, couponsObjId);
+            if (null == obj) {
+                return ResJson.failJson(4000, "券不存在", null);
+            }
+            return ResJson.successJson("success", obj);
+        } catch (JsonParseException jse) {
+            logger.info(jse.getMessage() + " -> /api/cus/getMyCouponsById");
+            return ResJson.errorRequestParam(jse.getMessage() + " -> /api/cus/getMyCouponsById");
+        } catch (Exception e) {
+            logger.error("/api/cus/getMyCouponsById -> ", e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }

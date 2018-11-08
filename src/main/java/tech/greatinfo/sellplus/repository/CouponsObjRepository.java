@@ -33,4 +33,7 @@ public interface CouponsObjRepository extends JpaRepository<CouponsObj, Long>,
     List<CouponsObj> findAllByOrigin(Customer origin);
 
     CouponsObj findByOriginAndOwn(Customer origin, Customer own);
+
+
+    CouponsObj findByOwnAndId(Customer own, Long id);
 }
