@@ -67,7 +67,7 @@ public class CusLotteryController {
 
             String lotteryStr = companyService.getLotteryStr();
             if (StringUtils.isEmpty(lotteryStr)) {
-                return ResJson.failJson(4000, "未设置奖品、概率", null);
+                return ResJson.failJson(5000, "未设置奖品、概率", null);
             }
             String[] lotteryList = lotteryStr.split(",");
             List<Lottery> list = new ArrayList<>();
