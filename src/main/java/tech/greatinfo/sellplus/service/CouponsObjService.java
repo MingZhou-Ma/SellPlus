@@ -112,12 +112,14 @@ public class CouponsObjService {
         // 核销的券为老司机券，有奖金加成
         if (coupon.getCoupon() == companyService.getFreqCoupon()) {
             Customer origin = coupon.getOrigin();
-            origin.setFreqBonus(origin.getFreqBonus() + companyService.getFreqBonus());
-            customService.save(origin);
+            if (null != origin) {
+                origin.setFreqBonus(origin.getFreqBonus() + companyService.getFreqBonus());
+                customService.save(origin);
 
-            AccessToken accessToken = tokenService.getTokenByCustomOpenId(origin.getOpenid());
-            accessToken.setUser(origin);
-            tokenService.saveToken(accessToken);
+                AccessToken accessToken = tokenService.getTokenByCustomOpenId(origin.getOpenid());
+                accessToken.setUser(origin);
+                tokenService.saveToken(accessToken);
+            }
         }
     }
 
