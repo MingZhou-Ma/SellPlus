@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Lottery;
+import tech.greatinfo.sellplus.domain.LotteryShare;
 import tech.greatinfo.sellplus.domain.coupons.Coupon;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
+import tech.greatinfo.sellplus.repository.LotteryShareRepository;
 import tech.greatinfo.sellplus.service.*;
 import tech.greatinfo.sellplus.utils.LotteryUtil;
 import tech.greatinfo.sellplus.utils.ParamUtils;
@@ -47,6 +49,9 @@ public class CusLotteryController {
 
     @Autowired
     CustomService customService;
+
+    @Autowired
+    LotteryShareRepository lotteryShareRepository;
 
     /**
      * 抽奖
@@ -155,26 +160,35 @@ public class CusLotteryController {
                 return ResJson.failJson(4000, "not uid", null);
             }
             if (!customer.getOpenid().equals(shareCustomer.getOpenid())) {
-                //if (customer.getLotteryNum() < 8) {
-                if (customer.getLotteryNum() + customer.getHasLotteryNum() < 8) {
-                    customer.setLotteryNum(customer.getLotteryNum() + 1);
-                    customService.save(customer);
-                    AccessToken accessToken = tokenService.getToken(token);
-                    if (null != accessToken) {
-                        accessToken.setUser(customer);
-                        tokenService.saveToken(accessToken);
+
+                // 判断是否重复领券
+                LotteryShare share = lotteryShareRepository.findByOriginAndOwn(shareCustomer, customer);
+                if (null == share) {
+                    if (customer.getLotteryNum() + customer.getHasLotteryNum() < 8) {
+                        customer.setLotteryNum(customer.getLotteryNum() + 1);
+                        customService.save(customer);
+                        AccessToken accessToken = tokenService.getToken(token);
+                        if (null != accessToken) {
+                            accessToken.setUser(customer);
+                            tokenService.saveToken(accessToken);
+                        }
                     }
+
+                    if (shareCustomer.getLotteryNum() + shareCustomer.getHasLotteryNum() < 8) {
+                        shareCustomer.setLotteryNum(shareCustomer.getLotteryNum() + 1);
+                        customService.save(shareCustomer);
+                        AccessToken accessToken = tokenService.getTokenByCustomOpenId(shareCustomer.getOpenid());
+                        if (null != accessToken) {
+                            accessToken.setUser(shareCustomer);
+                            tokenService.saveToken(accessToken);
+                        }
+                    }
+                    LotteryShare lotteryShare = new LotteryShare();
+                    lotteryShare.setOrigin(shareCustomer);
+                    lotteryShare.setOwn(customer);
+                    lotteryShareRepository.save(lotteryShare);
                 }
 
-                if (shareCustomer.getLotteryNum() + shareCustomer.getHasLotteryNum() < 8) {
-                    shareCustomer.setLotteryNum(shareCustomer.getLotteryNum() + 1);
-                    customService.save(shareCustomer);
-                    AccessToken accessToken = tokenService.getTokenByCustomOpenId(shareCustomer.getOpenid());
-                    if (null != accessToken) {
-                        accessToken.setUser(shareCustomer);
-                        tokenService.saveToken(accessToken);
-                    }
-                }
             }
             return ResJson.successJson("success", null);
         } catch (JsonParseException jse) {

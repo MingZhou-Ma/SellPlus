@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.repository.LotteryShareRepository;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
@@ -23,6 +24,9 @@ public class LotteryNumTask {
 
     @Autowired
     TokenService tokenService;
+
+    @Autowired
+    LotteryShareRepository lotteryShareRepository;
 
     /**
      * 每天凌晨0点将抽奖次数设置为初始值3
@@ -45,6 +49,8 @@ public class LotteryNumTask {
             }
             System.out.println("重置抽奖次数成功");
         }
+        // 清空抽奖分享表
+        lotteryShareRepository.deleteAll();
 
     }
 }
