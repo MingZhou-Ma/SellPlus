@@ -85,9 +85,10 @@ public class CustomerController {
     public ResJson wechatLogin(@RequestBody JSONObject jsonParam) {
         String code = jsonParam.getString("code");
         String errMsg = jsonParam.getString("errMsg");
-        System.out.println("code:" + code + " errMsg:" + errMsg);
-        System.out.println("appid：" + appid);
-        System.out.println("密钥:" + appsecret);
+        //System.out.println("code:" + code + " errMsg:" + errMsg);
+        System.out.println("code:" + code + " errMsg:" + errMsg + "appid:" + appid + "appsecret:" + appsecret);
+        //System.out.println("appid：" + appid);
+        //System.out.println("密钥:" + appsecret);
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + appsecret + "&grant_type=authorization_code&js_code=" + code;
         Request request = new Request.Builder()
                 .url(url)
