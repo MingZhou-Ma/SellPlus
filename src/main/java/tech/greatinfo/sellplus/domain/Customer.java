@@ -68,6 +68,9 @@ public class Customer implements User, Serializable {
     @Column(columnDefinition = "INT COMMENT '抽奖次数'")
     private Integer lotteryNum;
 
+    @Column(columnDefinition = "INT COMMENT '已抽奖次数'")
+    private Integer hasLotteryNum;
+
     public Customer() {
     }
 
@@ -189,6 +192,14 @@ public class Customer implements User, Serializable {
 
     public void setLotteryNum(Integer lotteryNum) {
         this.lotteryNum = lotteryNum;
+    }
+
+    public Integer getHasLotteryNum() {
+        return hasLotteryNum;
+    }
+
+    public void setHasLotteryNum(Integer hasLotteryNum) {
+        this.hasLotteryNum = hasLotteryNum;
     }
 
     @Override

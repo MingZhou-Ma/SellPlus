@@ -112,6 +112,7 @@ public class CusLotteryController {
             }
             // 抽奖次数减一
             if (customer.getLotteryNum() > 0) {
+                customer.setHasLotteryNum(customer.getHasLotteryNum() + 1);
                 customer.setLotteryNum(customer.getLotteryNum() - 1);
                 customService.save(customer);
 
@@ -154,7 +155,8 @@ public class CusLotteryController {
                 return ResJson.failJson(4000, "not uid", null);
             }
             if (!customer.getOpenid().equals(shareCustomer.getOpenid())) {
-                if (customer.getLotteryNum() < 8) {
+                //if (customer.getLotteryNum() < 8) {
+                if (customer.getLotteryNum() + customer.getHasLotteryNum() < 8) {
                     customer.setLotteryNum(customer.getLotteryNum() + 1);
                     customService.save(customer);
                     AccessToken accessToken = tokenService.getToken(token);
@@ -164,7 +166,7 @@ public class CusLotteryController {
                     }
                 }
 
-                if (shareCustomer.getLotteryNum() < 8) {
+                if (shareCustomer.getLotteryNum() + customer.getHasLotteryNum() < 8) {
                     shareCustomer.setLotteryNum(shareCustomer.getLotteryNum() + 1);
                     customService.save(shareCustomer);
                     AccessToken accessToken = tokenService.getTokenByCustomOpenId(shareCustomer.getOpenid());

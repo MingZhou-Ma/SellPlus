@@ -33,6 +33,7 @@ public class LotteryNumTask {
         if (null != list && !list.isEmpty()) {
             for (Customer customer : list) {
                 customer.setLotteryNum(3);
+                customer.setHasLotteryNum(0);
                 customService.save(customer);
 
                 AccessToken accessToken = tokenService.getTokenByCustomOpenId(customer.getOpenid());
