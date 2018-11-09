@@ -166,7 +166,7 @@ public class CusLotteryController {
                     }
                 }
 
-                if (shareCustomer.getLotteryNum() + customer.getHasLotteryNum() < 8) {
+                if (shareCustomer.getLotteryNum() + shareCustomer.getHasLotteryNum() < 8) {
                     shareCustomer.setLotteryNum(shareCustomer.getLotteryNum() + 1);
                     customService.save(shareCustomer);
                     AccessToken accessToken = tokenService.getTokenByCustomOpenId(shareCustomer.getOpenid());
