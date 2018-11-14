@@ -227,6 +227,7 @@ public class FrequenterConrtoller {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
             Long freqId = (Long) ParamUtils.getFromJson(jsonObject,"freqId", Long.class); // 老司机id
             Customer customer = (Customer) tokenService.getUserByToken(token);
+            System.out.println(company);
             if (null == customer) {
                 return ResJson.errorAccessToken();
             }
