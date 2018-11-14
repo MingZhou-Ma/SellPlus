@@ -13,7 +13,8 @@ import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.TokenService;
-import tech.greatinfo.sellplus.utils.SendMulSmsUtil;
+import tech.greatinfo.sellplus.utils.GroupSmsParamUtil;
+import tech.greatinfo.sellplus.utils.SendGroupSmsUtil;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.util.ArrayList;
@@ -23,9 +24,9 @@ import java.util.List;
  *
  */
 @RestController
-public class MsgController {
+public class GroupMsgController {
 
-    private static final Logger logger = LoggerFactory.getLogger(MsgController.class);
+    private static final Logger logger = LoggerFactory.getLogger(GroupMsgController.class);
 
     @Autowired
     TokenService tokenService;
@@ -51,16 +52,25 @@ public class MsgController {
 
             List<Customer> list = customService.findAllCustomer();
             List<String> phoneList = new ArrayList<>();
+            List<GroupSmsParamUtil> paramList = new ArrayList<>();
+            List<String> signNameList = new ArrayList<>();
             if (null != list && !list.isEmpty()) {
                 for (Customer c : list) {
                     if (StringUtils.isNotEmpty(c.getPhone())) {
                         phoneList.add(c.getPhone());
+                        signNameList.add("获客Plus");
+                        GroupSmsParamUtil groupSmsParamUtil = new GroupSmsParamUtil();
+                        groupSmsParamUtil.setContent(content);
+                        groupSmsParamUtil.setCompany(company);
+                        paramList.add(groupSmsParamUtil);
                     }
                 }
             }
             String phone = JSONObject.toJSONString(phoneList);
+            String signName = JSONObject.toJSONString(signNameList);
+            String param = JSONObject.toJSONString(paramList);
             //发送短信
-            if (!SendMulSmsUtil.sendMulSms(phone, content, company)) {
+            if (!SendGroupSmsUtil.sendMulSms(phone, signName, param)) {
                 return ResJson.failJson(4000, "group msg fail", null);
             }
 
