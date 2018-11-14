@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Customer;
+import tech.greatinfo.sellplus.domain.MsgRecord;
 import tech.greatinfo.sellplus.domain.Seller;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
+import tech.greatinfo.sellplus.repository.MsgRecordRepository;
 import tech.greatinfo.sellplus.service.CouponsObjService;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
@@ -27,6 +29,7 @@ import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -51,6 +54,9 @@ public class CusSellerController {
 
     @Autowired
     CouponsObjService objService;
+
+    @Autowired
+    MsgRecordRepository msgRecordRepository;
 
     @Value("${company}")
     private String company;
@@ -501,6 +507,13 @@ public class CusSellerController {
             if (!SendGroupSmsUtil.sendMulSms(phone, signName, param)) {
                 return ResJson.failJson(4000, "group msg fail", null);
             }
+
+            MsgRecord msgRecord = new MsgRecord();
+            msgRecord.setNum(phoneList.size());
+            msgRecord.setContent(content);
+            msgRecord.setSendTime(new Date());
+            msgRecord.setCustomer(customer);
+            msgRecordRepository.save(msgRecord);
 
             return ResJson.successJson("group msg success");
 

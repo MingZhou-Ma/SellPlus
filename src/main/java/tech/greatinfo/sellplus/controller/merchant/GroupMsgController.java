@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
+import tech.greatinfo.sellplus.domain.MsgRecord;
+import tech.greatinfo.sellplus.repository.MsgRecordRepository;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.GroupSmsParamUtil;
@@ -18,6 +20,7 @@ import tech.greatinfo.sellplus.utils.SendGroupSmsUtil;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +39,9 @@ public class GroupMsgController {
 
     @Value("${company}")
     private String company;
+
+    @Autowired
+    MsgRecordRepository msgRecordRepository;
 
     /**
      * 群发短信
@@ -73,6 +79,13 @@ public class GroupMsgController {
             if (!SendGroupSmsUtil.sendMulSms(phone, signName, param)) {
                 return ResJson.failJson(4000, "group msg fail", null);
             }
+
+            MsgRecord msgRecord = new MsgRecord();
+            msgRecord.setNum(phoneList.size());
+            msgRecord.setContent(content);
+            msgRecord.setSendTime(new Date());
+            msgRecord.setCustomer(null);
+            msgRecordRepository.save(msgRecord);
 
             return ResJson.successJson("group msg success");
 

@@ -122,9 +122,10 @@ public class CouponsObjService {
                 customService.save(origin);
 
                 AccessToken accessToken = tokenService.getTokenByCustomOpenId(origin.getOpenid());
-                accessToken.setUser(origin);
-                tokenService.saveToken(accessToken);
-
+                if (null != accessToken) {
+                    accessToken.setUser(origin);
+                    tokenService.saveToken(accessToken);
+                }
                 //发送短信
                 SendSmsUtil.writeOffFreqCouponSendSms(origin.getPhone(), coupon.getOwn().getNickname(), company);
             }
