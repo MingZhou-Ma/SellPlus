@@ -228,10 +228,11 @@ public class FrequenterConrtoller {
             Long freqId = (Long) ParamUtils.getFromJson(jsonObject,"freqId", Long.class); // 老司机id
             Customer customer = (Customer) tokenService.getUserByToken(token);
             System.out.println(company);
-            if (null == customer) {
-                return ResJson.errorAccessToken();
-            }
+//            if (null == customer) {
+//                return ResJson.errorAccessToken();
+//            }
             Customer freq = customService.getOne(freqId);
+            System.out.println(freq.getPhone());
             if (null == freq) {
                 return ResJson.failJson(4000, "老司机不存在", null);
             }
@@ -260,7 +261,7 @@ public class FrequenterConrtoller {
 
             //发送短信
             if (!SendSmsUtil.receiveFreqCouponSendSms(freq.getPhone(), customer.getNickname(), company)) {
-                return ResJson.failJson(4000, "send sms fail", null);
+                return ResJson.failJson(4000, "send sms fail1", null);
             }
 
             return ResJson.successJson("领取成功");
