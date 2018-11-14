@@ -1,5 +1,6 @@
 package tech.greatinfo.sellplus.service;
 
+import com.alibaba.fastjson.JSONObject;
 import tech.greatinfo.sellplus.domain.Site;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
@@ -14,5 +15,7 @@ public interface SiteService {
     ResJson querySiteList(String token, Integer start, Integer num);
 
     ResJson findSiteList();
+
+    ResJson findSiteDetail(JSONObject jsonObject);
 
 }

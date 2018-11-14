@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +17,7 @@ import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.repository.FreqWithdrawRepository;
 import tech.greatinfo.sellplus.service.*;
 import tech.greatinfo.sellplus.utils.ParamUtils;
+import tech.greatinfo.sellplus.utils.SendSmsUtil;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
@@ -94,6 +96,9 @@ public class FrequenterConrtoller {
 
     @Autowired
     FreqWithdrawRepository freqWithdrawRepository;
+
+    @Value("${company}")
+    private String company;
 
     /**
      * 申请成为老司机
@@ -251,6 +256,11 @@ public class FrequenterConrtoller {
             couponsObj.setGeneralTime(new Date());
             couponsObj.setExpired(false);
             objService.save(couponsObj);
+
+            //发送短信
+            if (!SendSmsUtil.receiveFreqCouponSendSms(freq.getPhone(), customer.getNickname(), company)) {
+                return ResJson.failJson(4000, "send sms fail", null);
+            }
 
             return ResJson.successJson("领取成功");
         }catch (JsonParseException jse){

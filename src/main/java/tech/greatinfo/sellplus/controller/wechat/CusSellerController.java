@@ -1,9 +1,11 @@
 package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +20,14 @@ import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.ParamUtils;
+import tech.greatinfo.sellplus.utils.SendMulSmsUtil;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 微信端 销售人员 相关接口
@@ -43,6 +50,9 @@ public class CusSellerController {
 
     @Autowired
     CouponsObjService objService;
+
+    @Value("${company}")
+    private String company;
 
     /**
      * 销售登录
@@ -403,7 +413,17 @@ public class CusSellerController {
                     return ResJson.failJson(-1,"没有 seller 权限",null);
                 }
                 Page<Customer> allBySeller = customService.getAllBySeller(customer.getSeller(), new PageRequest(start, num));
-                return ResJson.successJson("get all my customer success",allBySeller);
+                List<Customer> list = customService.findBySeller(customer.getSeller().getId());
+                int phoneNumbers = 0;
+                for (Customer c : list) {
+                    if (StringUtils.isNotEmpty(c.getPhone())) {
+                        phoneNumbers++;
+                    }
+                }
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("customerList", allBySeller);
+                map.put("phoneNumbers", phoneNumbers);
+                return ResJson.successJson("get all my customer success",map);
             }else {
                 return ResJson.errorAccessToken();
             }
@@ -442,4 +462,43 @@ public class CusSellerController {
             return ResJson.serverErrorJson(e.getMessage());
         }
     }
+
+    @RequestMapping(value = "/api/cus/group/msg", method = RequestMethod.POST)
+    public ResJson groupMsg(@RequestBody JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+            String msg = (String) ParamUtils.getFromJson(jsonObject,"msg", String.class);
+
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+            if (!customer.getbSell()) {
+                return ResJson.failJson(4000, "您不是销售", null);
+            }
+
+            List<Customer> list = customService.findBySeller(customer.getSeller().getId());
+            List<String> phoneList = new ArrayList<>();
+            if (null != list && !list.isEmpty()) {
+                for (Customer c : list) {
+                    if (StringUtils.isNotEmpty(c.getPhone())) {
+                        phoneList.add(c.getPhone());
+                    }
+                }
+            }
+            String phone = JSONObject.toJSONString(phoneList);
+            //发送短信
+            if (!SendMulSmsUtil.sendMulSms(company, phone, msg)) {
+                return ResJson.failJson(4000, "group msg fail", null);
+            }
+
+            return ResJson.successJson("group msg success");
+
+        } catch (Exception e) {
+            logger.error("/api/cus/writeOffCoupons -> ", e.getMessage());
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
 }

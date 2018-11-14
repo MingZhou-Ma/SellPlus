@@ -25,4 +25,6 @@ public interface CustomRepository extends JpaRepository<Customer, Long>,
     Page<Customer> getAllBySellerAndAccessRecordOrderByCreateTimeDesc(Seller seller, String accessRecord, Pageable pageable);
 
     List<Customer> getAllBySellerId(Long sellerId);
+
+    Page<Customer> getAllByOrderByCreateTimeDesc(Pageable pageable);
 }

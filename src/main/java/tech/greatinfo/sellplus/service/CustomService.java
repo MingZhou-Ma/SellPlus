@@ -71,6 +71,10 @@ public class CustomService {
         return repository.findAll(pageable);
     }
 
+    public Page<Customer> getAllByOrderByCreateTimeDesc(Pageable pageable){
+        return repository.getAllByOrderByCreateTimeDesc(pageable);
+    }
+
     public List<Customer> findBySeller(Long sellerId){
         return repository.getAllBySellerId(sellerId);
     }

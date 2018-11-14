@@ -198,7 +198,8 @@ public class CompanyController {
             Merchant merchant;
             if (tokenService.getUserByToken(token) != null && tokenService.getUserByToken(token) instanceof Merchant){
                 return ResJson.successJson("get all customer success",
-                        customService.findAll(new PageRequest(start,num)));
+                        //customService.findAll(new PageRequest(start,num)));
+                        customService.getAllByOrderByCreateTimeDesc(new PageRequest(start,num)));
             } else {
                 return ResJson.errorAccessToken();
             }

@@ -1,6 +1,7 @@
 package tech.greatinfo.sellplus.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,6 +12,7 @@ import tech.greatinfo.sellplus.domain.coupons.CouponsHistory;
 import tech.greatinfo.sellplus.domain.coupons.CouponsObj;
 import tech.greatinfo.sellplus.repository.CouponsHistoryRepository;
 import tech.greatinfo.sellplus.repository.CouponsObjRepository;
+import tech.greatinfo.sellplus.utils.SendSmsUtil;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 
 import javax.transaction.Transactional;
@@ -36,6 +38,9 @@ public class CouponsObjService {
 
     @Autowired
     TokenService tokenService;
+
+    @Value("${company}")
+    private String company;
 
     public CouponsObj save(CouponsObj obj){
         return objRepository.save(obj);
@@ -119,6 +124,9 @@ public class CouponsObjService {
                 AccessToken accessToken = tokenService.getTokenByCustomOpenId(origin.getOpenid());
                 accessToken.setUser(origin);
                 tokenService.saveToken(accessToken);
+
+                //发送短信
+                SendSmsUtil.writeOffFreqCouponSendSms(origin.getPhone(), coupon.getOwn().getNickname(), company);
             }
         }
     }

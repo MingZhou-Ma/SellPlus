@@ -1,14 +1,19 @@
 package tech.greatinfo.sellplus.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.domain.Site;
 import tech.greatinfo.sellplus.repository.SiteRepository;
 import tech.greatinfo.sellplus.service.SiteService;
 import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.utils.ParamUtils;
+import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.lang.reflect.Field;
@@ -39,8 +44,20 @@ public class SiteServiceImpl implements SiteService {
             if (null == site.getSiteName()) {
                 return ResJson.failJson(4000, "请输入场地名", null);
             }
+            if (StringUtils.isEmpty(site.getSiteAddress())) {
+                return ResJson.failJson(4000, "请输入场地详细地址", null);
+            }
+            if (StringUtils.isEmpty(site.getLatitude())) {
+                return ResJson.failJson(4000, "请输入纬度", null);
+            }
+            if (StringUtils.isEmpty(site.getLongitude())) {
+                return ResJson.failJson(4000, "请输入经度", null);
+            }
             if (null == site.getSitePic()) {
                 return ResJson.failJson(4000, "请选择头图", null);
+            }
+            if (StringUtils.isEmpty(site.getDescription())) {
+                return ResJson.failJson(4000, "请输入头图", null);
             }
             siteRepository.save(site);
             return ResJson.successJson("add site success", null);
@@ -141,6 +158,28 @@ public class SiteServiceImpl implements SiteService {
         try {
             List<Site> list = siteRepository.findAll();
             return ResJson.successJson("find site list success", list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResJson.serverErrorJson(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResJson findSiteDetail(JSONObject jsonObject) {
+        try {
+            String token = (String) ParamUtils.getFromJson(jsonObject, "token", String.class);
+            Long siteId = (Long) ParamUtils.getFromJson(jsonObject, "siteId", Long.class);
+            Customer customer = (Customer) tokenService.getUserByToken(token);
+            if (null == customer) {
+                return ResJson.errorAccessToken();
+            }
+            Site site = siteRepository.findOne(siteId);
+            if (null == site) {
+                return ResJson.failJson(4000, "场地不存在", null);
+            }
+            return ResJson.successJson("find site detail success", site);
+        } catch (JsonParseException jse) {
+            return ResJson.errorRequestParam(jse.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
