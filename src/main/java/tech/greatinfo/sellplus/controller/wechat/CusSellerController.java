@@ -467,7 +467,7 @@ public class CusSellerController {
     public ResJson groupMsg(@RequestBody JSONObject jsonObject) {
         try {
             String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
-            String msg = (String) ParamUtils.getFromJson(jsonObject,"msg", String.class);
+            String content = (String) ParamUtils.getFromJson(jsonObject,"content", String.class);
 
             Customer customer = (Customer) tokenService.getUserByToken(token);
             if (null == customer) {
@@ -488,7 +488,7 @@ public class CusSellerController {
             }
             String phone = JSONObject.toJSONString(phoneList);
             //发送短信
-            if (!SendMulSmsUtil.sendMulSms(company, phone, msg)) {
+            if (!SendMulSmsUtil.sendMulSms(phone, content, company)) {
                 return ResJson.failJson(4000, "group msg fail", null);
             }
 

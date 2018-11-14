@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Merchant;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.TokenService;
+import tech.greatinfo.sellplus.utils.SendMulSmsUtil;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.util.ArrayList;
@@ -31,13 +33,16 @@ public class MsgController {
     @Autowired
     CustomService customService;
 
+    @Value("${company}")
+    private String company;
+
     /**
      * 群发短信
      * @param token
      * @return
      */
     @RequestMapping(value = "/api/mer/group/msg")
-    public ResJson withdraw(@RequestParam(name = "token") String token, @RequestParam(name = "msg") String msg) {
+    public ResJson withdraw(@RequestParam(name = "token") String token, @RequestParam(name = "content") String content) {
         try {
             Merchant merchant = (Merchant) tokenService.getUserByToken(token);
             if (null == merchant) {
@@ -55,14 +60,14 @@ public class MsgController {
             }
             String phone = JSONObject.toJSONString(phoneList);
             //发送短信
-//            if (!SendMulSmsUtil.sendMulSms(company, phone, msg)) {
-//                return ResJson.failJson(4000, "group msg fail", null);
-//            }
+            if (!SendMulSmsUtil.sendMulSms(phone, content, company)) {
+                return ResJson.failJson(4000, "group msg fail", null);
+            }
 
             return ResJson.successJson("group msg success");
 
         } catch (Exception e) {
-            logger.error("/api/mer/uv -> ", e.getMessage());
+            logger.error("/api/mer/group/msg -> ", e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
