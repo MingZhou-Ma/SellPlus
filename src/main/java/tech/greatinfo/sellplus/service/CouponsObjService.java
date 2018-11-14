@@ -75,11 +75,11 @@ public class CouponsObjService {
     }
 
     public Page<CouponsObj> getAllByOwnAndUnUsed(Customer own,int start,int num){
-        return objRepository.getAllByOwnAndExpiredFalse(own,new PageRequest(start,num));
+        return objRepository.getAllByOwnAndExpiredFalseOrderByGeneralTimeDesc(own,new PageRequest(start,num));
     }
 
     public Page<CouponsObj> getAllByOwnAndUsed(Customer own,int start,int num){
-        return objRepository.getAllByOwnAndExpiredTrue(own,new PageRequest(start,num));
+        return objRepository.getAllByOwnAndExpiredTrueOrderByGeneralTimeDesc(own,new PageRequest(start,num));
     }
 
     public List<CouponsObj> findFirst3ByOrigin(Customer origin) {

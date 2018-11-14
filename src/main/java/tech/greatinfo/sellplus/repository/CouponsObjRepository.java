@@ -26,6 +26,9 @@ public interface CouponsObjRepository extends JpaRepository<CouponsObj, Long>,
     Page<CouponsObj> getAllByOwnAndExpiredTrue(Customer customer,Pageable pageable);
     Page<CouponsObj> getAllByOwnAndExpiredFalse(Customer customer,Pageable pageable);
 
+    Page<CouponsObj> getAllByOwnAndExpiredTrueOrderByGeneralTimeDesc(Customer customer,Pageable pageable);
+    Page<CouponsObj> getAllByOwnAndExpiredFalseOrderByGeneralTimeDesc(Customer customer,Pageable pageable);
+
     CouponsObj findByCode(String code);
 
     List<CouponsObj> findFirst3ByOrigin(Customer origin);
