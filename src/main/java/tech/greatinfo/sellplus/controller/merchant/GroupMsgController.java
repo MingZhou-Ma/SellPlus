@@ -66,7 +66,7 @@ public class GroupMsgController {
                         phoneList.add(c.getPhone());
                         signNameList.add("获客Plus");
                         GroupSmsParamUtil groupSmsParamUtil = new GroupSmsParamUtil();
-                        groupSmsParamUtil.setContent(content);
+                        groupSmsParamUtil.setContent("提示：" + content + "。");
                         groupSmsParamUtil.setCompany(company);
                         paramList.add(groupSmsParamUtil);
                     }
