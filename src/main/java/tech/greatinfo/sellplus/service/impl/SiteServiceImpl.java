@@ -1,7 +1,6 @@
 package tech.greatinfo.sellplus.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,7 +43,7 @@ public class SiteServiceImpl implements SiteService {
             if (null == site.getSiteName()) {
                 return ResJson.failJson(4000, "请输入场地名", null);
             }
-            if (StringUtils.isEmpty(site.getSiteAddress())) {
+            /*if (StringUtils.isEmpty(site.getSiteAddress())) {
                 return ResJson.failJson(4000, "请输入场地详细地址", null);
             }
             if (StringUtils.isEmpty(site.getLatitude())) {
@@ -52,13 +51,13 @@ public class SiteServiceImpl implements SiteService {
             }
             if (StringUtils.isEmpty(site.getLongitude())) {
                 return ResJson.failJson(4000, "请输入经度", null);
-            }
+            }*/
             if (null == site.getSitePic()) {
                 return ResJson.failJson(4000, "请选择头图", null);
             }
-            if (StringUtils.isEmpty(site.getDescription())) {
-                return ResJson.failJson(4000, "请输入头图", null);
-            }
+//            if (StringUtils.isEmpty(site.getDescription())) {
+//                return ResJson.failJson(4000, "请输入场地描述", null);
+//            }
             siteRepository.save(site);
             return ResJson.successJson("add site success", null);
         } catch (Exception e) {
