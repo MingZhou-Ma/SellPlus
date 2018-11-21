@@ -1,6 +1,11 @@
 package tech.greatinfo.sellplus.controller.wechat;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +28,6 @@ import tech.greatinfo.sellplus.service.SellerSerivce;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.GroupSmsParamUtil;
 import tech.greatinfo.sellplus.utils.ParamUtils;
-import tech.greatinfo.sellplus.utils.SendGroupSmsUtil;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
@@ -61,6 +65,9 @@ public class CusSellerController {
     @Value("${company}")
     private String company;
 
+    @Value("${appid}")
+    private String appid;
+
     /**
      * 销售登录
      * @param jsonObject
@@ -80,21 +87,29 @@ public class CusSellerController {
             if (null == seller) {
                 return ResJson.failJson(-1,"not seller",null);
             }
-            // 设置openId
-            seller.setOpenId(customer.getOpenid());
-            sellerSerivce.save(seller);
+            if (seller.getOpenId() == null || seller.getOpenId().equals("")) {
+                // 设置openId
+                seller.setOpenId(customer.getOpenid());
+                sellerSerivce.save(seller);
 
-            // 成为 Seller
-            customer.setbSell(true);
-            customer.setSeller(seller);
-            //customer.setUid(customer.getUid());
-            customService.save(customer);
+                // 成为 Seller
+                customer.setbSell(true);
+                customer.setSeller(seller);
+                //customer.setUid(customer.getUid());
+                customService.save(customer);
 
-            AccessToken accessToken = tokenService.getToken(token);
-            accessToken.setUser(customer);
-            tokenService.saveToken(accessToken);
+                AccessToken accessToken = tokenService.getToken(token);
+                if (null != accessToken) {
+                    accessToken.setUser(customer);
+                    tokenService.saveToken(accessToken);
+                }
+                return ResJson.successJson("seller login success", customer);
+            } else {
+                return ResJson.failJson(4000, "测试失败", null);
+            }
 
-            return ResJson.successJson("seller login success", customer);
+
+
 
         }catch (JsonParseException jse){
             logger.info(jse.getMessage()+" -> /api/cus/sellerLogin");
@@ -495,7 +510,7 @@ public class CusSellerController {
                         signNameList.add("获客Plus");
                         GroupSmsParamUtil groupSmsParamUtil = new GroupSmsParamUtil();
                         groupSmsParamUtil.setContent("提示：" + content + "。");
-                        groupSmsParamUtil.setCompany(company);
+                        groupSmsParamUtil.setCompany (company);
                         paramList.add(groupSmsParamUtil);
                     }
                 }
@@ -504,21 +519,48 @@ public class CusSellerController {
             String signName = JSONObject.toJSONString(signNameList);
             String param = JSONObject.toJSONString(paramList);
             //发送短信
-            if (!SendGroupSmsUtil.sendMulSms(phone, signName, param)) {
-                return ResJson.failJson(4000, "group msg fail", null);
+//            if (!SendGroupSmsUtil.sendMulSms(phone, signName, param)) {
+//                return ResJson.failJson(4000, "group msg fail", null);
+//            }
+
+            JSONObject json = new JSONObject();
+            json.put("phone", phone);
+            json.put("signName", signName);
+            json.put("param", param);
+            json.put("appId", appid);
+            json.put("numbers", phoneList.size());
+            //创建一个OkHttpClient对象
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://localhost:8888/api/sms/send")
+                    .post(okhttp3.RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toJSONString()))
+                    .build();
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String result = response.body() != null ? response.body().string() : null;
+                System.out.println(result);
+                // 如果短信发送成功，则继续执行
+                JSONObject obj = JSON.parseObject(result);
+                String code = obj.getString("code");
+                if (code.equals("1000")) {
+                    MsgRecord msgRecord = new MsgRecord();
+                    msgRecord.setNum(phoneList.size());
+                    msgRecord.setContent(content);
+                    msgRecord.setSendTime(new Date());
+                    msgRecord.setCustomer(customer);
+                    msgRecordRepository.save(msgRecord);
+
+                    return ResJson.successJson("group msg success");
+                } else {
+                    return ResJson.successJson("group msg fail");
+                }
+
+            } else {
+                return ResJson.failJson(4000, "请求发送短信接口失败", null);
             }
 
-            MsgRecord msgRecord = new MsgRecord();
-            msgRecord.setNum(phoneList.size());
-            msgRecord.setContent(content);
-            msgRecord.setSendTime(new Date());
-            msgRecord.setCustomer(customer);
-            msgRecordRepository.save(msgRecord);
-
-            return ResJson.successJson("group msg success");
-
         } catch (Exception e) {
-            logger.error("/api/cus/writeOffCoupons -> ", e.getMessage());
+            logger.error("/api/cus/group/msg -> ", e.getMessage());
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
