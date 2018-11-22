@@ -2,6 +2,7 @@ package tech.greatinfo.sellplus.controller.wechat;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.service.*;
-import tech.greatinfo.sellplus.utils.*;
+import tech.greatinfo.sellplus.utils.AES;
+import tech.greatinfo.sellplus.utils.ParamUtils;
+import tech.greatinfo.sellplus.utils.PhoneUtil;
+import tech.greatinfo.sellplus.utils.WeChatUtils;
 import tech.greatinfo.sellplus.utils.exception.JsonParseException;
 import tech.greatinfo.sellplus.utils.obj.AccessToken;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
@@ -139,6 +143,24 @@ public class CustomerController {
                         */
                         customer.setCreateTime(new Date());
                         customService.save(customer);
+
+                        // 新客户
+                        JSONObject json = new JSONObject();
+                        json.put("appId", appid);
+                        Request req = new Request.Builder()
+                                .url("https://api.center.great-info.tech/api/enterprise/update")
+                                .post(okhttp3.RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toJSONString()))
+                                .build();
+                        Response rep = client.newCall(req).execute();
+                        if (rep.isSuccessful()) {
+                            String result = rep.body() != null ? rep.body().string() : null;
+                            JSONObject jsonObject = JSON.parseObject(result);
+                            if (!jsonObject.getString("code").equals("1000")) {
+                                return ResJson.failJson(4000, "修改新增客户数出错", null);
+                            }
+                        } else {
+                            return ResJson.failJson(4000, "请求修改新增客户数接口失败", null);
+                        }
                     }
                     token = new AccessToken(true);
                     token.setUser(customer);
@@ -272,9 +294,10 @@ public class CustomerController {
             customService.save(customer);
 
             AccessToken accessToken = tokenService.getToken(token);
-            accessToken.setUser(customer);
-            tokenService.saveToken(accessToken);
-
+            if (null != accessToken) {
+                accessToken.setUser(customer);
+                tokenService.saveToken(accessToken);
+            }
 
             return ResJson.successJson("getPhone Success", decrypt);
         } catch (JsonParseException jse) {

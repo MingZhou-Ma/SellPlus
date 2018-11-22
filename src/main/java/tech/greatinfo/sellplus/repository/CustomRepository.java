@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import tech.greatinfo.sellplus.domain.Customer;
 import tech.greatinfo.sellplus.domain.Seller;
 
@@ -27,4 +28,7 @@ public interface CustomRepository extends JpaRepository<Customer, Long>,
     List<Customer> getAllBySellerId(Long sellerId);
 
     Page<Customer> getAllByOrderByCreateTimeDesc(Pageable pageable);
+
+    @Query(value = "select count(*) from customer where month(create_time) = month(now())", nativeQuery = true)
+    Long getThisMonthCustomerNum();
 }

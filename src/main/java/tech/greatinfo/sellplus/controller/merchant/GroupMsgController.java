@@ -1,6 +1,11 @@
 package tech.greatinfo.sellplus.controller.merchant;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +21,6 @@ import tech.greatinfo.sellplus.repository.MsgRecordRepository;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.GroupSmsParamUtil;
-import tech.greatinfo.sellplus.utils.SendGroupSmsUtil;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
 
 import java.util.ArrayList;
@@ -39,6 +43,9 @@ public class GroupMsgController {
 
     @Value("${company}")
     private String company;
+
+    @Value("${appid}")
+    private String appid;
 
     @Autowired
     MsgRecordRepository msgRecordRepository;
@@ -76,18 +83,47 @@ public class GroupMsgController {
             String signName = JSONObject.toJSONString(signNameList);
             String param = JSONObject.toJSONString(paramList);
             //发送短信
-            if (!SendGroupSmsUtil.sendMulSms(phone, signName, param)) {
+            /*if (!SendGroupSmsUtil.sendMulSms(phone, signName, param)) {
                 return ResJson.failJson(4000, "group msg fail", null);
+            }*/
+
+            JSONObject json = new JSONObject();
+            json.put("phone", phone);
+            json.put("signName", signName);
+            json.put("param", param);
+            json.put("appId", appid);
+            json.put("numbers", phoneList.size());
+            //创建一个OkHttpClient对象
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("https://api.center.great-info.tech/api/sms/send")
+                    .post(okhttp3.RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toJSONString()))
+                    .build();
+            Response response = okHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String result = response.body() != null ? response.body().string() : null;
+                System.out.println("返回结果：" + result);
+                // 如果短信发送成功，则继续执行
+                JSONObject obj = JSON.parseObject(result);
+                String code = obj.getString("code");
+                if (code.equals("1000")) {
+                    MsgRecord msgRecord = new MsgRecord();
+                    msgRecord.setNum(phoneList.size());
+                    msgRecord.setContent(content);
+                    msgRecord.setSendTime(new Date());
+                    msgRecord.setCustomer(null);
+                    msgRecordRepository.save(msgRecord);
+
+                    return ResJson.successJson("group msg success");
+                } else {
+                    return ResJson.successJson("group msg fail");
+                }
+
+            } else {
+                return ResJson.failJson(4000, "请求发送短信接口失败", null);
             }
 
-            MsgRecord msgRecord = new MsgRecord();
-            msgRecord.setNum(phoneList.size());
-            msgRecord.setContent(content);
-            msgRecord.setSendTime(new Date());
-            msgRecord.setCustomer(null);
-            msgRecordRepository.save(msgRecord);
-
-            return ResJson.successJson("group msg success");
+            //return ResJson.successJson("group msg success");
 
         } catch (Exception e) {
             logger.error("/api/mer/group/msg -> ", e.getMessage());

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.greatinfo.sellplus.domain.Merchant;
+import tech.greatinfo.sellplus.repository.CustomRepository;
 import tech.greatinfo.sellplus.service.CustomService;
 import tech.greatinfo.sellplus.service.TokenService;
 import tech.greatinfo.sellplus.utils.obj.ResJson;
@@ -25,8 +26,12 @@ public class UVController {
     @Autowired
     CustomService customService;
 
+    @Autowired
+    CustomRepository customRepository;
+
     /**
      * UV统计
+     *
      * @param token
      * @return
      */
@@ -46,6 +51,11 @@ public class UVController {
             e.printStackTrace();
             return ResJson.serverErrorJson(e.getMessage());
         }
+    }
+
+    @RequestMapping(value = "/api/customer/month/num")
+    public ResJson getThisMonthCustomerNum() {
+        return ResJson.successJson("success", customRepository.getThisMonthCustomerNum());
     }
 
 }
