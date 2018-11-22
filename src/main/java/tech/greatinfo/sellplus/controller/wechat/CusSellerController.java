@@ -532,7 +532,7 @@ public class CusSellerController {
             //创建一个OkHttpClient对象
             OkHttpClient okHttpClient = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("http://localhost:8888/api/sms/send")
+                    .url("https://api.center.great-info.tech/api/sms/send")
                     .post(okhttp3.RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toJSONString()))
                     .build();
             Response response = okHttpClient.newCall(request).execute();
