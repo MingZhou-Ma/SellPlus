@@ -1,15 +1,9 @@
 package tech.greatinfo.sellplus.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-
 import tech.greatinfo.sellplus.domain.intf.User;
+
+import javax.persistence.*;
 
 /**
  *
@@ -37,9 +31,9 @@ public class Seller implements User {
     private String sellerKey;
 
     // Seller 的 OPENID
-    @JsonIgnore
-    @Column
-    private String openId;
+//    @JsonIgnore
+//    @Column
+//    private String openId;
 
     // Seller 的联系名称
     @Column
@@ -88,13 +82,13 @@ public class Seller implements User {
         this.sellerKey = sellerKey;
     }
 
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
+//    public String getOpenId() {
+//        return openId;
+//    }
+//
+//    public void setOpenId(String openId) {
+//        this.openId = openId;
+//    }
 
     public String getName() {
         return name;

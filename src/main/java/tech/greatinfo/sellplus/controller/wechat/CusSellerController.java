@@ -87,10 +87,10 @@ public class CusSellerController {
             if (null == seller) {
                 return ResJson.failJson(-1,"not seller",null);
             }
-            if (seller.getOpenId() == null || seller.getOpenId().equals("")) {
-                // 设置openId
-                seller.setOpenId(customer.getOpenid());
-                sellerSerivce.save(seller);
+//            if (seller.getOpenId() == null || seller.getOpenId().equals("")) {
+//                // 设置openId
+//                seller.setOpenId(customer.getOpenid());
+//                sellerSerivce.save(seller);
 
                 // 成为 Seller
                 customer.setbSell(true);
@@ -104,9 +104,9 @@ public class CusSellerController {
                     tokenService.saveToken(accessToken);
                 }
                 return ResJson.successJson("seller login success", customer);
-            } else {
-                return ResJson.failJson(4000, "测试失败", null);
-            }
+//            } else {
+//                return ResJson.failJson(4000, "此销售账号已被登录", null);
+//            }
 
 
 
@@ -136,61 +136,61 @@ public class CusSellerController {
      * @param jsonObject
      * @return
      */
-    @RequestMapping(value = "/api/cus/beSeller",method = RequestMethod.POST)
-    public ResJson beSeller(@RequestBody JSONObject jsonObject){
-        try {
-            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
-            String selleAccount = (String) ParamUtils.getFromJson(jsonObject,"account", String.class);
-            String key =    (String) ParamUtils.getFromJson(jsonObject, "key", String.class);
-            /*String name =   (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
-            String phone =  (String) ParamUtils.getFromJson(jsonObject, "phone", String.class);
-            String wechat = (String) ParamUtils.getFromJson(jsonObject, "wechat", String.class);
-            String intro =  (String) ParamUtils.getFromJson(jsonObject, "intro", String.class);
-            String pic =    (String) ParamUtils.getFromJson(jsonObject, "avatar", String.class);*/
-
-            // 该帐号是公司帐号，默认销售
-            // 公司简介
-           Customer customer ;
-            if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
-                Seller seller;
-                if ((seller = sellerSerivce.findByAccountAndSellerKey(selleAccount, key)) != null
-                        && (seller.getOpenId() == null || seller.getOpenId().equals(""))){
-                    // 保存 seller 信息
-                    seller.setOpenId(customer.getOpenid());
-                    /*seller.setName(name);
-                    seller.setPhone(phone);
-                    seller.setWechat(wechat);
-                    seller.setIntro(intro);
-                    seller.setPic(WeChatUtils.getBigAvatarURL(pic));*/
-                    sellerSerivce.save(seller);
-
-                    // 插入默认销售渠道
-                    /*SellerCode sellerCode = new SellerCode();
-                    sellerCode.setName("默认渠道");
-                    sellerCode.setPath("");
-                    sellerCode.setCustomer(customer);*/
-
-                    // 成为 Seller
-                    customer.setbSell(true);
-                    customer.setSeller(seller);
-                    customer.setUid(customer.getUid());
-                    customService.save(customer);
-                    return ResJson.successJson("set seller info success");
-                }else {
-                    return ResJson.failJson(-1,"seller info error",null);
-                }
-            }else {
-                return ResJson.errorAccessToken();
-            }
-        }catch (JsonParseException jse){
-            logger.info(jse.getMessage()+" -> /api/cus/beSeller");
-            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/beSeller");
-        }catch (Exception e){
-            logger.error("/api/cus/beSeller -> ",e.getMessage());
-            e.printStackTrace();
-            return ResJson.serverErrorJson(e.getMessage());
-        }
-    }
+//    @RequestMapping(value = "/api/cus/beSeller",method = RequestMethod.POST)
+//    public ResJson beSeller(@RequestBody JSONObject jsonObject){
+//        try {
+//            String token = (String) ParamUtils.getFromJson(jsonObject,"token", String.class);
+//            String selleAccount = (String) ParamUtils.getFromJson(jsonObject,"account", String.class);
+//            String key =    (String) ParamUtils.getFromJson(jsonObject, "key", String.class);
+//            /*String name =   (String) ParamUtils.getFromJson(jsonObject, "name", String.class);
+//            String phone =  (String) ParamUtils.getFromJson(jsonObject, "phone", String.class);
+//            String wechat = (String) ParamUtils.getFromJson(jsonObject, "wechat", String.class);
+//            String intro =  (String) ParamUtils.getFromJson(jsonObject, "intro", String.class);
+//            String pic =    (String) ParamUtils.getFromJson(jsonObject, "avatar", String.class);*/
+//
+//            // 该帐号是公司帐号，默认销售
+//            // 公司简介
+//           Customer customer ;
+//            if ((customer = (Customer) tokenService.getUserByToken(token)) != null){
+//                Seller seller;
+//                if ((seller = sellerSerivce.findByAccountAndSellerKey(selleAccount, key)) != null
+//                        && (seller.getOpenId() == null || seller.getOpenId().equals(""))){
+//                    // 保存 seller 信息
+//                    seller.setOpenId(customer.getOpenid());
+//                    /*seller.setName(name);
+//                    seller.setPhone(phone);
+//                    seller.setWechat(wechat);
+//                    seller.setIntro(intro);
+//                    seller.setPic(WeChatUtils.getBigAvatarURL(pic));*/
+//                    sellerSerivce.save(seller);
+//
+//                    // 插入默认销售渠道
+//                    /*SellerCode sellerCode = new SellerCode();
+//                    sellerCode.setName("默认渠道");
+//                    sellerCode.setPath("");
+//                    sellerCode.setCustomer(customer);*/
+//
+//                    // 成为 Seller
+//                    customer.setbSell(true);
+//                    customer.setSeller(seller);
+//                    customer.setUid(customer.getUid());
+//                    customService.save(customer);
+//                    return ResJson.successJson("set seller info success");
+//                }else {
+//                    return ResJson.failJson(-1,"seller info error",null);
+//                }
+//            }else {
+//                return ResJson.errorAccessToken();
+//            }
+//        }catch (JsonParseException jse){
+//            logger.info(jse.getMessage()+" -> /api/cus/beSeller");
+//            return ResJson.errorRequestParam(jse.getMessage()+" -> /api/cus/beSeller");
+//        }catch (Exception e){
+//            logger.error("/api/cus/beSeller -> ",e.getMessage());
+//            e.printStackTrace();
+//            return ResJson.serverErrorJson(e.getMessage());
+//        }
+//    }
 
     /**
      *
