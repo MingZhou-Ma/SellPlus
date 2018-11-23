@@ -47,7 +47,7 @@ public class GroupMsgController {
     @Value("${appid}")
     private String appid;
 
-    @Value("${center-manager-sys-url}")
+    @Value("${centerManagerSysUrl}")
     private String centerManagerSysUrl;
 
     @Autowired
