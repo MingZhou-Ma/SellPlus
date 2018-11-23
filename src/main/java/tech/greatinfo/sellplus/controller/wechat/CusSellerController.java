@@ -68,7 +68,7 @@ public class CusSellerController {
     @Value("${appid}")
     private String appid;
 
-    @Value("${center-manager-sys-url}")
+    @Value("${centerManagerSysUrl}")
     private String centerManagerSysUrl;
 
     /**
