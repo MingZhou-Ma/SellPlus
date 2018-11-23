@@ -67,6 +67,9 @@ public class CustomerController {
     @Autowired
     QRcodeService qrService;
 
+    @Value("${center-manager-sys-url}")
+    private String centerManagerSysUrl;
+
     // 阅读一篇文章
 
 
@@ -148,7 +151,7 @@ public class CustomerController {
                         JSONObject json = new JSONObject();
                         json.put("appId", appid);
                         Request req = new Request.Builder()
-                                .url("https://api.center.great-info.tech/api/enterprise/update")
+                                .url(centerManagerSysUrl + "/api/enterprise/numOfNewCustomer/update")
                                 .post(okhttp3.RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toJSONString()))
                                 .build();
                         Response rep = client.newCall(req).execute();

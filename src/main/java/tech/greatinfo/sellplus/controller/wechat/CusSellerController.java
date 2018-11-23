@@ -68,6 +68,9 @@ public class CusSellerController {
     @Value("${appid}")
     private String appid;
 
+    @Value("${center-manager-sys-url}")
+    private String centerManagerSysUrl;
+
     /**
      * 销售登录
      * @param jsonObject
@@ -532,7 +535,7 @@ public class CusSellerController {
             //创建一个OkHttpClient对象
             OkHttpClient okHttpClient = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("https://api.center.great-info.tech/api/sms/send")
+                    .url(centerManagerSysUrl + "/api/sms/send")
                     .post(okhttp3.RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toJSONString()))
                     .build();
             Response response = okHttpClient.newCall(request).execute();
