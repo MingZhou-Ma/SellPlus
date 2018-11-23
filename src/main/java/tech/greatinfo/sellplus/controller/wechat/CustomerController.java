@@ -67,7 +67,7 @@ public class CustomerController {
     @Autowired
     QRcodeService qrService;
 
-    @Value("${center-manager-sys-url}")
+    @Value("${centerManagerSysUrl}")
     private String centerManagerSysUrl;
 
     // 阅读一篇文章
