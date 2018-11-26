@@ -19,7 +19,8 @@ public interface CustomRepository extends JpaRepository<Customer, Long>,
 
     Customer getByUid(String uid);
 
-    Page<Customer> getAllBySeller(Seller seller, Pageable pageable);
+    //Page<Customer> getAllBySeller(Seller seller, Pageable pageable);
+    Page<Customer> getAllBySellerAndPhoneNotNull(Seller seller, Pageable pageable);
 
     Page<Customer> getAllBySellerOrderByCreateTimeDesc(Seller seller, Pageable pageable);
 
@@ -28,6 +29,7 @@ public interface CustomRepository extends JpaRepository<Customer, Long>,
     List<Customer> getAllBySellerId(Long sellerId);
 
     Page<Customer> getAllByOrderByCreateTimeDesc(Pageable pageable);
+    Page<Customer> getAllByPhoneNotNullOrderByCreateTimeDesc(Pageable pageable);
 
     @Query(value = "select count(*) from customer where month(create_time) = month(now())", nativeQuery = true)
     Long getThisMonthCustomerNum();

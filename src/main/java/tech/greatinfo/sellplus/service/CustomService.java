@@ -56,7 +56,7 @@ public class CustomService {
     }
 
     public Page<Customer> getAllBySeller(Seller seller, Pageable pageable){
-        return repository.getAllBySeller(seller, pageable);
+        return repository.getAllBySellerAndPhoneNotNull(seller, pageable);
     }
 
     public Page<Customer> getAllBySellerOrderByCreateTimeDesc(Seller seller, Pageable pageable) {
@@ -72,7 +72,8 @@ public class CustomService {
     }
 
     public Page<Customer> getAllByOrderByCreateTimeDesc(Pageable pageable){
-        return repository.getAllByOrderByCreateTimeDesc(pageable);
+        //return repository.getAllByOrderByCreateTimeDesc(pageable);
+        return repository.getAllByPhoneNotNullOrderByCreateTimeDesc(pageable);
     }
 
     public List<Customer> findBySeller(Long sellerId){
