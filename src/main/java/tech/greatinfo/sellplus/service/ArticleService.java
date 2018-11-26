@@ -27,7 +27,8 @@ public class ArticleService {
     }
 
     public Page<Article> findByPage(int start, int num){
-        return articleRepository.findAll(new PageRequest(start,num));
+        //return articleRepository.findAll(new PageRequest(start,num));
+        return articleRepository.findAllByOrderByCreateDateDesc(new PageRequest(start,num));
     }
 
     public void delete(Long id){
