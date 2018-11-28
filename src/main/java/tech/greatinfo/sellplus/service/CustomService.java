@@ -88,6 +88,10 @@ public class CustomService {
         return repository.findAll();
     }
 
+    public List<Customer> getAllByPhoneNotNull() {
+        return repository.getAllByPhoneNotNull();
+    }
+
 //    public Page<Customer> getAllBySellerAndOriginOrderByCreateTimeDesc(Seller seller, String origin, Pageable pageable) {
 //        return repository.getAllBySellerAndOriginOrderByCreateTimeDesc(seller, origin, pageable);
 //    }

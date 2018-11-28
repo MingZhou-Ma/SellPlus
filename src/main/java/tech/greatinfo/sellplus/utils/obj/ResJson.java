@@ -26,8 +26,11 @@ public class ResJson {
         this.data = data;
     }
 
+//    public static ResJson errorAccessToken(){
+//        return new ResJson(1100,"access token error or expired",null);
+//    }
     public static ResJson errorAccessToken(){
-        return new ResJson(1100,"access token error or expired",null);
+        return new ResJson(1100,"登录过期，请重新打开小程序",null);
     }
 
     public static ResJson failJson(Integer code,String msg,Object data){

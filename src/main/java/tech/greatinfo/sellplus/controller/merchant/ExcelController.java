@@ -45,7 +45,7 @@ public class ExcelController {
             if (null == merchant) {
                 return ResJson.errorAccessToken();
             }
-            List<Customer> list = customService.findAllCustomer();
+            List<Customer> list = customService.getAllByPhoneNotNull();
 
             String[] headTitle = {"昵称", "手机号码", "所属销售", "注册时间"};
             String[][] data = new String[list.size()][headTitle.length];

@@ -28,6 +28,8 @@ public interface CustomRepository extends JpaRepository<Customer, Long>,
 
     List<Customer> getAllBySellerId(Long sellerId);
 
+    List<Customer> getAllByPhoneNotNull();
+
     Page<Customer> getAllByOrderByCreateTimeDesc(Pageable pageable);
     Page<Customer> getAllByPhoneNotNullOrderByCreateTimeDesc(Pageable pageable);
 
