@@ -82,7 +82,6 @@ public class MsgRecordController {
             OkHttpClient okHttpClient = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(centerManagerSysUrl + "/api/enterprise/getByAppId")
-                    //.url("http://192.168.1.114:8989/api/enterprise/getByAppId")
                     .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json.toJSONString()))
                     .build();
             Response response = okHttpClient.newCall(request).execute();
