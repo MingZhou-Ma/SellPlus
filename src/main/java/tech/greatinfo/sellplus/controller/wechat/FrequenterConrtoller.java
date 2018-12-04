@@ -262,7 +262,7 @@ public class FrequenterConrtoller {
                 return ResJson.failJson(4000, "send sms fail1", null);
             }
 
-            return ResJson.successJson("领取成功");
+            return ResJson.successJson("领取成功", couponsObj);
         }catch (JsonParseException jse){
             logger.info(jse.getMessage()+" -> /api/freq/coupon/receive");
             return ResJson.errorRequestParam(jse.getMessage()+" -> /api/freq/coupon/receive");
