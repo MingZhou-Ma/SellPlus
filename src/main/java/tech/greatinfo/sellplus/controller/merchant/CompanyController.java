@@ -90,6 +90,7 @@ public class CompanyController {
                                @RequestParam(value = "isOpenLottery", required = false) Boolean isOpenLottery,
                                @RequestParam(value = "lotteryCopy", required = false) String lotteryCopy,
                                @RequestParam(value = "lotteryStr", required = false) String lotteryStr,
+                               @RequestParam(value = "welfareBg", required = false) String welfareBg,
                                @RequestParam(value = "token") String token){
 
         try {
@@ -172,6 +173,9 @@ public class CompanyController {
 
                 if (null != lotteryStr) {
                     list.add(new Company("lotteryStr", lotteryStr));
+                }
+                if (null != welfareBg) {
+                    list.add(new Company("welfareBg", welfareBg));
                 }
 
                 companyService.saveMainInfo(list);
