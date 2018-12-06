@@ -206,8 +206,10 @@ public class CustomerController {
             customService.save(customer);
 
             AccessToken accessToken = tokenService.getToken(token);
-            accessToken.setUser(customer);
-            tokenService.saveToken(accessToken);
+            if (null != accessToken) {
+                accessToken.setUser(customer);
+                tokenService.saveToken(accessToken);
+            }
 
             return ResJson.successJson("set auth info success");
         } catch (JsonParseException jse) {
@@ -289,7 +291,9 @@ public class CustomerController {
 
             String decrypt = AES.wxDecrypt(encryptedData, customer.getSessionKey(), iv);
             System.out.println(decrypt);
-
+            if (StringUtils.isEmpty(decrypt)) {
+                return ResJson.errorAccessToken();
+            }
             JSONObject decryptJsonObject = JSON.parseObject(decrypt);
             String phoneNumber = decryptJsonObject.get("phoneNumber").toString();
             System.out.println(phoneNumber);
